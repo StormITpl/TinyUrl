@@ -17,7 +17,7 @@ w przygotowaniu
 w przygotowaniu
 
 ## Zrzuty ekranu
-![Example screenshot](./img/screenshot.png)
+w przygotowaniu
 
 ## Wymagane aplikacje/narzędzia
 Do uruchomienia aplikacji wymagana jest instalacja następujących narzędzi:
