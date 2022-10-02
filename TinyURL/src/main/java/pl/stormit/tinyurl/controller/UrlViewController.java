@@ -1,4 +1,4 @@
-package pl.stormit.tinyurl.url.controller;
+package pl.stormit.tinyurl.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
