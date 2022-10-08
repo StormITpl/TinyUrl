@@ -9,7 +9,7 @@ import pl.stormit.tinyurl.service.UrlService;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/v1/url")
+@RequestMapping(path = "api/v1/urls")
 public class UrlController {
 
     private final UrlService urlService;

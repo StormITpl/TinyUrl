@@ -2,13 +2,15 @@ package pl.stormit.tinyurl.domain.model;
 
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table(name = "url")
+@Table(name = "urls")
+@ToString
 public class Url {
 
     @Id
@@ -65,16 +67,6 @@ public class Url {
     }
 
     public Url() {
-    }
-
-    @Override
-    public String toString() {
-        return "Url{" +
-                "id=" + id +
-                ", longUrl='" + longUrl + '\'' +
-                ", shortUrl='" + shortUrl + '\'' +
-                ", creationDate=" + creationDate +
-                '}';
     }
 
     public Url(String longUrl, String shortUrl) {
