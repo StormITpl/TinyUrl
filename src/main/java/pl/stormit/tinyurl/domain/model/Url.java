@@ -25,9 +25,9 @@ public class Url {
     )
     private Long id;
 
-    @NotNull
+    @Column(unique = true, nullable = false)
     private String longUrl;
-    @NotNull
+    @Column(nullable = false)
     private String shortUrl;
 
     private LocalDate creationDate = LocalDate.now();
