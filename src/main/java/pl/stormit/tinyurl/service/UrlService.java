@@ -46,6 +46,10 @@ public class UrlService {
         return encodedUrl;
     }
 
+    public Url saveShortUrl(Url url){
+        Url urlToReturn=urlRepository.save(url);
+        return urlToReturn;
+    }
 
     public List<Url> getUrl(){
         return urlRepository.findAll();
