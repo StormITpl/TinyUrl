@@ -22,7 +22,7 @@ public class UrlService {
 
     public Url generateShortUrl(UrlDto urlDto) {
 
-        if (!urlDto.getLongUrl().isEmpty()){
+        if (!urlDto.getLongUrl().isEmpty()) {
 
             Url urlToSave = new Url();
             String encodedUrl = encodeUrl(urlDto.getLongUrl());
@@ -46,12 +46,12 @@ public class UrlService {
         return encodedUrl;
     }
 
-    public Url saveShortUrl(Url url){
-        Url urlToReturn=urlRepository.save(url);
+    public Url saveShortUrl(Url url) {
+        Url urlToReturn = urlRepository.save(url);
         return urlToReturn;
     }
 
-    public List<Url> getUrl(){
+    public List<Url> getUrl() {
         return urlRepository.findAll();
     }
 }
