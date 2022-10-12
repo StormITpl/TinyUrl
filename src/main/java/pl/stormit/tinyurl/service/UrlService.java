@@ -10,6 +10,7 @@ import pl.stormit.tinyurl.domain.repository.UrlRepository;
 import pl.stormit.tinyurl.dto.UrlDto;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class UrlService {
 
             Url urlToSave = new Url();
             String encodedUrl = encodeUrl(urlDto.getLongUrl());
-            urlToSave.setCreationDate(LocalDateTime.now());
+            urlToSave.setCreationDate(LocalDate.now());
             urlToSave.setLongUrl(urlDto.getLongUrl());
             urlToSave.setShortUrl(encodedUrl);
             Url urlToReturn = saveShortUrl(urlToSave);
