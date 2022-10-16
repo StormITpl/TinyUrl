@@ -23,7 +23,7 @@ public class UrlService {
 
     public Url generateShortUrl(UrlDto urlDto) {
 
-        if (!urlDto.getLongUrl().isEmpty()) {
+        if (!urlDto.getLongUrl().isBlank()) {
 
             Url urlToSave = new Url();
             String encodedUrl = encodeUrl(urlDto.getLongUrl());
