@@ -19,15 +19,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/v1/urls")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UrlController {
 
     @Autowired
     private final UrlService urlService;
 
     @PostMapping
-    public ResponseEntity<Object> createShortUrl(@RequestBody UrlDto urlDto) {
-        return ResponseEntity.ok(urlService.generateShortUrl(urlDto));
+    public ResponseEntity<UrlDto> createShortUrl(@RequestBody UrlDto urlDto) {
+        urlService.generateShortUrl(urlDto);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("message","You have successfully completed the creation of shortUrl");
+        return new ResponseEntity<>(urlDto,headers, HttpStatus.CREATED);
     }
 
     @GetMapping
