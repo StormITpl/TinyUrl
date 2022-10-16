@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,18 +16,20 @@ import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.service.UrlService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/v1/urls")
 @RequiredArgsConstructor
+@Validated
 public class UrlController {
 
     @Autowired
     private final UrlService urlService;
 
     @PostMapping
-    public ResponseEntity<UrlDto> createShortUrl(@RequestBody UrlDto urlDto) {
+    public ResponseEntity<UrlDto> createShortUrl(@Valid @RequestBody UrlDto urlDto) {
         urlService.generateShortUrl(urlDto);
         HttpHeaders headers = new HttpHeaders();
         headers.add("message","You have successfully completed the creation of shortUrl");
