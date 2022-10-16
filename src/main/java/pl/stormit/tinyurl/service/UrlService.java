@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.repository.UrlRepository;
 import pl.stormit.tinyurl.dto.UrlDto;
+import pl.stormit.tinyurl.exception.ApiException;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -34,7 +35,7 @@ public class UrlService {
 
             return urlToReturn;
         }
-        throw new RuntimeException("Change the request your longUrl is empty!");
+        throw new ApiException("Change the request your longUrl is empty!");
     }
 
     private String encodeUrl(String longUrl) {
