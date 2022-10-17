@@ -56,4 +56,13 @@ public class UrlService {
     public List<Url> getUrl() {
         return urlRepository.findAll();
     }
+
+    public String findByShortUrl(String shortUrl, List<Url> urls) {
+        for (Url url : urls) {
+            if (url.getShortUrl().equals(shortUrl)) {
+                return "https://" + url.getLongUrl();
+            }
+        }
+        return null;
+    }
 }

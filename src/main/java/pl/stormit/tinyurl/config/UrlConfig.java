@@ -19,9 +19,12 @@ public class UrlConfig {
                     "def456");
             Url yahoo = new Url(
                     "www.yahoo.com",
-                    "abc123"
+                    "abc123");
+            Url instagram = new Url(
+                    "www.instagram.com",
+                    "ghi789"
             );
-            repository.saveAll(List.of(google, yahoo));
+            repository.saveAll(List.of(google, yahoo, instagram));
         };
     }
 }
