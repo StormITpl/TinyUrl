@@ -9,9 +9,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class UrlDto {
 
-    @NotNull
     private String longUrl;
-    @NotNull
+
     private String shortUrl;
 
     public String getLongUrl() {
