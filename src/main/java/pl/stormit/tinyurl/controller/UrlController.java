@@ -25,7 +25,6 @@ import java.util.List;
 @Validated
 public class UrlController {
 
-    @Autowired
     private final UrlService urlService;
 
     @PostMapping
