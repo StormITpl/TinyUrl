@@ -45,9 +45,8 @@ class UrlControllerTest {
 
         //when
         ResultActions result = mockMvc.perform(post("/api/v1/urls")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlDto))))
-                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(urlDto)));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlDto))));
 
         //then
         result.andExpect(status().isCreated());
@@ -62,9 +61,8 @@ class UrlControllerTest {
 
         //when
         ResultActions result = mockMvc.perform(post("/api/v1/urls")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlDto))))
-                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(urlDto)));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlDto))));
 
         //then
         result.andExpect(status().isBadRequest());
@@ -79,9 +77,8 @@ class UrlControllerTest {
 
         //when
         ResultActions result = mockMvc.perform(post("/api/v1/urls")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlDto))))
-                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(urlDto)));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlDto))));
 
         //then
         result.andExpect(status().isBadRequest());
@@ -96,9 +93,8 @@ class UrlControllerTest {
 
         //when
         ResultActions result = mockMvc.perform(post("/api/v1/urls")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlDto))))
-                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(urlDto)));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlDto))));
 
         //then
         result.andExpect(status().isBadRequest());
