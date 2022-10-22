@@ -37,7 +37,7 @@ class UrlControllerTest {
     private UrlDto urlDto;
 
     @Test
-    void shouldReturnStatusOkWhenCreateShortUrlCorrectly() throws Exception {
+    void shouldReturnStatusCreatedWhenCreateShortUrlCorrectly() throws Exception {
         //given
         urlDto = new UrlDto("https://www.google.pl/", "");
         when(urlService.generateShortUrl(urlDto))
