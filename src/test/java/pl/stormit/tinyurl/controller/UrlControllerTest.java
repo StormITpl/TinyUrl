@@ -9,7 +9,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.service.UrlService;
