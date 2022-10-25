@@ -10,6 +10,7 @@ import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.exception.ApiException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
@@ -31,9 +32,7 @@ class UrlServiceTest {
         Url result = urlService.generateShortUrl(urlDTO);
 
         // then
-        assertThat(result.getId()).isEqualTo(urlRepository.getById(result.getId()).getId());
-        assertThat(result.getShortUrl()).isEqualTo(urlRepository.getById(result.getId()).getShortUrl());
-        assertThat(result.getLongUrl()).isEqualTo(urlRepository.getById(result.getId()).getLongUrl());
+        assertThat(result).isEqualTo(urlRepository.getById(result.getId()));
     }
 
     @Test
@@ -45,6 +44,7 @@ class UrlServiceTest {
 
         //then
         assertThrows(ApiException.class, () -> urlService.generateShortUrl(urlDto));
+        assertThatExceptionOfType(ApiException.class).isThrownBy(() -> urlService.generateShortUrl(urlDto)).withMessage("Change the request your longUrl is empty!");
     }
 
     @Test
@@ -56,5 +56,6 @@ class UrlServiceTest {
 
         //then
         assertThrows(ApiException.class, () -> urlService.generateShortUrl(urlDto));
+        assertThatExceptionOfType(ApiException.class).isThrownBy(() -> urlService.generateShortUrl(urlDto)).withMessage("Change the request your longUrl is empty!");
     }
 }
