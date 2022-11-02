@@ -53,7 +53,21 @@ public class UrlService {
         return urlToReturn;
     }
 
-    public List<Url> getUrl() {
+    public List<Url> getUrls() {
         return urlRepository.findAll();
+    }
+
+    public Url getByShortUrl(String shortUrl) {
+        Url urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl);
+        return urlByShortUrl;
+    }
+
+    public String isProtocolContainInLongUrl(String shortUrl){
+        Url urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl);
+        if(urlByShortUrl.getLongUrl().contains("https://") || urlByShortUrl.getLongUrl().contains("http://")){
+            return urlByShortUrl.getLongUrl();
+        } else {
+            return "https://" + urlByShortUrl.getLongUrl();
+        }
     }
 }

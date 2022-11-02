@@ -19,9 +19,11 @@ public class UrlConfig {
                     "def456");
             Url yahoo = new Url(
                     "www.yahoo.com",
-                    "abc123"
-            );
-            repository.saveAll(List.of(google, yahoo));
+                    "abc123");
+            Url tvn = new Url(
+                    "https://www.tvn.pl",
+                    "ghi789");
+            repository.saveAll(List.of(google, yahoo, tvn));
         };
     }
 }

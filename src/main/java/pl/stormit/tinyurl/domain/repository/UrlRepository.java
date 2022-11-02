@@ -5,4 +5,6 @@ import pl.stormit.tinyurl.domain.model.Url;
 
 @Repository
 public interface UrlRepository extends JpaRepository<Url,Long> {
+
+    Url findUrlByShortUrl (String shortUrl);
 }
