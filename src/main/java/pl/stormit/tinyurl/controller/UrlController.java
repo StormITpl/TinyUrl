@@ -35,13 +35,13 @@ public class UrlController {
     }
 
     @GetMapping
-    public List<Url> getUrl() {
+    public List<Url> getUrls() {
         return urlService.getUrls();
     }
 
     @GetMapping("/{shortUrl}")
     public ResponseEntity<UrlDto> longUrlRedirect(@PathVariable String shortUrl) throws URISyntaxException, IOException, InterruptedException {
-        URI uri = new URI(urlService.isProtocolContainInLongUrl(shortUrl));
+        URI uri = new URI(urlService.startsWithHttpsOrHttpsProtocolLongUrl(shortUrl));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(uri);
         return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);
