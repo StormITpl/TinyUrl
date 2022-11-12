@@ -1,8 +1,6 @@
 package pl.stormit.tinyurl.controller;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +29,7 @@ public class UrlController {
         urlService.generateShortUrl(urlDto);
         HttpHeaders headers = new HttpHeaders();
         headers.add("message","You have successfully completed the creation of shortUrl");
-        return new ResponseEntity<>(urlDto,headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(urlDto, headers, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -40,7 +38,7 @@ public class UrlController {
     }
 
     @GetMapping("/{shortUrl}")
-    public ResponseEntity<UrlDto> longUrlRedirect(@PathVariable String shortUrl) throws URISyntaxException, IOException, InterruptedException {
+    public ResponseEntity<UrlDto> longUrlRedirect(@PathVariable String shortUrl) throws URISyntaxException {
         URI uri = new URI(urlService.startsWithHttpsOrHttpsProtocolLongUrl(shortUrl));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(uri);
