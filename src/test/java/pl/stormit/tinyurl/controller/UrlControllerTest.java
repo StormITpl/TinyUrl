@@ -46,6 +46,8 @@ class UrlControllerTest {
 
     private UrlDto urlDto;
 
+    private Url url;
+
     private URI uri;
 
     @Autowired
@@ -118,18 +120,32 @@ class UrlControllerTest {
     @Test
     void shouldRedirectWhenUrlIsWithoutHttpsOrHttpProtocol() throws Exception {
         //given
-        Url url = new Url("www.cnn.com", "kbn132");
-        urlRepository.save(url);
-        when(urlService.startsWithHttpsOrHttpsProtocolLongUrl(url.getShortUrl())
-                .equals("https://www.cnn.com"));
+        urlDto = new UrlDto("www.cnn.com", "kbr345");
+        given(urlService.getByShortUrl("kbr345"))
+                .willReturn(new Url("www.cnn.com", "kbr345"));
 
         //when
-        ResultActions result = mockMvc.perform(post("/api/v1/urls/kbn1234")
+        ResultActions result = mockMvc.perform(get("/api/v1/urls/kbr345")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(url))));
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlDto))));
 
         //then
-        result.andExpect(status().is3xxRedirection());
+        result.andExpect(status().is2xxSuccessful());
     }
 
+    @Test
+    void shouldRedirectWhenUrlIsWithHttpsOrHttpProtocol() throws Exception {
+        //given
+        urlDto = new UrlDto("https://www.cnn.com", "kbr345");
+        given(urlService.getByShortUrl("kbr345"))
+                .willReturn(new Url("www.cnn.com", "kbr345"));
+
+        //when
+        ResultActions result = mockMvc.perform(get("/api/v1/urls/kbr345")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlDto))));
+
+        //then
+        result.andExpect(status().is2xxSuccessful());
+    }
 }
