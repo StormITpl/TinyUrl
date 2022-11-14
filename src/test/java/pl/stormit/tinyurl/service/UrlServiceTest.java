@@ -66,7 +66,7 @@ class UrlServiceTest {
         urlRepository.save(url);
 
         //when
-        String result = urlService.startsWithHttpsOrHttpsProtocolLongUrl(url.getShortUrl());
+        String result = urlService.startsWithHttpOrHttpsProtocolLongUrl(url.getShortUrl());
 
         //then
         String expected = "https://www.cnn.com";
@@ -80,7 +80,7 @@ class UrlServiceTest {
         urlRepository.save(url);
 
         //when
-        String result = urlService.startsWithHttpsOrHttpsProtocolLongUrl(url.getShortUrl());
+        String result = urlService.startsWithHttpOrHttpsProtocolLongUrl(url.getShortUrl());
 
         //then
         String expected = "https://www.cnn.com";

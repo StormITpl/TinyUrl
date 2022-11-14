@@ -61,7 +61,7 @@ public class UrlService {
         return urlRepository.findUrlByShortUrl(shortUrl);
     }
 
-    public String startsWithHttpsOrHttpsProtocolLongUrl(String shortUrl) {
+    public String startsWithHttpOrHttpsProtocolLongUrl(String shortUrl) {
         Url urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl);
         if (urlByShortUrl.getLongUrl().contains("https://") || urlByShortUrl.getLongUrl().contains("http://")) {
             return urlByShortUrl.getLongUrl();

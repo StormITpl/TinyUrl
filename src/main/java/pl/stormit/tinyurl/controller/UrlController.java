@@ -11,7 +11,6 @@ import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.service.UrlService;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -39,7 +38,7 @@ public class UrlController {
 
     @GetMapping("/{shortUrl}")
     public ResponseEntity<UrlDto> longUrlRedirect(@PathVariable String shortUrl) throws URISyntaxException {
-        URI uri = new URI(urlService.startsWithHttpsOrHttpsProtocolLongUrl(shortUrl));
+        URI uri = new URI(urlService.startsWithHttpOrHttpsProtocolLongUrl(shortUrl));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(uri);
         return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);
