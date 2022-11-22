@@ -58,4 +58,58 @@ class UrlServiceTest {
         assertThrows(ApiException.class, () -> urlService.generateShortUrl(urlDto));
         assertThatExceptionOfType(ApiException.class).isThrownBy(() -> urlService.generateShortUrl(urlDto)).withMessage("Change the request your longUrl is empty!");
     }
+
+    @Test
+    void shouldReturnLongUrlWithoutProtocolWithHttpsProtocol(){
+        //given
+        Url url = new Url("www.cnn.com", "kbn132");
+        urlRepository.save(url);
+
+        //when
+        String result = urlService.startsWithHttpOrHttpsProtocolLongUrl(url.getShortUrl());
+
+        //then
+        String expected = "https://www.cnn.com";
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldReturnLongUrlWithProtocol(){
+        //given
+        Url url = new Url("https://www.cnn.com", "kbn132");
+        urlRepository.save(url);
+
+        //when
+        String result = urlService.startsWithHttpOrHttpsProtocolLongUrl(url.getShortUrl());
+
+        //then
+        String expected = "https://www.cnn.com";
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldReturnUrlByShortUrlWhenLongUrlHasProtocol(){
+        //given
+        Url expected = new Url("https://www.cnn.com", "kbn132");
+        urlRepository.save(expected);
+
+        //when
+        Url result = urlRepository.findUrlByShortUrl("kbn132");
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldReturnUrlByShortUrlWhenLongUrlHasNoProtocol(){
+        //given
+        Url expected = new Url("www.cnn.com", "kbn132");
+        urlRepository.save(expected);
+
+        //when
+        Url result = urlRepository.findUrlByShortUrl("kbn132");
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
 }
