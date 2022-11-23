@@ -9,6 +9,8 @@ import pl.stormit.tinyurl.domain.repository.UrlRepository;
 import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.exception.ApiException;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -94,7 +96,7 @@ class UrlServiceTest {
         urlRepository.save(expected);
 
         //when
-        Url result = urlRepository.findUrlByShortUrl("kbn132");
+        Optional<Url> result = urlRepository.findUrlByShortUrl("kbn132");
 
         //then
         assertThat(result).isEqualTo(expected);
@@ -107,7 +109,7 @@ class UrlServiceTest {
         urlRepository.save(expected);
 
         //when
-        Url result = urlRepository.findUrlByShortUrl("kbn132");
+        Optional<Url> result = urlRepository.findUrlByShortUrl("kbn132");
 
         //then
         assertThat(result).isEqualTo(expected);

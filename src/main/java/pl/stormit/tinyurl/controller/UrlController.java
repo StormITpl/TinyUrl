@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.dto.UrlDto;
+import pl.stormit.tinyurl.exception.ApiException;
 import pl.stormit.tinyurl.service.UrlService;
 
 import javax.validation.Valid;
@@ -38,9 +39,12 @@ public class UrlController {
 
     @GetMapping("/{shortUrl}")
     public ResponseEntity<UrlDto> longUrlRedirect(@PathVariable String shortUrl) throws URISyntaxException {
-        URI uri = new URI(urlService.startsWithHttpOrHttpsProtocolLongUrl(shortUrl));
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(uri);
-        return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);
+        if(urlService.isShortUrlExist(shortUrl) == true) {
+            URI uri = new URI(urlService.startsWithHttpOrHttpsProtocolLongUrl(shortUrl));
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(uri);
+            return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);
+        }
+        throw new ApiException("The short url: " + shortUrl + ", does not exist.");
     }
 }

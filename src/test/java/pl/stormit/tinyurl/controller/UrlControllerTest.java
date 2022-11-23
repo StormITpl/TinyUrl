@@ -16,6 +16,7 @@ import pl.stormit.tinyurl.service.UrlService;
 
 import java.net.URI;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -118,7 +119,7 @@ class UrlControllerTest {
         //given
         urlDto = new UrlDto("www.cnn.com", "kbr345");
         given(urlService.getByShortUrl("kbr345"))
-                .willReturn(new Url("www.cnn.com", "kbr345"));
+                .willReturn(Optional.of(new Url("www.cnn.com", "kbr345")));
 
         //when
         ResultActions result = mockMvc.perform(get("/api/v1/urls/kbr345")
@@ -134,7 +135,7 @@ class UrlControllerTest {
         //given
         urlDto = new UrlDto("https://www.cnn.com", "kbr345");
         given(urlService.getByShortUrl("kbr345"))
-                .willReturn(new Url("www.cnn.com", "kbr345"));
+                .willReturn(Optional.of(new Url("www.cnn.com", "kbr345")));
 
         //when
         ResultActions result = mockMvc.perform(get("/api/v1/urls/kbr345")
