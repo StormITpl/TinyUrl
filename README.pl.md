@@ -11,18 +11,34 @@ TinyUrl – aplikacja, która zamienia pełen, długi adres URL na skróconą fo
 * [Autorzy](#autorzy)
 
 ## Informacje ogólne
-w przygotowaniu
+Projekt ma na celu praktyczną naukę, wdrążenia wiedzy pozyskanej w kursach Tomasza Wolińskiego - JOP (Java Od Podstaw) oraz EAI (Efektywne Aplikacje Internetowe).
+Tworzona aplikacja służy do zamiany długiego adresu URL podanego przez użytkownika na skróconą formę (wzorowana na takich platformach jak m.in.: Bitly.com, Rebrandly.com, TinyURL.com).
+Aplikacja jest oparta na architekturze REST i modelu Minimum Viable Product (MVP).
 
 ## Zastosowane technologie
-w przygotowaniu
+### Development
+- [Java 18](https://openjdk.org/projects/jdk/18/)
+- [Spring Boot 2](https://spring.io/projects/spring-boot)
+- [Spring Data](https://spring.io/projects/spring-data)
+- [PostgreSQL (docker)](https://www.postgresql.org/)
+- [Maven 3.x](https://maven.apache.org/)
+- [Git](https://git-scm.com/)
+
+
+### Testy
+- [JUnit5](https://junit.org/junit5/)
+- [Mockito](https://site.mockito.org/)
 
 ## Zrzuty ekranu
-w przygotowaniu
+![Test redirect](./images/redirect.png)
 
 ## Wymagane aplikacje/narzędzia
 Do uruchomienia aplikacji wymagana jest instalacja następujących narzędzi:
 
-w przygotowaniu
+- [IntelliJ IDEA](https://www.jetbrains.com/idea/),
+- [Java 18](https://openjdk.org/projects/jdk/18/)
+- [Maven 3.x](https://maven.apache.org/download.cgi),
+- [Docker](https://docs.docker.com/get-docker/)
 
 ## Autorzy
 Społeczność StormIT:
