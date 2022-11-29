@@ -14,6 +14,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -57,16 +59,28 @@ public class UrlService {
         return urlRepository.findAll();
     }
 
-    public Url getByShortUrl(String shortUrl) {
-        return urlRepository.findUrlByShortUrl(shortUrl);
+    public Optional<Url> getByShortUrl(String shortUrl) throws ApiException {
+            return urlRepository.findUrlByShortUrl(shortUrl);
     }
 
-    public String startsWithHttpOrHttpsProtocolLongUrl(String shortUrl) {
-        Url urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl);
-        if (urlByShortUrl.getLongUrl().contains("https://") || urlByShortUrl.getLongUrl().contains("http://")) {
-            return urlByShortUrl.getLongUrl();
+    public String startsWithHttpOrHttpsProtocolLongUrl(String shortUrl) throws NoSuchElementException {
+        Optional<Url> urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl);
+
+        if (urlByShortUrl.get().getLongUrl().contains("https://") ||
+                urlByShortUrl.get().getLongUrl().contains("http://")) {
+            return urlByShortUrl.get().getLongUrl();
         } else {
-            return "https://" + urlByShortUrl.getLongUrl();
+            return "https://" + urlByShortUrl.get().getLongUrl();
+        }
+    }
+
+    public boolean shortUrlExist(String shortUrl) {
+        Optional<Url> urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl);
+
+        if(urlByShortUrl.isPresent()){
+            return true;
+        } else {
+            throw new ApiException("The short url: " + shortUrl + ", does not exist.");
         }
     }
 }
