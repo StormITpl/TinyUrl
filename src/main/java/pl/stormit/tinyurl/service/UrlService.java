@@ -39,6 +39,20 @@ public class UrlService {
         }
         throw new ApiException("Change the request your longUrl is empty!");
     }
+    public Url createShortUrl(UrlDto urlDto) {
+
+        Url urlToSave = new Url();
+        urlToSave.setCreationDate(LocalDate.now());
+        if(longUrlExist(urlDto.getLongUrl())) {
+            urlToSave.setLongUrl(urlDto.getLongUrl());
+        }
+        if(shortUrlExist(urlDto.getShortUrl())) {
+            urlToSave.setShortUrl(urlDto.getShortUrl());
+        }
+        Url urlToReturn = saveShortUrl(urlToSave);
+
+        return urlToReturn;
+    }
 
     private String encodeUrl(String longUrl) {
         LocalDateTime time = LocalDateTime.now();
@@ -74,13 +88,33 @@ public class UrlService {
         }
     }
 
-    public boolean shortUrlExist(String shortUrl) {
+    public boolean shortUrlDoesNotExist(String shortUrl) {
         Optional<Url> urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl);
 
         if(urlByShortUrl.isPresent()){
             return true;
         } else {
             throw new ApiException("The short url: " + shortUrl + ", does not exist.");
+        }
+    }
+
+    public boolean shortUrlExist(String shortUrl) {
+        Optional<Url> urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl);
+
+        if(urlByShortUrl.isPresent()){
+            throw new ApiException("The short url: " + shortUrl + ", exist.");
+        } else {
+            return true;
+        }
+    }
+
+    public boolean longUrlExist(String longUrl) {
+        Optional<Url> urlByLongUrl = urlRepository.findUrlByLongUrl(longUrl);
+
+        if(urlByLongUrl.isPresent()){
+            throw new ApiException("The long url: " + longUrl + ", exist.");
+        } else {
+            return true;
         }
     }
 }
