@@ -39,13 +39,11 @@ public class UrlController {
 
     @GetMapping("/{shortUrl}")
     public ResponseEntity<UrlDto> longUrlRedirect(@PathVariable String shortUrl) throws URISyntaxException {
-        if(urlService.shortUrlExist(shortUrl)) {
-            URI uri = new URI(urlService.startsWithHttpOrHttpsProtocolLongUrl(shortUrl));
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setLocation(uri);
-            return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);
-        }
-        return null;
+        urlService.shortUrlExist(shortUrl);
+        URI uri = new URI(urlService.startsWithHttpOrHttpsProtocolLongUrl(shortUrl));
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(uri);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);
     }
 
 }
