@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
@@ -46,7 +48,7 @@ public class UrlService {
         if(longUrlExist(urlDto.getLongUrl())) {
             urlToSave.setLongUrl(urlDto.getLongUrl());
         }
-        if(shortUrlExist(urlDto.getShortUrl())) {
+        if(shortUrlExist(isShortUrlCorrect(urlDto.getShortUrl()))) {
             urlToSave.setShortUrl(urlDto.getShortUrl());
         }
         Url urlToReturn = saveShortUrl(urlToSave);
@@ -116,5 +118,17 @@ public class UrlService {
         } else {
             return true;
         }
+    }
+
+    public String isShortUrlCorrect(String shortUrl){
+
+        String regex ="^\\w{4,8}$";
+
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(shortUrl);
+        if(m.matches()) {
+            return shortUrl;
+        }
+        throw new ApiException("The short url: " + shortUrl + ", is incorrect.");
     }
 }

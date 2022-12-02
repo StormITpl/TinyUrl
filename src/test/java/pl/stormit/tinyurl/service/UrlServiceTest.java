@@ -114,4 +114,76 @@ class UrlServiceTest {
         //then
         assertThat(result).isEqualTo(expected);
     }
+
+    @Test
+    void shouldPassWhenShortUrlHaveLowerCaseUpperCaseAndDigits(){
+        //given
+        String expected = "aaaAA11";
+
+        //when
+        String result = urlService.isShortUrlCorrect(expected);
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldPassWhenShortUrlOnlyLowerCase(){
+        //given
+        String expected = "aaaaa";
+
+        //when
+        String result = urlService.isShortUrlCorrect(expected);
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldPassWhenShortUrlOnlyUpperCase(){
+        //given
+        String expected = "AAAAAA";
+
+        //when
+        String result = urlService.isShortUrlCorrect(expected);
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldPassWhenShortUrlOnlyDigits(){
+        //given
+        String expected = "012345";
+
+        //when
+        String result = urlService.isShortUrlCorrect(expected);
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldNotPassWhenShortUrlIsTooSort(){
+        //given
+        String expected = "aaa";
+
+        //when
+        String result = urlService.isShortUrlCorrect(expected);
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldNotPassWhenShortUrlIsTooLong(){
+        //given
+        String expected = "aaaaaaaaa";
+
+        //when
+        String result = urlService.isShortUrlCorrect(expected);
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
 }
