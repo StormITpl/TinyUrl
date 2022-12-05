@@ -51,9 +51,8 @@ public class UrlService {
         if(shortUrlExist(isShortUrlCorrect(urlDto.getShortUrl()))) {
             urlToSave.setShortUrl(urlDto.getShortUrl());
         }
-        Url urlToReturn = saveShortUrl(urlToSave);
 
-        return urlToReturn;
+        return saveShortUrl(urlToSave);
     }
 
     private String encodeUrl(String longUrl) {
