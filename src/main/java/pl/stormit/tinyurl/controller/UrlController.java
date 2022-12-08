@@ -8,7 +8,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.dto.UrlDto;
-import pl.stormit.tinyurl.exception.ApiException;
 import pl.stormit.tinyurl.service.UrlService;
 
 import javax.validation.Valid;
@@ -25,12 +24,21 @@ public class UrlController {
     private final UrlService urlService;
 
     @PostMapping
-    public ResponseEntity<UrlDto> createShortUrl(@Valid @RequestBody UrlDto urlDto) {
+    public ResponseEntity<UrlDto> generateShortUrl(@Valid @RequestBody UrlDto urlDto) {
         urlService.generateShortUrl(urlDto);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("message","You have successfully completed the creation of shortUrl");
+        headers.add("message","You have successfully completed the generation of shortUrl");
         return new ResponseEntity<>(urlDto, headers, HttpStatus.CREATED);
     }
+
+    @PostMapping("/add")
+    public ResponseEntity<UrlDto> createShortUrl(@Valid @RequestBody UrlDto urlDto) {
+        urlService.createShortUrl(urlDto);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("message","You have successfully completed the creation of shortUrl for your longUrl");
+        return new ResponseEntity<>(urlDto, headers, HttpStatus.CREATED);
+    }
+
 
     @GetMapping
     public List<Url> getUrls() {
@@ -39,11 +47,12 @@ public class UrlController {
 
     @GetMapping("/{shortUrl}")
     public ResponseEntity<UrlDto> longUrlRedirect(@PathVariable String shortUrl) throws URISyntaxException {
-        urlService.shortUrlExist(shortUrl);
+        urlService.shortUrlDoesNotExist(shortUrl);
         URI uri = new URI(urlService.startsWithHttpOrHttpsProtocolLongUrl(shortUrl));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(uri);
         return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);
     }
+
 
 }
