@@ -1,8 +1,6 @@
 package pl.stormit.tinyurl.controller;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +11,6 @@ import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.service.UrlService;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -27,12 +24,21 @@ public class UrlController {
     private final UrlService urlService;
 
     @PostMapping
-    public ResponseEntity<UrlDto> createShortUrl(@Valid @RequestBody UrlDto urlDto) {
+    public ResponseEntity<UrlDto> generateShortUrl(@Valid @RequestBody UrlDto urlDto) {
         urlService.generateShortUrl(urlDto);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("message","You have successfully completed the creation of shortUrl");
-        return new ResponseEntity<>(urlDto,headers, HttpStatus.CREATED);
+        headers.add("message","You have successfully completed the generation of shortUrl");
+        return new ResponseEntity<>(urlDto, headers, HttpStatus.CREATED);
     }
+
+    @PostMapping("/add")
+    public ResponseEntity<UrlDto> createShortUrl(@Valid @RequestBody UrlDto urlDto) {
+        urlService.createShortUrl(urlDto);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("message","You have successfully completed the creation of shortUrl for your longUrl");
+        return new ResponseEntity<>(urlDto, headers, HttpStatus.CREATED);
+    }
+
 
     @GetMapping
     public List<Url> getUrls() {
@@ -40,10 +46,13 @@ public class UrlController {
     }
 
     @GetMapping("/{shortUrl}")
-    public ResponseEntity<UrlDto> longUrlRedirect(@PathVariable String shortUrl) throws URISyntaxException, IOException, InterruptedException {
-        URI uri = new URI(urlService.startsWithHttpsOrHttpsProtocolLongUrl(shortUrl));
+    public ResponseEntity<UrlDto> longUrlRedirect(@PathVariable String shortUrl) throws URISyntaxException {
+        urlService.shortUrlDoesNotExist(shortUrl);
+        URI uri = new URI(urlService.startsWithHttpOrHttpsProtocolLongUrl(shortUrl));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(uri);
         return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);
     }
+
+
 }

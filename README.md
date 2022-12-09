@@ -8,6 +8,7 @@ TinyUrl – application, which converts the full, long URL into a shortened form
 * [Technologies Used](#technologies-used)
 * [Screenshots](#screenshots)
 * [Prerequisites](#prerequisites)
+* [Setup](#setup)
 * [Authors](#authors)
 
 ## General Information
@@ -39,6 +40,39 @@ The following tools are required to start the application:
 - [Java 18](https://openjdk.org/projects/jdk/18/)
 - [Maven 3.x](https://maven.apache.org/download.cgi),
 - [Docker](https://docs.docker.com/get-docker/)
+
+## Setup
+
+To run this project, please clone this repository and create a local copy on your computer.
+
+After download project configurate your database and db server in few step:
+
+- Create database connection with Docker pasting in command line:
+
+docker run --name postgrestinyurl -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres
+
+- Connect with server:
+
+Login: postgres
+
+Password: password
+
+- Create database in server:
+
+create database db_tinyurl;
+
+Create table:
+
+create table url(
+
+id serial PRIMARY KEY ,
+
+longURL VARCHAR(255) NOT NULL ,
+
+shortURL VARCHAR(16) NOT NULL ,
+
+creationDate DATE NOT NULL DEFAULT CURRENT_DATE
+);
 
 ## Authors
 Created by StormIT community: 

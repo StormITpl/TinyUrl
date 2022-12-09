@@ -9,8 +9,11 @@ import pl.stormit.tinyurl.domain.repository.UrlRepository;
 import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.exception.ApiException;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
@@ -57,5 +60,141 @@ class UrlServiceTest {
         //then
         assertThrows(ApiException.class, () -> urlService.generateShortUrl(urlDto));
         assertThatExceptionOfType(ApiException.class).isThrownBy(() -> urlService.generateShortUrl(urlDto)).withMessage("Change the request your longUrl is empty!");
+    }
+
+    @Test
+    void shouldReturnLongUrlWithoutProtocolWithHttpsProtocol(){
+        //given
+        Url url = new Url("www.cnn.com", "kbn132");
+        urlRepository.save(url);
+
+        //when
+        String result = urlService.startsWithHttpOrHttpsProtocolLongUrl(url.getShortUrl());
+
+        //then
+        String expected = "https://www.cnn.com";
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldReturnLongUrlWithProtocol(){
+        //given
+        Url url = new Url("https://www.cnn.com", "kbn132");
+        urlRepository.save(url);
+
+        //when
+        String result = urlService.startsWithHttpOrHttpsProtocolLongUrl(url.getShortUrl());
+
+        //then
+        String expected = "https://www.cnn.com";
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldReturnUrlByShortUrlWhenLongUrlHasProtocol(){
+        //given
+        Url expected = new Url("https://www.cnn.com", "kbn132");
+        urlRepository.save(expected);
+
+        //when
+
+        //then
+        assertThat(urlRepository.findUrlByShortUrl(expected.getShortUrl()).get()).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldReturnUrlByShortUrlWhenLongUrlHasNoProtocol(){
+        //given
+        Url expected = new Url("www.cnn.com", "kbn132");
+        urlRepository.save(expected);
+
+        //when
+
+        //then
+        assertThat(urlRepository.findUrlByShortUrl(expected.getShortUrl()).get()).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldPassWhenShortUrlHaveLowerCaseUpperCaseAndDigits(){
+        //given
+        String expected = "aaaAA11";
+
+        //when
+        String result = urlService.isShortUrlCorrect(expected);
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldPassWhenShortUrlOnlyLowerCase(){
+        //given
+        String expected = "aaaaa";
+
+        //when
+        String result = urlService.isShortUrlCorrect(expected);
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldPassWhenShortUrlOnlyUpperCase(){
+        //given
+        String expected = "AAAAAA";
+
+        //when
+        String result = urlService.isShortUrlCorrect(expected);
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldPassWhenShortUrlOnlyDigits(){
+        //given
+        String expected = "012345";
+
+        //when
+        String result = urlService.isShortUrlCorrect(expected);
+
+        //then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldNotPassWhenShortUrlIsTooSort(){
+        //given
+        String shortUrl = "aaa";
+
+        //when
+
+        //then
+        assertThrows(ApiException.class, () -> urlService.isShortUrlCorrect(shortUrl));
+        assertThatExceptionOfType(ApiException.class).isThrownBy(() -> urlService.isShortUrlCorrect(shortUrl)).withMessage("The short url: " + shortUrl + ", is incorrect.");
+    }
+
+    @Test
+    void shouldNotPassWhenShortUrlIsTooLong(){
+        //given
+        String shortUrl = "aaaaaaaaa";
+
+        //when
+
+        //then
+        assertThrows(ApiException.class, () -> urlService.isShortUrlCorrect(shortUrl));
+        assertThatExceptionOfType(ApiException.class).isThrownBy(() -> urlService.isShortUrlCorrect(shortUrl)).withMessage("The short url: " + shortUrl + ", is incorrect.");
+    }
+
+    @Test
+    void shouldNotPassWhenShortUrlHasWhiteSpaces(){
+        //given
+        String shortUrl = "aaaa a";
+
+        //when
+
+        //then
+        assertThrows(ApiException.class, () -> urlService.isShortUrlCorrect(shortUrl));
+        assertThatExceptionOfType(ApiException.class).isThrownBy(() -> urlService.isShortUrlCorrect(shortUrl)).withMessage("The short url: " + shortUrl + ", is incorrect.");
     }
 }

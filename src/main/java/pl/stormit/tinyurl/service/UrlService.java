@@ -14,6 +14,10 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
@@ -37,6 +41,19 @@ public class UrlService {
         }
         throw new ApiException("Change the request your longUrl is empty!");
     }
+    public Url createShortUrl(UrlDto urlDto) {
+
+        Url urlToSave = new Url();
+        urlToSave.setCreationDate(LocalDate.now());
+        if(longUrlExist(urlDto.getLongUrl())) {
+            urlToSave.setLongUrl(urlDto.getLongUrl());
+        }
+        if(shortUrlExist(isShortUrlCorrect(urlDto.getShortUrl()))) {
+            urlToSave.setShortUrl(urlDto.getShortUrl());
+        }
+
+        return saveShortUrl(urlToSave);
+    }
 
     private String encodeUrl(String longUrl) {
         LocalDateTime time = LocalDateTime.now();
@@ -57,16 +74,60 @@ public class UrlService {
         return urlRepository.findAll();
     }
 
-    public Url getByShortUrl(String shortUrl) {
-        return urlRepository.findUrlByShortUrl(shortUrl);
+    public Optional<Url> getByShortUrl(String shortUrl) throws ApiException {
+            return urlRepository.findUrlByShortUrl(shortUrl);
     }
 
-    public String startsWithHttpsOrHttpsProtocolLongUrl(String shortUrl){
-        Url urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl);
-        if(urlByShortUrl.getLongUrl().contains("https://") || urlByShortUrl.getLongUrl().contains("http://")){
-            return urlByShortUrl.getLongUrl();
+    public String startsWithHttpOrHttpsProtocolLongUrl(String shortUrl) throws NoSuchElementException {
+        Optional<Url> urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl);
+
+        if (urlByShortUrl.get().getLongUrl().contains("https://") ||
+                urlByShortUrl.get().getLongUrl().contains("http://")) {
+            return urlByShortUrl.get().getLongUrl();
         } else {
-            return "https://" + urlByShortUrl.getLongUrl();
+            return "https://" + urlByShortUrl.get().getLongUrl();
         }
+    }
+
+    public boolean shortUrlDoesNotExist(String shortUrl) {
+        Optional<Url> urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl);
+
+        if(urlByShortUrl.isPresent()){
+            return true;
+        } else {
+            throw new ApiException("The short url: " + shortUrl + ", does not exist.");
+        }
+    }
+
+    public boolean shortUrlExist(String shortUrl) {
+        Optional<Url> urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl);
+
+        if(urlByShortUrl.isPresent()){
+            throw new ApiException("The short url: " + shortUrl + ", exist.");
+        } else {
+            return true;
+        }
+    }
+
+    public boolean longUrlExist(String longUrl) {
+        Optional<Url> urlByLongUrl = urlRepository.findUrlByLongUrl(longUrl);
+
+        if(urlByLongUrl.isPresent()){
+            throw new ApiException("The long url: " + longUrl + ", exist.");
+        } else {
+            return true;
+        }
+    }
+
+    public String isShortUrlCorrect(String shortUrl){
+
+        String regex ="^\\w{4,8}$";
+
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(shortUrl);
+        if(m.matches()) {
+            return shortUrl;
+        }
+        throw new ApiException("The short url: " + shortUrl + ", is incorrect.");
     }
 }

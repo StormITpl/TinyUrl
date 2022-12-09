@@ -10,13 +10,18 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.stormit.tinyurl.domain.model.Url;
+import pl.stormit.tinyurl.domain.repository.UrlRepository;
 import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.service.UrlService;
 
+import java.net.URI;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,6 +32,9 @@ class UrlControllerTest {
     @MockBean
     private UrlService urlService;
 
+    @MockBean
+    private UrlController urlController;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -34,6 +42,13 @@ class UrlControllerTest {
     private ObjectMapper objectMapper;
 
     private UrlDto urlDto;
+
+    private Url url;
+
+    private URI uri;
+
+    @Autowired
+    private UrlRepository urlRepository;
 
     @Test
     void shouldReturnStatusCreatedWhenCreateShortUrlCorrectly() throws Exception {
@@ -97,5 +112,37 @@ class UrlControllerTest {
 
         //then
         result.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldRedirectWhenUrlIsWithoutHttpsOrHttpProtocol() throws Exception {
+        //given
+        urlDto = new UrlDto("www.cnn.com", "kbr345");
+        given(urlService.getByShortUrl("kbr345"))
+                .willReturn(Optional.of(new Url("www.cnn.com", "kbr345")));
+
+        //when
+        ResultActions result = mockMvc.perform(get("/api/v1/urls/kbr345")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlDto))));
+
+        //then
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldRedirectWhenUrlIsWithHttpsOrHttpProtocol() throws Exception {
+        //given
+        urlDto = new UrlDto("https://www.cnn.com", "kbr345");
+        given(urlService.getByShortUrl("kbr345"))
+                .willReturn(Optional.of(new Url("www.cnn.com", "kbr345")));
+
+        //when
+        ResultActions result = mockMvc.perform(get("/api/v1/urls/kbr345")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlDto))));
+
+        //then
+        result.andExpect(status().isOk());
     }
 }
