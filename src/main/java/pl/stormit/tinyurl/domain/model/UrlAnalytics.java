@@ -1,10 +1,14 @@
 package pl.stormit.tinyurl.domain.model;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 @Table (name = "url_analytics")
@@ -16,7 +20,7 @@ public class UrlAnalytics {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @NotBlank
     private Long totalClicks;
