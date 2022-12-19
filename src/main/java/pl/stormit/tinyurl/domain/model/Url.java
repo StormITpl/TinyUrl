@@ -33,6 +33,9 @@ public class Url {
 
     private LocalDate creationDate = LocalDate.now();
 
+    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "url")
+    private UrlAnalytics urlAnalytics;
+
     public Url(Long id, String longUrl, String shortUrl) {
         this.id = id;
         this.longUrl = longUrl;
