@@ -7,6 +7,8 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -22,7 +24,8 @@ public class UrlAnalytics {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    @NotBlank
+    @NotNull
+    @PositiveOrZero
     private Long totalClicks;
 
     private String localization;
