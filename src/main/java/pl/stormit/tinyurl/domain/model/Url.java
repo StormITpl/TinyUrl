@@ -5,23 +5,16 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Table(name = "urls")
 @ToString
 public class Url {
 
+
     @Id
-    @SequenceGenerator(
-            name = "url_sequence",
-            sequenceName = "url_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "url_sequence"
-    )
-    private Long id;
+    private UUID id;
 
     @NotNull
     @Column(nullable = false)
@@ -36,17 +29,17 @@ public class Url {
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "url")
     private UrlAnalytics urlAnalytics;
 
-    public Url(Long id, String longUrl, String shortUrl) {
-        this.id = id;
+    public Url(UUID id, String longUrl, String shortUrl) {
+        this.id = UUID.randomUUID();
         this.longUrl = longUrl;
         this.shortUrl = shortUrl;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -71,9 +64,11 @@ public class Url {
     }
 
     public Url() {
+        this.id = UUID.randomUUID();
     }
 
     public Url(String longUrl, String shortUrl) {
+        this();
         this.longUrl = longUrl;
         this.shortUrl = shortUrl;
     }

@@ -35,13 +35,12 @@ public class UrlService {
             urlToSave.setCreationDate(LocalDate.now());
             urlToSave.setLongUrl(urlDto.getLongUrl());
             urlToSave.setShortUrl(encodedUrl);
-            Url urlToReturn = saveShortUrl(urlToSave);
 
-            return urlToReturn;
+            return saveShortUrl(urlToSave);
         }
         throw new ApiException("Change the request your longUrl is empty!");
     }
-    public Url createShortUrl(UrlDto urlDto) {
+    public void createShortUrl(UrlDto urlDto) {
 
         Url urlToSave = new Url();
         urlToSave.setCreationDate(LocalDate.now());
@@ -52,7 +51,7 @@ public class UrlService {
             urlToSave.setShortUrl(urlDto.getShortUrl());
         }
 
-        return saveShortUrl(urlToSave);
+        saveShortUrl(urlToSave);
     }
 
     private String encodeUrl(String longUrl) {
@@ -66,8 +65,7 @@ public class UrlService {
     }
 
     public Url saveShortUrl(Url url) {
-        Url urlToReturn = urlRepository.save(url);
-        return urlToReturn;
+        return urlRepository.save(url);
     }
 
     public List<Url> getUrls() {
