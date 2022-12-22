@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -15,6 +16,17 @@ import java.util.UUID;
 public class UrlExpiry {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private UUID id;
+
+    @Column(nullable = false)
+    private Instant creationDate = Instant.now();
+
+    private Instant expirationDate;
+
+    @Column(nullable = false)
+    private Boolean isPremium = false;
+
+    @OneToOne
+    private Url url;
 }
