@@ -21,7 +21,7 @@ import java.util.UUID;
 public class UrlAnalytics {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private UUID id;
 
     @NotNull
