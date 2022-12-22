@@ -36,6 +36,9 @@ public class Url {
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "url")
     private UrlAnalytics urlAnalytics;
 
+    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "url")
+    private UrlExpiry urlExpiry;
+
     public Url(Long id, String longUrl, String shortUrl) {
         this.id = id;
         this.longUrl = longUrl;
