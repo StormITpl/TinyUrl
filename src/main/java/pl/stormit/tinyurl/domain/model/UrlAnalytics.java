@@ -22,7 +22,7 @@ public class UrlAnalytics {
 
     @Id
     @GeneratedValue
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
     @NotNull
     @PositiveOrZero

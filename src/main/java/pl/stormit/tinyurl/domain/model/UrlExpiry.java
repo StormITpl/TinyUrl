@@ -17,7 +17,7 @@ public class UrlExpiry {
 
     @Id
     @GeneratedValue
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
     @Column(nullable = false)
     private Instant creationDate = Instant.now();
