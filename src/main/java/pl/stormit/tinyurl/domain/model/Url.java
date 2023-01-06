@@ -1,6 +1,8 @@
 package pl.stormit.tinyurl.domain.model;
 
-import com.sun.istack.NotNull;
+import javax.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -10,9 +12,9 @@ import java.util.UUID;
 @Entity
 @Table(name = "urls")
 @ToString
+@Setter
+@Getter
 public class Url {
-
-
     @Id
     private UUID id;
 
@@ -35,34 +37,6 @@ public class Url {
         this.shortUrl = shortUrl;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getLongUrl() {
-        return longUrl;
-    }
-
-    public void setLongUrl(String longUrl) {
-        this.longUrl = longUrl;
-    }
-
-    public String getShortUrl() {
-        return shortUrl;
-    }
-
-    public void setShortUrl(String shortUrl) {
-        this.shortUrl = shortUrl;
-    }
-
-    public LocalDate getCreationDate() {
-        return creationDate;
-    }
-
     public Url() {
         this.id = UUID.randomUUID();
     }
@@ -71,9 +45,5 @@ public class Url {
         this();
         this.longUrl = longUrl;
         this.shortUrl = shortUrl;
-    }
-
-    public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
     }
 }
