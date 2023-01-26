@@ -1,12 +1,17 @@
 package pl.stormit.tinyurl.domain.model;
 
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -14,8 +19,13 @@ import java.util.UUID;
 @ToString
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Url {
+
     @Id
+    @GeneratedValue
+    @Column(columnDefinition = "uuid")
     private UUID id;
 
     @NotNull
@@ -28,21 +38,11 @@ public class Url {
 
     private LocalDate creationDate = LocalDate.now();
 
-    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "url")
-    private UrlAnalytics urlAnalytics;
-
-    public Url(UUID id, String longUrl, String shortUrl) {
-        this.id = UUID.randomUUID();
-        this.longUrl = longUrl;
-        this.shortUrl = shortUrl;
-    }
-
-    public Url() {
-        this.id = UUID.randomUUID();
-    }
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "url")
+    private List<UrlAnalytics> urlAnalytics;
 
     public Url(String longUrl, String shortUrl) {
-        this();
         this.longUrl = longUrl;
         this.shortUrl = shortUrl;
     }
