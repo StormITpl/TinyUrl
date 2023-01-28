@@ -34,21 +34,24 @@ public class UrlAnalyticsService {
         UUID urlId = url.get().getId();
         UrlAnalytics urlAnalytics = new UrlAnalytics();
         urlAnalytics.setClickDate(Instant.now());
+        urlAnalytics.setTotalClicks(checkClicksAmountOnShortUrl(urlId));
+        urlAnalytics.setUrl(url.get());
 
+        return urlAnalyticsRepository.save(urlAnalytics);
+    }
+
+    private Long checkClicksAmountOnShortUrl(UUID urlId) {
+        Long incMaxClickValue;
         Optional<Long> maxClickValue = urlAnalyticsRepository.findAllByUrlId(urlId).stream()
                 .map(UrlAnalytics::getTotalClicks)
                 .collect(Collectors.maxBy(Comparator.naturalOrder()));
 
         if (maxClickValue.isPresent()) {
-            Long incMaxClickValue = maxClickValue.get().longValue();
+            incMaxClickValue = maxClickValue.get().longValue();
             incMaxClickValue++;
-            urlAnalytics.setTotalClicks(incMaxClickValue);
         } else {
-            Long firstValue = FIRST_CLICK_ON_SHORT_URL;
-            urlAnalytics.setTotalClicks(firstValue);
+            return FIRST_CLICK_ON_SHORT_URL;
         }
-        urlAnalytics.setUrl(url.get());
-
-        return urlAnalyticsRepository.save(urlAnalytics);
+        return incMaxClickValue;
     }
 }
