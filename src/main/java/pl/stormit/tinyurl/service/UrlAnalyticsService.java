@@ -21,6 +21,14 @@ public class UrlAnalyticsService {
 
     private final UrlAnalyticsRepository urlAnalyticsRepository;
 
+    public List<UrlAnalytics> getAnalyticsByUrlId(UUID urlId) {
+        return urlAnalyticsRepository.findAllByUrlId(urlId);
+    }
+
+    public List<UrlAnalytics> getAllAnalytics() {
+        return urlAnalyticsRepository.findAll();
+    }
+
     public UrlAnalytics clickCounter(Optional<Url> url) {
 
         UUID urlId = url.get().getId();
