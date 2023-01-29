@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
+import pl.stormit.tinyurl.exception.ApiException;
 
 import java.time.Instant;
 import java.util.Comparator;
@@ -22,6 +23,9 @@ public class UrlAnalyticsService {
     private final UrlAnalyticsRepository urlAnalyticsRepository;
 
     public List<UrlAnalytics> getAnalyticsByUrlId(UUID urlId) {
+        if(!urlAnalyticsRepository.existsById(urlId)){
+            throw new ApiException("Change the request your id does not exist!");
+        }
         return urlAnalyticsRepository.findAllByUrlId(urlId);
     }
 
