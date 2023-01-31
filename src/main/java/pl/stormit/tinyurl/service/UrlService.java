@@ -79,15 +79,18 @@ public class UrlService {
         return urlRepository.findUrlByShortUrl(shortUrl);
     }
 
-    public String startsWithHttpOrHttpsProtocolLongUrl(String shortUrl) throws NoSuchElementException {
-        Optional<Url> urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl);
+    public String startsWithHttpOrHttpsProtocolLongUrl(String shortUrl) {
+        Url urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl)
+                .orElseThrow(() -> {
+                    throw new ApiException("The short url: " + shortUrl + ", does not exist.");
+                });
         urlAnalyticsService.clickCounter(urlByShortUrl);
 
-        if (urlByShortUrl.get().getLongUrl().contains("https://") ||
-                urlByShortUrl.get().getLongUrl().contains("http://")) {
-            return urlByShortUrl.get().getLongUrl();
+        if (urlByShortUrl.getLongUrl().contains("https://") ||
+                urlByShortUrl.getLongUrl().contains("http://")) {
+            return urlByShortUrl.getLongUrl();
         } else {
-            return "https://" + urlByShortUrl.get().getLongUrl();
+            return "https://" + urlByShortUrl.getLongUrl();
         }
     }
 

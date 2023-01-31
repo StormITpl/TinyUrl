@@ -33,13 +33,13 @@ public class UrlAnalyticsService {
         return urlAnalyticsRepository.findAll();
     }
 
-    public UrlAnalytics clickCounter(Optional<Url> url) {
+    public UrlAnalytics clickCounter(Url url) {
 
-        UUID urlId = url.get().getId();
+        UUID urlId = url.getId();
         UrlAnalytics urlAnalytics = new UrlAnalytics();
         urlAnalytics.setClickDate(Instant.now());
         urlAnalytics.setTotalClicks(checkClicksAmountOnShortUrl(urlId));
-        urlAnalytics.setUrl(url.get());
+        urlAnalytics.setUrl(url);
 
         return urlAnalyticsRepository.save(urlAnalytics);
     }

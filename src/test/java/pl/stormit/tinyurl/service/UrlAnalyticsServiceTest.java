@@ -16,7 +16,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -79,7 +78,7 @@ class UrlAnalyticsServiceTest {
         List<UrlAnalytics> urlAnalyticsList = createListOfAnalytics();
         UrlAnalytics urlAnalytics4 = new UrlAnalytics(ID_4, AMOUNT_OF_CLICKS_4, null, Instant.now(), url);
         when(urlAnalyticsRepository.findAllByUrlId(URL_ID_1)).thenReturn(urlAnalyticsList);
-        given(urlAnalyticsService.clickCounter(Optional.of(url))).willReturn(urlAnalytics4);
+        given(urlAnalyticsService.clickCounter(url)).willReturn(urlAnalytics4);
         List<UrlAnalytics> newList = new ArrayList<>();
 
         //when
