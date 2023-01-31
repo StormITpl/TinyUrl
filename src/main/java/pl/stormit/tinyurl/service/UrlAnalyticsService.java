@@ -8,11 +8,8 @@ import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
 import pl.stormit.tinyurl.exception.ApiException;
 
 import java.time.Instant;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -23,7 +20,7 @@ public class UrlAnalyticsService {
     private final UrlAnalyticsRepository urlAnalyticsRepository;
 
     public List<UrlAnalytics> getAnalyticsByUrlId(UUID urlId) {
-        if(!urlAnalyticsRepository.existsById(urlId)){
+        if (!urlAnalyticsRepository.existsById(urlId)) {
             throw new ApiException("Change the request your id does not exist!");
         }
         return urlAnalyticsRepository.findAllByUrlId(urlId);
@@ -45,17 +42,15 @@ public class UrlAnalyticsService {
     }
 
     private Long checkClicksAmountOnShortUrl(UUID urlId) {
-        Long incMaxClickValue;
-        Optional<Long> maxClickValue = urlAnalyticsRepository.findAllByUrlId(urlId).stream()
-                .map(UrlAnalytics::getTotalClicks)
-                .collect(Collectors.maxBy(Comparator.naturalOrder()));
+        long incMaxClickValue;
+        Long maxClickValue = urlAnalyticsRepository.findMaxClickOnShortUrlByUrlId(urlId);
 
-        if (maxClickValue.isPresent()) {
-            incMaxClickValue = maxClickValue.get().longValue();
-            incMaxClickValue++;
-        } else {
+        if (maxClickValue == null) {
             return FIRST_CLICK_ON_SHORT_URL;
+        } else {
+            incMaxClickValue = maxClickValue.longValue();
+            incMaxClickValue++;
+            return incMaxClickValue;
         }
-        return incMaxClickValue;
     }
 }
