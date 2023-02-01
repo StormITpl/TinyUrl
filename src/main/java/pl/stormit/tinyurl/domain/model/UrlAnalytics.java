@@ -1,28 +1,37 @@
 package pl.stormit.tinyurl.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table (name = "url_analytics")
+@Table(name = "url_analytics")
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class UrlAnalytics {
 
     @Id
     @GeneratedValue
-    private UUID id = UUID.randomUUID();
+    @Column(columnDefinition = "uuid")
+    private UUID id;
 
     @NotNull
     @PositiveOrZero
@@ -30,15 +39,10 @@ public class UrlAnalytics {
 
     private String localization;
 
-    @NotBlank
+    @NotNull
     private Instant clickDate;
 
-    @OneToOne
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     private Url url;
-
-    UrlAnalytics(final Long totalClicks, final String localization, final Instant clickDate) {
-        this.totalClicks = totalClicks;
-        this.localization = localization;
-        this.clickDate = Instant.now();
-    }
 }
