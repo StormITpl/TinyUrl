@@ -1,0 +1,20 @@
+spring:
+  jpa:
+    hibernate.ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+    show-sql: true
+    defer-datasource-initialization: false
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: password
+
+  liquibase:
+    change-log: db/dbchangelog-dev.yaml
+
+server:
+  port: 8989
