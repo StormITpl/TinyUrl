@@ -22,11 +22,11 @@ public class UrlExpiry {
     @Column(nullable = false)
     private Instant creationDate = Instant.now();
 
-    private Instant expirationDate;
+    private Instant expirationDate = creationDate.plusSeconds(1209600);
 
     @Column(nullable = false)
     private Boolean isPremium = false;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Url url;
 }
