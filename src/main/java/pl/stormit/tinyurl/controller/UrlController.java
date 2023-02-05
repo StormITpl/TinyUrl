@@ -8,7 +8,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.dto.UrlDto;
-import pl.stormit.tinyurl.service.UrlExpiryService;
 import pl.stormit.tinyurl.service.UrlService;
 
 import javax.validation.Valid;
@@ -23,12 +22,10 @@ import java.util.List;
 public class UrlController {
 
     private final UrlService urlService;
-    private final UrlExpiryService urlExpiryService;
 
     @PostMapping
     public ResponseEntity<UrlDto> generateShortUrl(@Valid @RequestBody UrlDto urlDto) {
         urlService.generateShortUrl(urlDto);
-        urlExpiryService.createUrlExpiryDate(urlService.generateShortUrl(urlDto));
         HttpHeaders headers = new HttpHeaders();
         headers.add("message","You have successfully completed the generation of shortUrl");
         return new ResponseEntity<>(urlDto, headers, HttpStatus.CREATED);
@@ -37,7 +34,6 @@ public class UrlController {
     @PostMapping("/add")
     public ResponseEntity<UrlDto> createShortUrl(@Valid @RequestBody UrlDto urlDto) {
         urlService.createShortUrl(urlDto);
-        urlExpiryService.createUrlExpiryDate(urlService.createShortUrl(urlDto));
         HttpHeaders headers = new HttpHeaders();
         headers.add("message","You have successfully completed the creation of shortUrl for your longUrl");
         return new ResponseEntity<>(urlDto, headers, HttpStatus.CREATED);

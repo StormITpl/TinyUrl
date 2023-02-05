@@ -14,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,6 +25,8 @@ public class UrlService {
     @Autowired
     private final UrlRepository urlRepository;
 
+    private final UrlExpiryService urlExpiryService;
+
     private final UrlAnalyticsService urlAnalyticsService;
 
     public Url generateShortUrl(UrlDto urlDto) {
@@ -33,13 +34,15 @@ public class UrlService {
         if (!urlDto.getLongUrl().isBlank()) {
 
             Url urlToSave = new Url();
-                String encodedUrl = encodeUrl(urlDto.getLongUrl());
-                urlToSave.setCreationDate(LocalDate.now());
-                urlToSave.setLongUrl(urlDto.getLongUrl());
-                urlToSave.setShortUrl(encodedUrl);
-            if (longUrlExist(urlDto.getLongUrl())) {
-                return urlToSave;
-            }
+
+            String encodedUrl = encodeUrl(urlDto.getLongUrl());
+            urlToSave.setCreationDate(LocalDate.now());
+            urlToSave.setLongUrl(urlDto.getLongUrl());
+            urlToSave.setShortUrl(encodedUrl);
+            urlExpiryService.createUrlExpiryDate(urlToSave);
+
+            return urlToSave;
+
         }
         throw new ApiException("Change the request your longUrl is empty!");
     }
@@ -55,6 +58,7 @@ public class UrlService {
             urlToSave.setShortUrl(urlDto.getShortUrl());
         }
 
+        urlExpiryService.createUrlExpiryDate(urlToSave);
         return urlToSave;
     }
 
