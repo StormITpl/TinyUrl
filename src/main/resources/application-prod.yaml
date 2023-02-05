@@ -1,0 +1,18 @@
+spring:
+  jpa:
+    hibernate.ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+    show-sql: true
+    defer-datasource-initialization: false
+
+  datasource:
+    url:
+
+  liquibase:
+    change-log: db/dbchangelog-prod.yaml
+
+server:
+  port: 8080
