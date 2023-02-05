@@ -33,12 +33,13 @@ public class UrlService {
         if (!urlDto.getLongUrl().isBlank()) {
 
             Url urlToSave = new Url();
-            String encodedUrl = encodeUrl(urlDto.getLongUrl());
-            urlToSave.setCreationDate(LocalDate.now());
-            urlToSave.setLongUrl(urlDto.getLongUrl());
-            urlToSave.setShortUrl(encodedUrl);
-
-            return urlToSave;
+                String encodedUrl = encodeUrl(urlDto.getLongUrl());
+                urlToSave.setCreationDate(LocalDate.now());
+                urlToSave.setLongUrl(urlDto.getLongUrl());
+                urlToSave.setShortUrl(encodedUrl);
+            if (longUrlExist(urlDto.getLongUrl())) {
+                return urlToSave;
+            }
         }
         throw new ApiException("Change the request your longUrl is empty!");
     }
