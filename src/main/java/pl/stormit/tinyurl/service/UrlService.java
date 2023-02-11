@@ -25,8 +25,9 @@ public class UrlService {
     @Autowired
     private final UrlRepository urlRepository;
 
-    private final UrlAnalyticsService urlAnalyticsService;
     private final UrlExpiryService urlExpiryService;
+
+    private final UrlAnalyticsService urlAnalyticsService;
 
 
     public Url generateShortUrl(UrlDto urlDto) {

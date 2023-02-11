@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 @Service
 @AllArgsConstructor
 public class UrlExpiryService {
@@ -33,9 +34,9 @@ public class UrlExpiryService {
         return urlExpiryRepository.save(urlExpiry);
     }
 
-    public UrlExpiry isAccountPremium(UrlExpiry urlExpiry){
+    public UrlExpiry isAccountPremium(UrlExpiry urlExpiry) {
 
-        if(!urlExpiry.getIsPremium()){
+        if (!urlExpiry.getIsPremium()) {
             urlExpiry.setExpirationDate(Instant.now().plusSeconds(20)); //TWO_WEEKS
         }
 
@@ -58,7 +59,7 @@ public class UrlExpiryService {
         List<UrlExpiry> expires = urlExpiryRepository.findAll().stream()
                 .filter(urlExpiry -> urlExpiry.getExpirationDate().isBefore(checkInstant)).toList();
 
-        if(expires.size()>0) {
+        if (expires.size() > 0) {
             logger.log(Level.INFO, "Expiry Short Urls:");
             for (int i = 0; i < expires.size(); i++) {
                 logger.log(Level.INFO, "ID: " + expires.get(i).getUrl().getId() + ", Long Url: " + expires.get(i).getUrl().getLongUrl() + ", Short Url: " + expires.get(i).getUrl().getShortUrl());
@@ -67,3 +68,5 @@ public class UrlExpiryService {
         urlExpiryRepository.deleteAll(expires);
     }
 }
+
+

@@ -1,12 +1,10 @@
 package pl.stormit.tinyurl.domain.model;
 
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
@@ -48,6 +47,7 @@ public class Url {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "url")
     private List<UrlAnalytics> urlAnalytics;
+
 
     @JsonBackReference
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "url")

@@ -28,7 +28,7 @@ public class UrlExpiry {
     @Column(nullable = false)
     private Instant creationDate = Instant.now();
 
-    private Instant expirationDate;
+    private Instant expirationDate = creationDate.plusSeconds(60); //1209600
 
     @Column(nullable = false)
     private Boolean isPremium = false;
