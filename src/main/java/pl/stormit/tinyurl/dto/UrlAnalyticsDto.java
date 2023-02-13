@@ -1,13 +1,17 @@
 package pl.stormit.tinyurl.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.UUID;
 
 @Data
+@AllArgsConstructor
 public class UrlAnalyticsDto {
+
+    private UUID id;
 
     @NotBlank
     private Long totalClicks;
@@ -16,9 +20,4 @@ public class UrlAnalyticsDto {
 
     @NotBlank
     private Instant clickDate;
-
-    private Long urlId;
-
-    @NotNull
-    private String shortUrl;
 }
