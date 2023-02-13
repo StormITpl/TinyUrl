@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
+import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
+import pl.stormit.tinyurl.dto.UrlAnalyticsMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
 import java.time.Instant;
@@ -19,6 +21,8 @@ public class UrlAnalyticsService {
 
     private final UrlAnalyticsRepository urlAnalyticsRepository;
 
+    private final UrlAnalyticsMapper urlAnalyticsMapper;
+
     public List<UrlAnalytics> getAnalyticsByUrlId(UUID urlId) {
         if (!urlAnalyticsRepository.existsById(urlId)) {
             throw new ApiException("Change the request your id does not exist!");
@@ -30,7 +34,7 @@ public class UrlAnalyticsService {
         return urlAnalyticsRepository.findAll();
     }
 
-    public UrlAnalytics clickCounter(Url url) {
+    public UrlAnalyticsDto clickCounter(Url url) {
 
         UUID urlId = url.getId();
         UrlAnalytics urlAnalytics = new UrlAnalytics();
@@ -38,7 +42,7 @@ public class UrlAnalyticsService {
         urlAnalytics.setTotalClicks(checkClicksAmountOnShortUrl(urlId));
         urlAnalytics.setUrl(url);
 
-        return urlAnalyticsRepository.save(urlAnalytics);
+        return urlAnalyticsMapper.mapUrlAnalyticsEntityToUrlAnalyticsDto(urlAnalyticsRepository.save(urlAnalytics));
     }
 
     private Long checkClicksAmountOnShortUrl(UUID urlId) {
