@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
+import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
+import pl.stormit.tinyurl.dto.UrlAnalyticsMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
 import java.time.Instant;
@@ -44,6 +46,9 @@ class UrlAnalyticsServiceTest {
     @MockBean
     private UrlAnalyticsRepository urlAnalyticsRepository;
 
+    @MockBean
+    private UrlAnalyticsMapper urlAnalyticsMapper;
+
     @Test
     void shouldReturnAllAnalytics() {
         //given
@@ -77,8 +82,9 @@ class UrlAnalyticsServiceTest {
         Url url = new Url(URL_ID_1, "www.google.pl", "817a3ec2", null, null);
         List<UrlAnalytics> urlAnalyticsList = createListOfAnalytics();
         UrlAnalytics urlAnalytics4 = new UrlAnalytics(ID_4, AMOUNT_OF_CLICKS_4, null, Instant.now(), url);
+        UrlAnalyticsDto urlAnalyticsDto = new UrlAnalyticsDto(ID_4, AMOUNT_OF_CLICKS_4, null, Instant.now());
         when(urlAnalyticsRepository.findAllByUrlId(URL_ID_1)).thenReturn(urlAnalyticsList);
-        given(urlAnalyticsService.clickCounter(url)).willReturn(urlAnalytics4);
+        when(urlAnalyticsMapper.mapUrlAnalyticsEntityToUrlAnalyticsDto(urlAnalytics4)).thenReturn(urlAnalyticsDto);
         List<UrlAnalytics> newList = new ArrayList<>();
 
         //when

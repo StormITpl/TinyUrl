@@ -55,7 +55,7 @@ class UrlControllerTest {
         //given
         urlDto = new UrlDto("https://www.google.pl/", "");
         when(urlService.generateShortUrl(urlDto))
-                .thenReturn(new Url("https://www.google.pl/", ""));
+                .thenReturn(new UrlDto("https://www.google.pl/", ""));
 
         //when
         ResultActions result = mockMvc.perform(post("/api/v1/urls")
@@ -71,7 +71,7 @@ class UrlControllerTest {
         //given
         urlDto = new UrlDto(null, "");
         when(urlService.generateShortUrl(any()))
-                .thenReturn(new Url(null, ""));
+                .thenReturn(new UrlDto(null, ""));
 
         //when
         ResultActions result = mockMvc.perform(post("/api/v1/urls")
@@ -87,7 +87,7 @@ class UrlControllerTest {
         //given
         urlDto = new UrlDto("", "");
         when(urlService.generateShortUrl(any()))
-                .thenReturn(new Url("", ""));
+                .thenReturn(new UrlDto("", ""));
 
         //when
         ResultActions result = mockMvc.perform(post("/api/v1/urls")
@@ -103,7 +103,7 @@ class UrlControllerTest {
         //given
         urlDto = new UrlDto("     ", "");
         when(urlService.generateShortUrl(any()))
-                .thenReturn(new Url("     ", ""));
+                .thenReturn(new UrlDto("     ", ""));
 
         //when
         ResultActions result = mockMvc.perform(post("/api/v1/urls")

@@ -3,72 +3,99 @@ package pl.stormit.tinyurl.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.repository.UrlRepository;
 import pl.stormit.tinyurl.dto.UrlDto;
+import pl.stormit.tinyurl.dto.UrlMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
+import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Transactional
 class UrlServiceTest {
 
-    @Autowired
+    public static final UUID ID_1 = UUID.fromString("0175650a-a076-11ed-a8fc-0242ac120002");
+
+    @MockBean
     private UrlRepository urlRepository;
 
     @Autowired
     private UrlService urlService;
 
+    @MockBean
+    private UrlMapper urlMapper;
+
     @Test
     void shouldCreateShortUrlCorrectly() {
         // given
-        UrlDto urlDTO = new UrlDto("http://www.google.com", "");
+        Url url = new Url(ID_1, "https://www.google.com", "yr49u12", LocalDate.now(), null);
+        UrlDto createdUrlDto = new UrlDto("https://www.google.com", "yr49u12");
+        UrlDto urlDto = new UrlDto("https://www.google.com", "yr49u12");
+
 
         // when
-        Url result = urlService.generateShortUrl(urlDTO);
+        when(urlRepository.save(any(Url.class))).thenReturn(url);
+        when(urlMapper.mapUrlEntityToUrlDto(url)).thenReturn(urlDto);
+        UrlDto returnUrl = urlService.generateShortUrl(createdUrlDto);
 
         // then
-        assertThat(result).isEqualTo(urlRepository.getById(result.getId()));
+        assertEquals(url.getShortUrl(), returnUrl.getShortUrl());
+        assertEquals(url.getLongUrl(), returnUrl.getLongUrl());
     }
 
     @Test
-    void shouldThrowAnExceptionWhenLongUrlIsEmpty() throws Exception {
+    void shouldThrowAnExceptionWhenLongUrlIsEmpty() {
         //given
+        Url url = new Url(ID_1, "", "", LocalDate.now(), null);
+        UrlDto createdUrlDto = new UrlDto("", "");
         UrlDto urlDto = new UrlDto("", "");
 
         //when
+        when(urlRepository.save(any(Url.class))).thenReturn(url);
+        when(urlMapper.mapUrlEntityToUrlDto(url)).thenReturn(urlDto);
 
         //then
-        assertThrows(ApiException.class, () -> urlService.generateShortUrl(urlDto));
-        assertThatExceptionOfType(ApiException.class).isThrownBy(() -> urlService.generateShortUrl(urlDto)).withMessage("Change the request your longUrl is empty!");
+        assertThrows(ApiException.class, () -> urlService.generateShortUrl(createdUrlDto));
+        assertThatExceptionOfType(ApiException.class)
+                .isThrownBy(() -> urlService.generateShortUrl(createdUrlDto)).withMessage("Change the request your longUrl is empty!");
     }
 
     @Test
-    void shouldThrowAnExceptionWhenOnlyWhiteSpacesInLongUrl() throws Exception {
+    void shouldThrowAnExceptionWhenOnlyWhiteSpacesInLongUrl() {
         //given
-        UrlDto urlDto = new UrlDto("     ", "");
+        Url url = new Url(ID_1, "   ", "", LocalDate.now(), null);
+        UrlDto createdUrlDto = new UrlDto("    ", "");
+        UrlDto urlDto = new UrlDto("   ", "");
 
         //when
+        when(urlRepository.save(any(Url.class))).thenReturn(url);
+        when(urlMapper.mapUrlEntityToUrlDto(url)).thenReturn(urlDto);
 
         //then
-        assertThrows(ApiException.class, () -> urlService.generateShortUrl(urlDto));
-        assertThatExceptionOfType(ApiException.class).isThrownBy(() -> urlService.generateShortUrl(urlDto)).withMessage("Change the request your longUrl is empty!");
+        assertThrows(ApiException.class, () -> urlService.generateShortUrl(createdUrlDto));
+        assertThatExceptionOfType(ApiException.class)
+                .isThrownBy(() -> urlService.generateShortUrl(createdUrlDto)).withMessage("Change the request your longUrl is empty!");
     }
 
     @Test
-    void shouldReturnLongUrlWithoutProtocolWithHttpsProtocol(){
+    void shouldReturnLongUrlWithoutProtocolWithHttpsProtocol() {
         //given
         Url url = new Url("www.cnn.com", "kbn132");
-        urlRepository.save(url);
 
         //when
+        when(urlRepository.findUrlByShortUrl(any())).thenReturn(Optional.of(url));
         String result = urlService.startsWithHttpOrHttpsProtocolLongUrl(url.getShortUrl());
 
         //then
@@ -77,12 +104,12 @@ class UrlServiceTest {
     }
 
     @Test
-    void shouldReturnLongUrlWithProtocol(){
+    void shouldReturnLongUrlWithProtocol() {
         //given
         Url url = new Url("https://www.cnn.com", "kbn132");
-        urlRepository.save(url);
 
         //when
+        when(urlRepository.findUrlByShortUrl(any())).thenReturn(Optional.of(url));
         String result = urlService.startsWithHttpOrHttpsProtocolLongUrl(url.getShortUrl());
 
         //then
@@ -91,31 +118,31 @@ class UrlServiceTest {
     }
 
     @Test
-    void shouldReturnUrlByShortUrlWhenLongUrlHasProtocol(){
+    void shouldReturnUrlByShortUrlWhenLongUrlHasProtocol() {
         //given
         Url expected = new Url("https://www.cnn.com", "kbn132");
-        urlRepository.save(expected);
 
         //when
+        when(urlRepository.findUrlByShortUrl(any())).thenReturn(Optional.of(expected));
 
         //then
         assertThat(urlRepository.findUrlByShortUrl(expected.getShortUrl()).get()).isEqualTo(expected);
     }
 
     @Test
-    void shouldReturnUrlByShortUrlWhenLongUrlHasNoProtocol(){
+    void shouldReturnUrlByShortUrlWhenLongUrlHasNoProtocol() {
         //given
         Url expected = new Url("www.cnn.com", "kbn132");
-        urlRepository.save(expected);
 
         //when
+        when(urlRepository.findUrlByShortUrl(any())).thenReturn(Optional.of(expected));
 
         //then
         assertThat(urlRepository.findUrlByShortUrl(expected.getShortUrl()).get()).isEqualTo(expected);
     }
 
     @Test
-    void shouldPassWhenShortUrlHaveLowerCaseUpperCaseAndDigits(){
+    void shouldPassWhenShortUrlHaveLowerCaseUpperCaseAndDigits() {
         //given
         String expected = "aaaAA11";
 
@@ -127,7 +154,7 @@ class UrlServiceTest {
     }
 
     @Test
-    void shouldPassWhenShortUrlOnlyLowerCase(){
+    void shouldPassWhenShortUrlOnlyLowerCase() {
         //given
         String expected = "aaaaa";
 
@@ -139,7 +166,7 @@ class UrlServiceTest {
     }
 
     @Test
-    void shouldPassWhenShortUrlOnlyUpperCase(){
+    void shouldPassWhenShortUrlOnlyUpperCase() {
         //given
         String expected = "AAAAAA";
 
@@ -151,7 +178,7 @@ class UrlServiceTest {
     }
 
     @Test
-    void shouldPassWhenShortUrlOnlyDigits(){
+    void shouldPassWhenShortUrlOnlyDigits() {
         //given
         String expected = "012345";
 
@@ -163,7 +190,7 @@ class UrlServiceTest {
     }
 
     @Test
-    void shouldNotPassWhenShortUrlIsTooSort(){
+    void shouldNotPassWhenShortUrlIsTooSort() {
         //given
         String shortUrl = "aaa";
 
@@ -175,7 +202,7 @@ class UrlServiceTest {
     }
 
     @Test
-    void shouldNotPassWhenShortUrlIsTooLong(){
+    void shouldNotPassWhenShortUrlIsTooLong() {
         //given
         String shortUrl = "aaaaaaaaa";
 
@@ -187,7 +214,7 @@ class UrlServiceTest {
     }
 
     @Test
-    void shouldNotPassWhenShortUrlHasWhiteSpaces(){
+    void shouldNotPassWhenShortUrlHasWhiteSpaces() {
         //given
         String shortUrl = "aaaa a";
 
