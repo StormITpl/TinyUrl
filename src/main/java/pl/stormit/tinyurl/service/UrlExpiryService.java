@@ -16,11 +16,9 @@ import java.util.logging.Logger;
 
 @Service
 @AllArgsConstructor
-public class UrlExpiryService {
+public class UrlExpiryService implements UrlExpiryInterface {
 
     private final UrlExpiryRepository urlExpiryRepository;
-
-    private final static int TWO_WEEKS = 1209600;
 
 
     public UrlExpiry createUrlExpiryDate(Url url) {
@@ -38,33 +36,43 @@ public class UrlExpiryService {
 
         if (!urlExpiry.getIsPremium()) {
             urlExpiry.setExpirationDate(Instant.now().plusSeconds(20)); //TWO_WEEKS
+            return urlExpiry;
+        } else {
+            urlExpiry.setIsPremium(true);
+            urlExpiry.setExpirationDate(null);
+            return urlExpiry;
         }
-
-        return urlExpiry;
     }
 
     public List<UrlExpiry> getAllExpiries() {
         return urlExpiryRepository.findAll();
     }
 
-    @Scheduled(fixedDelay = 15000)
-    public void deleteExpiredDateUrls() {
+    public List<UrlExpiry> getAllExpiredUrls(){
+        Instant checkInstant = Instant.now();
+        return urlExpiryRepository.findAll().stream()
+                .filter(urlExpiry -> urlExpiry.getExpirationDate().isBefore(checkInstant)).toList();
+    }
 
+    public void printExpiredUrlsToDelete(List<UrlExpiry> expires){
         Logger logger = Logger.getLogger(getClass().getName());
 
         logger.log(Level.INFO, "Start searching expired urls");
 
-        Instant checkInstant = Instant.now();
-
-        List<UrlExpiry> expires = urlExpiryRepository.findAll().stream()
-                .filter(urlExpiry -> urlExpiry.getExpirationDate().isBefore(checkInstant)).toList();
-
         if (expires.size() > 0) {
             logger.log(Level.INFO, "Expiry Short Urls:");
-            for (int i = 0; i < expires.size(); i++) {
-                logger.log(Level.INFO, "ID: " + expires.get(i).getUrl().getId() + ", Long Url: " + expires.get(i).getUrl().getLongUrl() + ", Short Url: " + expires.get(i).getUrl().getShortUrl());
+            for (UrlExpiry expire : expires) {
+                logger.log(Level.INFO, "ID: " + expire.getUrl().getId() + ", Long Url: " + expire.getUrl().getLongUrl() + ", Short Url: " + expire.getUrl().getShortUrl());
             }
         }
+    }
+
+    @Scheduled(fixedDelay = 15000)
+    public void deleteExpiredDateUrls() {
+        List<UrlExpiry> expires = getAllExpiredUrls();
+
+        printExpiredUrlsToDelete(expires);
+
         urlExpiryRepository.deleteAll(expires);
     }
 }

@@ -1,6 +1,8 @@
 package pl.stormit.tinyurl.domain.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -18,6 +20,8 @@ import java.util.UUID;
 @Table(name = "url_expiry")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class UrlExpiry {
 
