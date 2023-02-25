@@ -20,7 +20,6 @@ public class UrlExpiryService implements UrlExpiryInterface {
 
     private final UrlExpiryRepository urlExpiryRepository;
 
-
     public UrlExpiry createUrlExpiryDate(Url url) {
 
         UrlExpiry urlExpiry = new UrlExpiry();
@@ -44,9 +43,9 @@ public class UrlExpiryService implements UrlExpiryInterface {
         }
     }
 
-    public List<UrlExpiry> getAllExpiries() {
+    public List<UrlExpiry> getAllExpires() {
         return urlExpiryRepository.findAll();
-    }
+    } //OK
 
     public List<UrlExpiry> getAllExpiredUrls(){
         Instant checkInstant = Instant.now();

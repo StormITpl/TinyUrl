@@ -19,8 +19,8 @@ public class UrlExpiryController {
     private final UrlExpiryService urlExpiryService;
 
     @GetMapping
-    public ResponseEntity<List<UrlExpiry>> getAllExpiries() {
-        List<UrlExpiry> urlExpiryList = urlExpiryService.getAllExpiries();
+    public ResponseEntity<List<UrlExpiry>> getAllExpires() {
+        List<UrlExpiry> urlExpiryList = urlExpiryService.getAllExpires();
         return new ResponseEntity<>(urlExpiryList, HttpStatus.OK);
     }
 }
