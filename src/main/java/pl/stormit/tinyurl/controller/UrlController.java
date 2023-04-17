@@ -10,6 +10,7 @@ import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.service.UrlService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -46,9 +47,9 @@ public class UrlController {
     }
 
     @GetMapping("/{shortUrl}")
-    public ResponseEntity<UrlDto> longUrlRedirect(@PathVariable String shortUrl) throws URISyntaxException {
+    public ResponseEntity<UrlDto> longUrlRedirect(@PathVariable String shortUrl, HttpServletRequest servletRequest) throws URISyntaxException {
         urlService.shortUrlDoesNotExist(shortUrl);
-        URI uri = new URI(urlService.startsWithHttpOrHttpsProtocolLongUrl(shortUrl));
+        URI uri = new URI(urlService.startsWithHttpOrHttpsProtocolLongUrl(shortUrl, servletRequest));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(uri);
         return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);
