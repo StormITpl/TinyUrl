@@ -1,5 +1,11 @@
 package pl.stormit.tinyurl.service;
 
+import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.exception.GeoIp2Exception;
+import com.maxmind.geoip2.model.CityResponse;
+import com.maxmind.geoip2.record.City;
+import com.maxmind.geoip2.record.Country;
+import com.maxmind.geoip2.record.Subdivision;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.stormit.tinyurl.domain.model.Url;
@@ -9,6 +15,10 @@ import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
 import pl.stormit.tinyurl.dto.UrlAnalyticsMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -56,5 +66,31 @@ public class UrlAnalyticsService {
             incMaxClickValue++;
             return incMaxClickValue;
         }
+    }
+
+    public UrlAnalyticsDto ipLocalization(Url url, HttpServletRequest servletRequest){
+
+        UrlAnalytics urlAnalytics = new UrlAnalytics();
+        String addressIp = servletRequest.getRemoteAddr();
+        getIpLocalization(addressIp);
+
+        return urlAnalyticsMapper.mapUrlAnalyticsEntityToUrlAnalyticsDto(urlAnalyticsRepository.save(urlAnalytics));
+    }
+
+    private String getIpLocalization(String addressIp) throws IOException, GeoIp2Exception {
+
+        File database;
+        database = new File("src/main/resources/localizationdb/GeoLite2-City.mmdb");
+        DatabaseReader reader = new DatabaseReader.Builder(database).build();
+
+        InetAddress ipAddress = InetAddress.getByName(addressIp);
+
+        CityResponse response = reader.city(ipAddress);
+
+        Country country = response.getCountry();
+        Subdivision subdivision = response.getMostSpecificSubdivision();
+        City city = response.getCity();
+
+        return null;
     }
 }
