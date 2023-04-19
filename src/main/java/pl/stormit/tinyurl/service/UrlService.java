@@ -16,7 +16,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -84,8 +83,7 @@ public class UrlService {
                 .orElseThrow(() -> {
                     throw new ApiException("The short url: " + shortUrl + ", does not exist.");
                 });
-        urlAnalyticsService.clickCounter(urlByShortUrl);
-        urlAnalyticsService.ipLocalization(urlByShortUrl, servletRequest);
+        urlAnalyticsService.setAnalitycsData(urlByShortUrl, servletRequest);
 
         if (urlByShortUrl.getLongUrl().contains("https://") ||
                 urlByShortUrl.getLongUrl().contains("http://")) {
