@@ -81,8 +81,10 @@ class UrlAnalyticsServiceTest {
         //given
         Url url = new Url(URL_ID_1, "www.google.pl", "817a3ec2", null, null);
         List<UrlAnalytics> urlAnalyticsList = createListOfAnalytics();
-        UrlAnalytics urlAnalytics4 = new UrlAnalytics(ID_4, AMOUNT_OF_CLICKS_4, null, Instant.now(), url);
-        UrlAnalyticsDto urlAnalyticsDto = new UrlAnalyticsDto(ID_4, AMOUNT_OF_CLICKS_4, null, Instant.now());
+        UrlAnalytics urlAnalytics4 = new UrlAnalytics
+                (ID_4, AMOUNT_OF_CLICKS_4, "Poland", "PL", "Gdansk", Instant.now(), url);
+        UrlAnalyticsDto urlAnalyticsDto = new UrlAnalyticsDto
+                (ID_4, AMOUNT_OF_CLICKS_4, "Poland", "PL", "Gdansk", Instant.now());
         when(urlAnalyticsRepository.findAllByUrlId(URL_ID_1)).thenReturn(urlAnalyticsList);
         when(urlAnalyticsMapper.mapUrlAnalyticsEntityToUrlAnalyticsDto(urlAnalytics4)).thenReturn(urlAnalyticsDto);
         List<UrlAnalytics> newList = new ArrayList<>();
@@ -99,9 +101,12 @@ class UrlAnalyticsServiceTest {
 
     private List<UrlAnalytics> createListOfAnalytics() {
         Url url = new Url(URL_ID_1, "www.google.pl", "817a3ec2", null, null);
-        UrlAnalytics urlAnalytics1 = new UrlAnalytics(ID_1, AMOUNT_OF_CLICKS_1, null, Instant.now(), url);
-        UrlAnalytics urlAnalytics2 = new UrlAnalytics(ID_2, AMOUNT_OF_CLICKS_2, null, Instant.now(), url);
-        UrlAnalytics urlAnalytics3 = new UrlAnalytics(ID_3, AMOUNT_OF_CLICKS_3, null, Instant.now(), url);
+        UrlAnalytics urlAnalytics1 = new UrlAnalytics
+                (ID_1, AMOUNT_OF_CLICKS_1, "Poland", "PL", "Warsaw", Instant.now(), url);
+        UrlAnalytics urlAnalytics2 = new UrlAnalytics
+                (ID_2, AMOUNT_OF_CLICKS_2, "United States", "US", "Los Angeles", Instant.now(), url);
+        UrlAnalytics urlAnalytics3 = new UrlAnalytics
+                (ID_3, AMOUNT_OF_CLICKS_3, "Poland", "PL", "Cracow", Instant.now(), url);
 
         return List.of(urlAnalytics1, urlAnalytics2, urlAnalytics3);
     }
