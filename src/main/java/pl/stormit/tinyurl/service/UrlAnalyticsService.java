@@ -3,15 +3,13 @@ package pl.stormit.tinyurl.service;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
-import com.maxmind.geoip2.record.City;
-import com.maxmind.geoip2.record.Country;
-import com.maxmind.geoip2.record.Subdivision;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
 import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
+import pl.stormit.tinyurl.dto.UrlAnalyticsLocalizationDto;
 import pl.stormit.tinyurl.dto.UrlAnalyticsMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
@@ -44,15 +42,20 @@ public class UrlAnalyticsService {
         return urlAnalyticsRepository.findAll();
     }
 
-    public UrlAnalyticsDto clickCounter(Url url) {
+    public void setAnalitycsData(Url url, HttpServletRequest servletRequest) {
+
+        String addressIp = servletRequest.getRemoteAddr();
 
         UUID urlId = url.getId();
         UrlAnalytics urlAnalytics = new UrlAnalytics();
         urlAnalytics.setClickDate(Instant.now());
         urlAnalytics.setTotalClicks(checkClicksAmountOnShortUrl(urlId));
+        urlAnalytics.setCountryLocalization(getIpLocalization(addressIp).getCountryLocalization());
+        urlAnalytics.setCountryLocalization(getIpLocalization(addressIp).getIsoCode());
+        urlAnalytics.setCityLocalization(getIpLocalization(addressIp).getCityLocalization());
         urlAnalytics.setUrl(url);
 
-        return urlAnalyticsMapper.mapUrlAnalyticsEntityToUrlAnalyticsDto(urlAnalyticsRepository.save(urlAnalytics));
+        urlAnalyticsMapper.mapUrlAnalyticsEntityToUrlAnalyticsDto(urlAnalyticsRepository.save(urlAnalytics));
     }
 
     private Long checkClicksAmountOnShortUrl(UUID urlId) {
