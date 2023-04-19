@@ -71,29 +71,27 @@ public class UrlAnalyticsService {
         }
     }
 
-    public UrlAnalyticsDto ipLocalization(Url url, HttpServletRequest servletRequest){
+    private UrlAnalyticsLocalizationDto getIpLocalization(String addressIp) {
 
-        UrlAnalytics urlAnalytics = new UrlAnalytics();
-        String addressIp = servletRequest.getRemoteAddr();
-        getIpLocalization(addressIp);
+        String countryName = null;
+        String isoCode = null;
+        String cityName = null;
 
-        return urlAnalyticsMapper.mapUrlAnalyticsEntityToUrlAnalyticsDto(urlAnalyticsRepository.save(urlAnalytics));
-    }
+        try {
+            InetAddress ipAddress = InetAddress.getByName(addressIp);
 
-    private String getIpLocalization(String addressIp) throws IOException, GeoIp2Exception {
+            DatabaseReader database = new DatabaseReader.
+                    Builder(new File("src/main/resources/localizationdb/GeoLite2-City.mmdb")).build();
+            CityResponse response = database.city(ipAddress);
 
-        File database;
-        database = new File("src/main/resources/localizationdb/GeoLite2-City.mmdb");
-        DatabaseReader reader = new DatabaseReader.Builder(database).build();
+            countryName = response.getCountry().getName();
+            isoCode = response.getCountry().getIsoCode();
+            cityName = response.getCity().getName();
 
-        InetAddress ipAddress = InetAddress.getByName(addressIp);
+        } catch (IOException | GeoIp2Exception e) {
+            e.printStackTrace();
+        }
 
-        CityResponse response = reader.city(ipAddress);
-
-        Country country = response.getCountry();
-        Subdivision subdivision = response.getMostSpecificSubdivision();
-        City city = response.getCity();
-
-        return null;
+        return new UrlAnalyticsLocalizationDto(countryName, isoCode, cityName);
     }
 }
