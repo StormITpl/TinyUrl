@@ -71,7 +71,7 @@ public class UrlAnalyticsService {
         }
     }
 
-    private UrlAnalyticsLocalizationDto getIpLocalization(String addressIp) {
+    public UrlAnalyticsLocalizationDto getIpLocalization(String addressIp) {
 
         String countryName = null;
         String isoCode = null;

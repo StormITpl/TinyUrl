@@ -11,6 +11,7 @@ import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
 import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
+import pl.stormit.tinyurl.dto.UrlAnalyticsLocalizationDto;
 import pl.stormit.tinyurl.dto.UrlAnalyticsMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
@@ -97,6 +98,34 @@ class UrlAnalyticsServiceTest {
 
         //then
         assertEquals(urlAnalytics4.getTotalClicks(), newList.get(3).getTotalClicks());
+    }
+
+    @Test
+    void shouldReturnLocalizationValueWhenIpAddressFoundCorrectly() {
+        //given
+        String ipAddress = "95.160.156.244";
+
+        //when
+        UrlAnalyticsLocalizationDto response = urlAnalyticsService.getIpLocalization(ipAddress);
+
+        //then
+        assertEquals(response.getCityLocalization(), "Warsaw");
+        assertEquals(response.getCountryLocalization(), "Poland");
+        assertEquals(response.getIsoCode(), "PL");
+    }
+
+    @Test
+    void shouldReturnNullWhenAddressIpIsInvalid() {
+        //given
+        String ipAddress = "Invalid";
+
+        //when
+        UrlAnalyticsLocalizationDto response = urlAnalyticsService.getIpLocalization(ipAddress);
+
+        //then
+        assertNull(response.getCityLocalization());
+        assertNull(response.getCountryLocalization());
+        assertNull(response.getIsoCode());
     }
 
     private List<UrlAnalytics> createListOfAnalytics() {
