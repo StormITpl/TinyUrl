@@ -44,6 +44,9 @@ class UrlAnalyticsServiceTest {
     @Autowired
     private UrlAnalyticsService urlAnalyticsService;
 
+    @Autowired
+    private IpLocalizationService ipLocalizationService;
+
     @MockBean
     private UrlAnalyticsRepository urlAnalyticsRepository;
 
@@ -106,7 +109,7 @@ class UrlAnalyticsServiceTest {
         String ipAddress = "95.160.156.244";
 
         //when
-        UrlAnalyticsLocalizationDto response = urlAnalyticsService.getIpLocalization(ipAddress);
+        UrlAnalyticsLocalizationDto response = ipLocalizationService.getIpLocalization(ipAddress);
 
         //then
         assertEquals(response.getCityLocalization(), "Warsaw");
@@ -120,7 +123,7 @@ class UrlAnalyticsServiceTest {
         String ipAddress = "Invalid";
 
         //when
-        UrlAnalyticsLocalizationDto response = urlAnalyticsService.getIpLocalization(ipAddress);
+        UrlAnalyticsLocalizationDto response = ipLocalizationService.getIpLocalization(ipAddress);
 
         //then
         assertNull(response.getCityLocalization());

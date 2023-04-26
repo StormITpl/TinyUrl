@@ -1,22 +1,15 @@
 package pl.stormit.tinyurl.service;
 
-import com.maxmind.geoip2.DatabaseReader;
-import com.maxmind.geoip2.exception.GeoIp2Exception;
-import com.maxmind.geoip2.model.CityResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
-import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
 import pl.stormit.tinyurl.dto.UrlAnalyticsLocalizationDto;
 import pl.stormit.tinyurl.dto.UrlAnalyticsMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.net.InetAddress;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +23,8 @@ public class UrlAnalyticsService {
     private final UrlAnalyticsRepository urlAnalyticsRepository;
 
     private final UrlAnalyticsMapper urlAnalyticsMapper;
+
+    private IpLocalizationService ipLocalization;
 
     public List<UrlAnalytics> getAnalyticsByUrlId(UUID urlId) {
         if (!urlAnalyticsRepository.existsById(urlId)) {
@@ -46,13 +41,15 @@ public class UrlAnalyticsService {
 
         String addressIp = servletRequest.getRemoteAddr();
 
+        UrlAnalyticsLocalizationDto analyticsLocalizationDto = ipLocalization.getIpLocalization(addressIp);
+
         UUID urlId = url.getId();
         UrlAnalytics urlAnalytics = new UrlAnalytics();
         urlAnalytics.setClickDate(Instant.now());
         urlAnalytics.setTotalClicks(checkClicksAmountOnShortUrl(urlId));
-        urlAnalytics.setCountryLocalization(getIpLocalization(addressIp).getCountryLocalization());
-        urlAnalytics.setCountryLocalization(getIpLocalization(addressIp).getIsoCode());
-        urlAnalytics.setCityLocalization(getIpLocalization(addressIp).getCityLocalization());
+        urlAnalytics.setCountryLocalization(analyticsLocalizationDto.getCountryLocalization());
+        urlAnalytics.setIsoCode(analyticsLocalizationDto.getIsoCode());
+        urlAnalytics.setCityLocalization(analyticsLocalizationDto.getCityLocalization());
         urlAnalytics.setUrl(url);
 
         urlAnalyticsMapper.mapUrlAnalyticsEntityToUrlAnalyticsDto(urlAnalyticsRepository.save(urlAnalytics));
@@ -69,29 +66,5 @@ public class UrlAnalyticsService {
             incMaxClickValue++;
             return incMaxClickValue;
         }
-    }
-
-    public UrlAnalyticsLocalizationDto getIpLocalization(String addressIp) {
-
-        String countryName = null;
-        String isoCode = null;
-        String cityName = null;
-
-        try {
-            InetAddress ipAddress = InetAddress.getByName(addressIp);
-
-            DatabaseReader database = new DatabaseReader.
-                    Builder(new File("src/main/resources/localizationdb/GeoLite2-City.mmdb")).build();
-            CityResponse response = database.city(ipAddress);
-
-            countryName = response.getCountry().getName();
-            isoCode = response.getCountry().getIsoCode();
-            cityName = response.getCity().getName();
-
-        } catch (IOException | GeoIp2Exception e) {
-            e.printStackTrace();
-        }
-
-        return new UrlAnalyticsLocalizationDto(countryName, isoCode, cityName);
     }
 }
