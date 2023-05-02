@@ -1,6 +1,7 @@
 package pl.stormit.tinyurl.service;
 
 import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.exception.AddressNotFoundException;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
 import org.springframework.stereotype.Service;
@@ -15,25 +16,27 @@ public class IpLocalizationService {
 
     public UrlAnalyticsLocalizationDto getIpLocalization(String addressIp) {
 
-        String countryName = null;
-        String isoCode = null;
-        String cityName = null;
+        InetAddress ipAddress;
+        UrlAnalyticsLocalizationDto setLocalization = new UrlAnalyticsLocalizationDto(null, null, null);
 
         try {
-            InetAddress ipAddress = InetAddress.getByName(addressIp);
+            ipAddress = InetAddress.getByName(addressIp);
 
             DatabaseReader database = new DatabaseReader.
                     Builder(new File("src/main/resources/localizationdb/GeoLite2-City.mmdb")).build();
             CityResponse response = database.city(ipAddress);
 
-            countryName = response.getCountry().getName();
-            isoCode = response.getCountry().getIsoCode();
-            cityName = response.getCity().getName();
+            if (response != null) {
+                setLocalization.setCountryLocalization(response.getCountry().getName());
+                setLocalization.setIsoCode(response.getCountry().getIsoCode());
+                setLocalization.setCityLocalization(response.getCity().getName());
+            } else {
+                throw new AddressNotFoundException("Failed to get location for IP address: " + addressIp);
+            }
 
         } catch (IOException | GeoIp2Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to get location for IP address: " + addressIp, e);
         }
-
-        return new UrlAnalyticsLocalizationDto(countryName, isoCode, cityName);
+        return setLocalization;
     }
 }
