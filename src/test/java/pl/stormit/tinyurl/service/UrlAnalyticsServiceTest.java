@@ -18,12 +18,12 @@ import pl.stormit.tinyurl.exception.ApiException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
@@ -123,12 +123,12 @@ class UrlAnalyticsServiceTest {
         String ipAddress = "Invalid";
 
         //when
-        UrlAnalyticsLocalizationDto response = ipLocalizationService.getIpLocalization(ipAddress);
 
         //then
-        assertNull(response.getCityLocalization());
-        assertNull(response.getCountryLocalization());
-        assertNull(response.getIsoCode());
+        assertThrows(RuntimeException.class, () -> ipLocalizationService.getIpLocalization(ipAddress));
+        Assertions.assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> ipLocalizationService.getIpLocalization(ipAddress))
+                .withMessageContaining("Failed to get location");
     }
 
     private List<UrlAnalytics> createListOfAnalytics() {
