@@ -14,16 +14,18 @@ import java.net.InetAddress;
 @Service
 public class IpLocalizationService {
 
+    public static final String LOCALIZATION_DB_GEO_LITE = "src/main/resources/localizationdb/GeoLite2-City.mmdb";
+
     public UrlAnalyticsLocalizationDto getIpLocalization(String addressIp) {
 
         InetAddress ipAddress;
-        UrlAnalyticsLocalizationDto setLocalization = new UrlAnalyticsLocalizationDto(null, null, null);
+        UrlAnalyticsLocalizationDto setLocalization = new UrlAnalyticsLocalizationDto();
 
         try {
             ipAddress = InetAddress.getByName(addressIp);
 
             DatabaseReader database = new DatabaseReader.
-                    Builder(new File("src/main/resources/localizationdb/GeoLite2-City.mmdb")).build();
+                    Builder(new File(LOCALIZATION_DB_GEO_LITE)).build();
             CityResponse response = database.city(ipAddress);
 
             if (response != null) {

@@ -12,4 +12,10 @@ public class UrlAnalyticsLocalizationDto {
     private String isoCode;
 
     private String cityLocalization;
+
+    public UrlAnalyticsLocalizationDto() {
+        this.countryLocalization = "";
+        this.isoCode = "";
+        this.cityLocalization = "";
+    }
 }
