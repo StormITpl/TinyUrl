@@ -37,7 +37,11 @@ public class UrlAnalytics {
     @PositiveOrZero
     private Long totalClicks;
 
-    private String localization;
+    private String countryLocalization;
+
+    private String isoCode;
+
+    private String cityLocalization;
 
     @NotNull
     private Instant clickDate;

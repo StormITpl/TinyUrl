@@ -11,18 +11,19 @@ import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
 import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
+import pl.stormit.tinyurl.dto.UrlAnalyticsLocalizationDto;
 import pl.stormit.tinyurl.dto.UrlAnalyticsMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
@@ -42,6 +43,9 @@ class UrlAnalyticsServiceTest {
 
     @Autowired
     private UrlAnalyticsService urlAnalyticsService;
+
+    @Autowired
+    private IpLocalizationService ipLocalizationService;
 
     @MockBean
     private UrlAnalyticsRepository urlAnalyticsRepository;
@@ -81,8 +85,10 @@ class UrlAnalyticsServiceTest {
         //given
         Url url = new Url(URL_ID_1, "www.google.pl", "817a3ec2", null, null);
         List<UrlAnalytics> urlAnalyticsList = createListOfAnalytics();
-        UrlAnalytics urlAnalytics4 = new UrlAnalytics(ID_4, AMOUNT_OF_CLICKS_4, null, Instant.now(), url);
-        UrlAnalyticsDto urlAnalyticsDto = new UrlAnalyticsDto(ID_4, AMOUNT_OF_CLICKS_4, null, Instant.now());
+        UrlAnalytics urlAnalytics4 = new UrlAnalytics
+                (ID_4, AMOUNT_OF_CLICKS_4, "Poland", "PL", "Gdansk", Instant.now(), url);
+        UrlAnalyticsDto urlAnalyticsDto = new UrlAnalyticsDto
+                (ID_4, AMOUNT_OF_CLICKS_4, "Poland", "PL", "Gdansk", Instant.now());
         when(urlAnalyticsRepository.findAllByUrlId(URL_ID_1)).thenReturn(urlAnalyticsList);
         when(urlAnalyticsMapper.mapUrlAnalyticsEntityToUrlAnalyticsDto(urlAnalytics4)).thenReturn(urlAnalyticsDto);
         List<UrlAnalytics> newList = new ArrayList<>();
@@ -97,11 +103,42 @@ class UrlAnalyticsServiceTest {
         assertEquals(urlAnalytics4.getTotalClicks(), newList.get(3).getTotalClicks());
     }
 
+    @Test
+    void shouldReturnLocalizationValueWhenIpAddressFoundCorrectly() {
+        //given
+        String ipAddress = "95.160.156.244";
+
+        //when
+        UrlAnalyticsLocalizationDto response = ipLocalizationService.getIpLocalization(ipAddress);
+
+        //then
+        assertEquals(response.getCityLocalization(), "Warsaw");
+        assertEquals(response.getCountryLocalization(), "Poland");
+        assertEquals(response.getIsoCode(), "PL");
+    }
+
+    @Test
+    void shouldReturnNullWhenAddressIpIsInvalid() {
+        //given
+        String ipAddress = "Invalid";
+
+        //when
+
+        //then
+        assertThrows(RuntimeException.class, () -> ipLocalizationService.getIpLocalization(ipAddress));
+        Assertions.assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> ipLocalizationService.getIpLocalization(ipAddress))
+                .withMessageContaining("Failed to get location");
+    }
+
     private List<UrlAnalytics> createListOfAnalytics() {
         Url url = new Url(URL_ID_1, "www.google.pl", "817a3ec2", null, null);
-        UrlAnalytics urlAnalytics1 = new UrlAnalytics(ID_1, AMOUNT_OF_CLICKS_1, null, Instant.now(), url);
-        UrlAnalytics urlAnalytics2 = new UrlAnalytics(ID_2, AMOUNT_OF_CLICKS_2, null, Instant.now(), url);
-        UrlAnalytics urlAnalytics3 = new UrlAnalytics(ID_3, AMOUNT_OF_CLICKS_3, null, Instant.now(), url);
+        UrlAnalytics urlAnalytics1 = new UrlAnalytics
+                (ID_1, AMOUNT_OF_CLICKS_1, "Poland", "PL", "Warsaw", Instant.now(), url);
+        UrlAnalytics urlAnalytics2 = new UrlAnalytics
+                (ID_2, AMOUNT_OF_CLICKS_2, "United States", "US", "Los Angeles", Instant.now(), url);
+        UrlAnalytics urlAnalytics3 = new UrlAnalytics
+                (ID_3, AMOUNT_OF_CLICKS_3, "Poland", "PL", "Cracow", Instant.now(), url);
 
         return List.of(urlAnalytics1, urlAnalytics2, urlAnalytics3);
     }
