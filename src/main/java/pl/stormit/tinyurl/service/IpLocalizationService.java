@@ -18,6 +18,9 @@ public class IpLocalizationService {
 
     public UrlAnalyticsLocalizationDto getIpLocalization(String addressIp) {
 
+        String country;
+        String isoCode;
+        String city;
         InetAddress ipAddress;
         UrlAnalyticsLocalizationDto setLocalization = new UrlAnalyticsLocalizationDto();
 
@@ -27,11 +30,14 @@ public class IpLocalizationService {
             DatabaseReader database = new DatabaseReader.
                     Builder(new File(LOCALIZATION_DB_GEO_LITE)).build();
             CityResponse response = database.city(ipAddress);
+            country = response.getCountry().getName();
+            isoCode = response.getCountry().getIsoCode();
+            city = response.getCity().getName();
 
-            if (response != null) {
-                setLocalization.setCountryLocalization(response.getCountry().getName());
-                setLocalization.setIsoCode(response.getCountry().getIsoCode());
-                setLocalization.setCityLocalization(response.getCity().getName());
+            if (country != null && isoCode != null && city != null) {
+                setLocalization.setCountryLocalization(country);
+                setLocalization.setIsoCode(isoCode);
+                setLocalization.setCityLocalization(city);
             } else {
                 throw new AddressNotFoundException("Failed to get location for IP address: " + addressIp);
             }
