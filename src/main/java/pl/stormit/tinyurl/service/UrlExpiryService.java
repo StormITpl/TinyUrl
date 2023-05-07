@@ -1,56 +1,60 @@
 package pl.stormit.tinyurl.service;
 
-
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlExpiry;
 import pl.stormit.tinyurl.domain.repository.UrlExpiryRepository;
+import pl.stormit.tinyurl.domain.repository.UrlRepository;
+import pl.stormit.tinyurl.dto.UrlExpiryDto;
+import pl.stormit.tinyurl.dto.UrlExpiryMapper;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 @Service
 @AllArgsConstructor
 public class UrlExpiryService implements UrlExpiryInterface {
 
     private final UrlExpiryRepository urlExpiryRepository;
+    private final UrlExpiryMapper urlExpiryMapper;
 
-    public UrlExpiry createUrlExpiryDate(Url url) {
+    public UrlExpiryDto createUrlExpiryDate(Url url) {
 
-        UrlExpiry urlExpiry = new UrlExpiry();
-
-        isAccountPremium(urlExpiry);
-
-        urlExpiry.setUrl(url);
-
-        return urlExpiryRepository.save(urlExpiry);
+            UrlExpiry urlExpiry = new UrlExpiry();
+            isAccountPremium(urlExpiry);
+            urlExpiry.setUrl(url);
+            return urlExpiryMapper.mapUrlExpiryEntityToUrlExpiryDto(urlExpiryRepository.save(urlExpiry));
     }
 
-    public UrlExpiry isAccountPremium(UrlExpiry urlExpiry) {
+    @Override
+    public boolean isAccountPremium(UrlExpiry urlExpiry) {
 
         if (!urlExpiry.getIsPremium()) {
-            urlExpiry.setExpirationDate(Instant.now().plusSeconds(20)); //TWO_WEEKS
-            return urlExpiry;
+            urlExpiry.setIsPremium(false);
+            urlExpiry.setExpirationDate(Instant.now().plusSeconds(TWO_WEEKS));
+            return false;
         } else {
             urlExpiry.setIsPremium(true);
             urlExpiry.setExpirationDate(null);
-            return urlExpiry;
+            return true;
         }
     }
 
-    public List<UrlExpiry> getAllExpires() {
-        return urlExpiryRepository.findAll();
-    } //OK
+    public List<UrlExpiryDto> getAllExpires() {
+        return urlExpiryRepository.findAll().stream()
+                .map(urlExpiryMapper::mapUrlExpiryEntityToUrlExpiryDto)
+                .toList();
+    }
 
     public List<UrlExpiry> getAllExpiredUrls(){
         Instant checkInstant = Instant.now();
         return urlExpiryRepository.findAll().stream()
-                .filter(urlExpiry -> urlExpiry.getExpirationDate().isBefore(checkInstant)).toList();
+                .filter(urlExpiry -> Objects.nonNull(urlExpiry.getExpirationDate()) && urlExpiry.getExpirationDate().isBefore(checkInstant)).toList();
     }
 
     public void printExpiredUrlsToDelete(List<UrlExpiry> expires){
@@ -74,6 +78,7 @@ public class UrlExpiryService implements UrlExpiryInterface {
 
         urlExpiryRepository.deleteAll(expires);
     }
+
 }
 
 

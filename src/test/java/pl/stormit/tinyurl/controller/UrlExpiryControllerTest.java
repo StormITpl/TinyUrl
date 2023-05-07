@@ -12,13 +12,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import pl.stormit.tinyurl.domain.model.Url;
-import pl.stormit.tinyurl.domain.model.UrlExpiry;
+import pl.stormit.tinyurl.dto.UrlExpiryDto;
 import pl.stormit.tinyurl.service.UrlExpiryService;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -36,14 +35,15 @@ class UrlExpiryControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+
     @Test
     void getAllExpires() throws Exception {
         //given
-        List<UrlExpiry> urlExpiryList = listOfUrlExpiry();
+        List<UrlExpiryDto> urlExpiryList = listOfUrlExpiry();
         given(urlExpiryService.getAllExpires()).willReturn(urlExpiryList);
 
         //when
-        ResultActions result = mockMvc.perform(get("/api/v1/expiry")
+        ResultActions result = mockMvc.perform(get("/api/v1/expires")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlExpiryList))));
         //then
@@ -51,14 +51,29 @@ class UrlExpiryControllerTest {
         result.andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(3));
     }
 
-    private List<UrlExpiry> listOfUrlExpiry() {
-        Url url1 = new Url("www.storimit.pl", "abc123");
+    private List<UrlExpiryDto> listOfUrlExpiry() {
+        Url url1 = new Url("www.stormit.pl", "abc123");
         Url url2 = new Url("www.facebook.pl", "def456");
         Url url3 = new Url("www.google.pl", "ghi789");
-        UrlExpiry urlExpiry1 = new UrlExpiry(UUID.randomUUID(), Instant.now(), Instant.now().plusSeconds(500), false, url1);
-        UrlExpiry urlExpiry2 = new UrlExpiry(UUID.randomUUID(), Instant.now(), Instant.now().plusSeconds(20), true, url2);
-        UrlExpiry urlExpiry3 = new UrlExpiry(UUID.randomUUID(), Instant.now(), Instant.now().minusSeconds(20), false, url3);
 
-        return List.of(urlExpiry1, urlExpiry2, urlExpiry3);
+        UrlExpiryDto urlExpiryDto1 = new UrlExpiryDto();
+        urlExpiryDto1.setShortUrl(url1.getShortUrl());
+        urlExpiryDto1.setCreationDate(Instant.now());
+        urlExpiryDto1.setExpirationDate(Instant.now().plusSeconds(500));
+        urlExpiryDto1.setIsPremium(false);
+
+        UrlExpiryDto urlExpiryDto2 = new UrlExpiryDto();
+        urlExpiryDto2.setShortUrl(url2.getShortUrl());
+        urlExpiryDto2.setCreationDate(Instant.now());
+        urlExpiryDto2.setExpirationDate(Instant.now().plusSeconds(20));
+        urlExpiryDto2.setIsPremium(true);
+
+        UrlExpiryDto urlExpiryDto3 = new UrlExpiryDto();
+        urlExpiryDto3.setShortUrl(url3.getShortUrl());
+        urlExpiryDto3.setCreationDate(Instant.now());
+        urlExpiryDto3.setExpirationDate(Instant.now().minusSeconds(20));
+        urlExpiryDto3.setIsPremium(false);
+
+        return List.of(urlExpiryDto1, urlExpiryDto2, urlExpiryDto3);
     }
 }

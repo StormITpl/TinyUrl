@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.repository.UrlRepository;
 import pl.stormit.tinyurl.dto.UrlDto;
+import pl.stormit.tinyurl.dto.UrlMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
 import java.nio.charset.StandardCharsets;
@@ -29,26 +30,25 @@ public class UrlService {
 
     private final UrlAnalyticsService urlAnalyticsService;
 
+    private final UrlMapper urlMapper;
 
-    public Url generateShortUrl(UrlDto urlDto) {
+    public UrlDto generateShortUrl(UrlDto urlDto) {
 
         if (!urlDto.getLongUrl().isBlank()) {
 
             Url urlToSave = new Url();
-
             String encodedUrl = encodeUrl(urlDto.getLongUrl());
             urlToSave.setCreationDate(LocalDate.now());
             urlToSave.setLongUrl(urlDto.getLongUrl());
             urlToSave.setShortUrl(encodedUrl);
+            Url savedUrl = urlRepository.save(urlToSave);
             urlExpiryService.createUrlExpiryDate(urlToSave);
-
-            return urlToSave;
-
+            return urlMapper.mapUrlEntityToUrlDto(savedUrl);
         }
         throw new ApiException("Change the request your longUrl is empty!");
     }
 
-    public Url createShortUrl(UrlDto urlDto) {
+    public UrlDto createShortUrl(UrlDto urlDto) {
 
         Url urlToSave = new Url();
         urlToSave.setCreationDate(LocalDate.now());
@@ -58,9 +58,9 @@ public class UrlService {
         if (shortUrlExist(isShortUrlCorrect(urlDto.getShortUrl()))) {
             urlToSave.setShortUrl(urlDto.getShortUrl());
         }
-
+        Url savedUrl = urlRepository.save(urlToSave);
         urlExpiryService.createUrlExpiryDate(urlToSave);
-        return urlToSave;
+        return urlMapper.mapUrlEntityToUrlDto(savedUrl);
     }
 
     private String encodeUrl(String longUrl) {
