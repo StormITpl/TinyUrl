@@ -34,7 +34,7 @@ public class UrlService {
     private final UrlMapper urlMapper;
 
     public UrlDto generateShortUrl(UrlDto urlDto) {
-
+        longUrlExist(urlDto.getLongUrl());
         if (!urlDto.getLongUrl().isBlank()) {
 
             Url urlToSave = new Url();
@@ -50,7 +50,7 @@ public class UrlService {
     }
 
     public UrlDto createShortUrl(UrlDto urlDto) {
-
+        longUrlExist(urlDto.getLongUrl());
         Url urlToSave = new Url();
         urlToSave.setCreationDate(LocalDate.now());
         if (longUrlExist(urlDto.getLongUrl())) {
