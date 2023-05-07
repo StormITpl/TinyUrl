@@ -5,10 +5,11 @@ import org.springframework.stereotype.Service;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
-import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
+import pl.stormit.tinyurl.dto.UrlAnalyticsLocalizationDto;
 import pl.stormit.tinyurl.dto.UrlAnalyticsMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -23,6 +24,8 @@ public class UrlAnalyticsService {
 
     private final UrlAnalyticsMapper urlAnalyticsMapper;
 
+    private IpLocalizationService ipLocalization;
+
     public List<UrlAnalytics> getAnalyticsByUrlId(UUID urlId) {
         if (!urlAnalyticsRepository.existsById(urlId)) {
             throw new ApiException("Change the request your id does not exist!");
@@ -34,15 +37,26 @@ public class UrlAnalyticsService {
         return urlAnalyticsRepository.findAll();
     }
 
-    public UrlAnalyticsDto clickCounter(Url url) {
+
+
+    public void setAnalitycsData(Url url, HttpServletRequest servletRequest) {
+
+        String addressIp = servletRequest.getRemoteAddr();
+
+        UrlAnalyticsLocalizationDto analyticsLocalizationDto = ipLocalization.getIpLocalization(addressIp);
+
 
         UUID urlId = url.getId();
         UrlAnalytics urlAnalytics = new UrlAnalytics();
         urlAnalytics.setClickDate(Instant.now());
         urlAnalytics.setTotalClicks(checkClicksAmountOnShortUrl(urlId));
+        urlAnalytics.setCountryLocalization(analyticsLocalizationDto.getCountryLocalization());
+        urlAnalytics.setIsoCode(analyticsLocalizationDto.getIsoCode());
+        urlAnalytics.setCityLocalization(analyticsLocalizationDto.getCityLocalization());
         urlAnalytics.setUrl(url);
 
-        return urlAnalyticsMapper.mapUrlAnalyticsEntityToUrlAnalyticsDto(urlAnalyticsRepository.save(urlAnalytics));
+
+        urlAnalyticsMapper.mapUrlAnalyticsEntityToUrlAnalyticsDto(urlAnalyticsRepository.save(urlAnalytics));
     }
 
     private Long checkClicksAmountOnShortUrl(UUID urlId) {

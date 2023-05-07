@@ -11,6 +11,7 @@ import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.dto.UrlMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,7 +30,7 @@ public class UrlService {
     private final UrlExpiryService urlExpiryService;
 
     private final UrlAnalyticsService urlAnalyticsService;
-
+    
     private final UrlMapper urlMapper;
 
     public UrlDto generateShortUrl(UrlDto urlDto) {
@@ -73,10 +74,6 @@ public class UrlService {
         return encodedUrl;
     }
 
-    public Url saveShortUrl(Url url) {
-        return urlRepository.save(url);
-    }
-
     public List<Url> getUrls() {
         return urlRepository.findAll();
     }
@@ -85,12 +82,12 @@ public class UrlService {
         return urlRepository.findUrlByShortUrl(shortUrl);
     }
 
-    public String startsWithHttpOrHttpsProtocolLongUrl(String shortUrl) {
+    public String startsWithHttpOrHttpsProtocolLongUrl(String shortUrl, HttpServletRequest servletRequest) {
         Url urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl)
                 .orElseThrow(() -> {
                     throw new ApiException("The short url: " + shortUrl + ", does not exist.");
                 });
-        urlAnalyticsService.clickCounter(urlByShortUrl);
+        urlAnalyticsService.setAnalitycsData(urlByShortUrl, servletRequest);
 
         if (urlByShortUrl.getLongUrl().contains("https://") ||
                 urlByShortUrl.getLongUrl().contains("http://")) {

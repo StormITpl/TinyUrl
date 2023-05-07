@@ -16,7 +16,11 @@ public class UrlAnalyticsDto {
     @NotBlank
     private Long totalClicks;
 
-    private String localization;
+    private String countryLocalization;
+
+    private String isoCode;
+
+    private String cityLocalization;
 
     @NotBlank
     private Instant clickDate;

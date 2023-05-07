@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.transaction.annotation.Transactional;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.repository.UrlRepository;
@@ -93,10 +94,11 @@ class UrlServiceTest {
     void shouldReturnLongUrlWithoutProtocolWithHttpsProtocol() {
         //given
         Url url = new Url("www.cnn.com", "kbn132");
+        MockHttpServletRequest servletRequest = new MockHttpServletRequest();
 
         //when
         when(urlRepository.findUrlByShortUrl(any())).thenReturn(Optional.of(url));
-        String result = urlService.startsWithHttpOrHttpsProtocolLongUrl(url.getShortUrl());
+        String result = urlService.startsWithHttpOrHttpsProtocolLongUrl(url.getShortUrl(), servletRequest);
 
         //then
         String expected = "https://www.cnn.com";
@@ -108,9 +110,12 @@ class UrlServiceTest {
         //given
         Url url = new Url("https://www.cnn.com", "kbn132");
 
+        MockHttpServletRequest servletRequest = new MockHttpServletRequest();
+
         //when
         when(urlRepository.findUrlByShortUrl(any())).thenReturn(Optional.of(url));
-        String result = urlService.startsWithHttpOrHttpsProtocolLongUrl(url.getShortUrl());
+        String result = urlService.startsWithHttpOrHttpsProtocolLongUrl(url.getShortUrl(), servletRequest);
+
 
         //then
         String expected = "https://www.cnn.com";

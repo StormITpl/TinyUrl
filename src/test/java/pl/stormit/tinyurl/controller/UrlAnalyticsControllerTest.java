@@ -114,9 +114,12 @@ class UrlAnalyticsControllerTest {
 
     private List<UrlAnalytics> createListOfAnalytics() {
         Url url = new Url("www.google.pl", "817a3ec2");
-        UrlAnalytics urlAnalytics1 = new UrlAnalytics(ID_1, AMOUNT_OF_CLICKS_1, null, Instant.now(), url);
-        UrlAnalytics urlAnalytics2 = new UrlAnalytics(ID_2, AMOUNT_OF_CLICKS_2, null, Instant.now(), url);
-        UrlAnalytics urlAnalytics3 = new UrlAnalytics(ID_3, AMOUNT_OF_CLICKS_3, null, Instant.now(), url);
+        UrlAnalytics urlAnalytics1 = new UrlAnalytics
+                (ID_1, AMOUNT_OF_CLICKS_1, "Poland", "PL", "Warsaw", Instant.now(), url);
+        UrlAnalytics urlAnalytics2 = new UrlAnalytics
+                (ID_2, AMOUNT_OF_CLICKS_2, "United States", "US", "Los Angeles", Instant.now(), url);
+        UrlAnalytics urlAnalytics3 = new UrlAnalytics
+                (ID_3, AMOUNT_OF_CLICKS_3, "Poland", "PL", "Cracow", Instant.now(), url);
 
         return List.of(urlAnalytics1, urlAnalytics2, urlAnalytics3);
     }
