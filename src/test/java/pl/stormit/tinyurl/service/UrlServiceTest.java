@@ -12,7 +12,6 @@ import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.dto.UrlMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,7 +41,7 @@ class UrlServiceTest {
     @Test
     void shouldCreateShortUrlCorrectly() {
         // given
-        Url url = new Url(ID_1, "https://www.google.com", "yr49u12", LocalDate.now(), null);
+        Url url = new Url(ID_1, "https://www.google.com", "yr49u12", LocalDate.now(), null, null);
         UrlDto createdUrlDto = new UrlDto("https://www.google.com", "yr49u12");
         UrlDto urlDto = new UrlDto("https://www.google.com", "yr49u12");
 
@@ -60,7 +59,7 @@ class UrlServiceTest {
     @Test
     void shouldThrowAnExceptionWhenLongUrlIsEmpty() {
         //given
-        Url url = new Url(ID_1, "", "", LocalDate.now(), null);
+        Url url = new Url(ID_1, "", "", LocalDate.now(), null, null);
         UrlDto createdUrlDto = new UrlDto("", "");
         UrlDto urlDto = new UrlDto("", "");
 
@@ -77,7 +76,7 @@ class UrlServiceTest {
     @Test
     void shouldThrowAnExceptionWhenOnlyWhiteSpacesInLongUrl() {
         //given
-        Url url = new Url(ID_1, "   ", "", LocalDate.now(), null);
+        Url url = new Url(ID_1, "   ", "", LocalDate.now(), null, null);
         UrlDto createdUrlDto = new UrlDto("    ", "");
         UrlDto urlDto = new UrlDto("   ", "");
 
@@ -110,11 +109,13 @@ class UrlServiceTest {
     void shouldReturnLongUrlWithProtocol() {
         //given
         Url url = new Url("https://www.cnn.com", "kbn132");
+
         MockHttpServletRequest servletRequest = new MockHttpServletRequest();
 
         //when
         when(urlRepository.findUrlByShortUrl(any())).thenReturn(Optional.of(url));
         String result = urlService.startsWithHttpOrHttpsProtocolLongUrl(url.getShortUrl(), servletRequest);
+
 
         //then
         String expected = "https://www.cnn.com";

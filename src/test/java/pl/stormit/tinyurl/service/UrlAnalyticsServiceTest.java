@@ -83,8 +83,9 @@ class UrlAnalyticsServiceTest {
     @Test
     void shouldCountedAmountOfClicksForShortUrl() {
         //given
-        Url url = new Url(URL_ID_1, "www.google.pl", "817a3ec2", null, null);
+        Url url = new Url(URL_ID_1, "www.google.pl", "817a3ec2", null, null, null);
         List<UrlAnalytics> urlAnalyticsList = createListOfAnalytics();
+
         UrlAnalytics urlAnalytics4 = new UrlAnalytics
                 (ID_4, AMOUNT_OF_CLICKS_4, "Poland", "PL", "Gdansk", Instant.now(), url);
         UrlAnalyticsDto urlAnalyticsDto = new UrlAnalyticsDto
@@ -132,7 +133,7 @@ class UrlAnalyticsServiceTest {
     }
 
     private List<UrlAnalytics> createListOfAnalytics() {
-        Url url = new Url(URL_ID_1, "www.google.pl", "817a3ec2", null, null);
+        Url url = new Url(URL_ID_1, "www.google.pl", "817a3ec2", null, null, null);
         UrlAnalytics urlAnalytics1 = new UrlAnalytics
                 (ID_1, AMOUNT_OF_CLICKS_1, "Poland", "PL", "Warsaw", Instant.now(), url);
         UrlAnalytics urlAnalytics2 = new UrlAnalytics

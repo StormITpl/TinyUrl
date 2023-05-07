@@ -37,11 +37,14 @@ public class UrlAnalyticsService {
         return urlAnalyticsRepository.findAll();
     }
 
+
+
     public void setAnalitycsData(Url url, HttpServletRequest servletRequest) {
 
         String addressIp = servletRequest.getRemoteAddr();
 
         UrlAnalyticsLocalizationDto analyticsLocalizationDto = ipLocalization.getIpLocalization(addressIp);
+
 
         UUID urlId = url.getId();
         UrlAnalytics urlAnalytics = new UrlAnalytics();
@@ -51,6 +54,7 @@ public class UrlAnalyticsService {
         urlAnalytics.setIsoCode(analyticsLocalizationDto.getIsoCode());
         urlAnalytics.setCityLocalization(analyticsLocalizationDto.getCityLocalization());
         urlAnalytics.setUrl(url);
+
 
         urlAnalyticsMapper.mapUrlAnalyticsEntityToUrlAnalyticsDto(urlAnalyticsRepository.save(urlAnalytics));
     }
