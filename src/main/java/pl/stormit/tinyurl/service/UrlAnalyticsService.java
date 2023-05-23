@@ -1,13 +1,16 @@
 package pl.stormit.tinyurl.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
-import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
+import pl.stormit.tinyurl.domain.repository.UrlRepository;
 import pl.stormit.tinyurl.dto.UrlAnalyticsLocalizationDto;
 import pl.stormit.tinyurl.dto.UrlAnalyticsMapper;
+import pl.stormit.tinyurl.dto.UrlDto;
+import pl.stormit.tinyurl.dto.UrlMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +26,11 @@ public class UrlAnalyticsService {
 
     private final UrlAnalyticsRepository urlAnalyticsRepository;
 
+    private final UrlRepository urlRepository;
+
     private final UrlAnalyticsMapper urlAnalyticsMapper;
+
+    private final UrlMapper urlMapper;
 
     private IpLocalizationService ipLocalization;
 
@@ -69,7 +76,10 @@ public class UrlAnalyticsService {
         }
     }
 
-    public List<UrlAnalyticsDto[]> getMostPopularUrls() {
-        return urlAnalyticsRepository.findMostPopularUrls();
+    public List<UrlDto> findMostPopularUrls() {
+        PageRequest pageRequest = PageRequest.of(0, 3);
+        return urlRepository.findMostPopularUrls(pageRequest).stream()
+                .map(urlMapper::mapUrlEntityToUrlDto)
+                .toList();
     }
 }

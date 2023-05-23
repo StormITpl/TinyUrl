@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
-import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
+import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.service.UrlAnalyticsService;
 
 import javax.validation.constraints.NotNull;
@@ -35,11 +35,14 @@ public class UrlAnalyticsController {
         return new ResponseEntity<>(urlAnalyticsDtoList, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<UrlAnalyticsDto[]>> getMostPopularUrls() {
-        List<UrlAnalyticsDto[]> mostPopularUrlsList = urlAnalyticsService.getMostPopularUrls();
+    @GetMapping("/most-popular")
+    public ResponseEntity<List<UrlDto>> getMostPopularUrls() {
+
+        List<UrlDto> mostPopularUrlsList = urlAnalyticsService.findMostPopularUrls();
+
         HttpHeaders headers = new HttpHeaders();
         headers.add("message", "The most popular URL's has been successfully found");
+
         return new ResponseEntity<>(mostPopularUrlsList, headers, HttpStatus.OK);
     }
 }
