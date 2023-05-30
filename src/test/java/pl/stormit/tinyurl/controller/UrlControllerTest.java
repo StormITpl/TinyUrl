@@ -53,9 +53,9 @@ class UrlControllerTest {
     @Test
     void shouldReturnStatusCreatedWhenCreateShortUrlCorrectly() throws Exception {
         //given
-        urlDto = new UrlDto("https://www.google.pl/", "");
+        urlDto = new UrlDto("https://www.google.pl/", "", null);
         when(urlService.generateShortUrl(urlDto))
-                .thenReturn(new UrlDto("https://www.google.pl/", ""));
+                .thenReturn(new UrlDto("https://www.google.pl/", "", null));
 
         //when
         ResultActions result = mockMvc.perform(post("/api/v1/urls")
@@ -69,9 +69,9 @@ class UrlControllerTest {
     @Test
     void shouldThrowAnExceptionWhenLongUrlIsNull() throws Exception {
         //given
-        urlDto = new UrlDto(null, "");
+        urlDto = new UrlDto(null, "", null);
         when(urlService.generateShortUrl(any()))
-                .thenReturn(new UrlDto(null, ""));
+                .thenReturn(new UrlDto(null, "", null));
 
         //when
         ResultActions result = mockMvc.perform(post("/api/v1/urls")
@@ -85,9 +85,9 @@ class UrlControllerTest {
     @Test
     void shouldThrowAnExceptionWhenLongUrlIsEmpty() throws Exception {
         //given
-        urlDto = new UrlDto("", "");
+        urlDto = new UrlDto("", "", null);
         when(urlService.generateShortUrl(any()))
-                .thenReturn(new UrlDto("", ""));
+                .thenReturn(new UrlDto("", "", null));
 
         //when
         ResultActions result = mockMvc.perform(post("/api/v1/urls")
@@ -101,9 +101,9 @@ class UrlControllerTest {
     @Test
     void shouldThrowAnExceptionWhenOnlyWhiteSpacesInLongUrl() throws Exception {
         //given
-        urlDto = new UrlDto("     ", "");
+        urlDto = new UrlDto("     ", "", null);
         when(urlService.generateShortUrl(any()))
-                .thenReturn(new UrlDto("     ", ""));
+                .thenReturn(new UrlDto("     ", "", null));
 
         //when
         ResultActions result = mockMvc.perform(post("/api/v1/urls")
@@ -117,7 +117,7 @@ class UrlControllerTest {
     @Test
     void shouldRedirectWhenUrlIsWithoutHttpsOrHttpProtocol() throws Exception {
         //given
-        urlDto = new UrlDto("www.cnn.com", "kbr345");
+        urlDto = new UrlDto("www.cnn.com", "kbr345", null);
         given(urlService.getByShortUrl("kbr345"))
                 .willReturn(Optional.of(new Url("www.cnn.com", "kbr345")));
 
@@ -133,7 +133,7 @@ class UrlControllerTest {
     @Test
     void shouldRedirectWhenUrlIsWithHttpsOrHttpProtocol() throws Exception {
         //given
-        urlDto = new UrlDto("https://www.cnn.com", "kbr345");
+        urlDto = new UrlDto("https://www.cnn.com", "kbr345", null);
         given(urlService.getByShortUrl("kbr345"))
                 .willReturn(Optional.of(new Url("www.cnn.com", "kbr345")));
 
