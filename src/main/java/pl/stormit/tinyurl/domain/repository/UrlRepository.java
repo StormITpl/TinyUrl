@@ -16,6 +16,6 @@ public interface UrlRepository extends JpaRepository<Url, UUID> {
     Optional<Url> findUrlByShortUrl (String shortUrl);
     Optional<Url> findUrlByLongUrl (String longUrl);
 
-    @Query("SELECT u FROM Url u JOIN u.urlAnalytics ua GROUP BY u.id, u.shortUrl, u.longUrl ORDER BY MAX(ua.totalClicks) DESC")
-    List<Url> findMostPopularUrls(Pageable pageable);
+    @Query("SELECT u, MAX(ua.totalClicks) FROM Url u JOIN u.urlAnalytics ua GROUP BY u.id, u.shortUrl, u.longUrl ORDER BY MAX(ua.totalClicks) DESC")
+    List<Object[]> findMostPopularUrls(Pageable pageable);
 }

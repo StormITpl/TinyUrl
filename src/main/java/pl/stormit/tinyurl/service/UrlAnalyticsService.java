@@ -7,6 +7,7 @@ import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
 import pl.stormit.tinyurl.domain.repository.UrlRepository;
+import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
 import pl.stormit.tinyurl.dto.UrlAnalyticsLocalizationDto;
 import pl.stormit.tinyurl.dto.UrlAnalyticsMapper;
 import pl.stormit.tinyurl.dto.UrlDto;
@@ -15,6 +16,7 @@ import pl.stormit.tinyurl.exception.ApiException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -78,8 +80,19 @@ public class UrlAnalyticsService {
 
     public List<UrlDto> findMostPopularUrls() {
         PageRequest pageRequest = PageRequest.of(0, 3);
-        return urlRepository.findMostPopularUrls(pageRequest).stream()
-                .map(urlMapper::mapUrlEntityToUrlDto)
-                .toList();
+        List<Object[]> results = urlRepository.findMostPopularUrls(pageRequest);
+
+        List<UrlDto> popularUrls = new ArrayList<>();
+        for (Object[] result : results) {
+            Url url = (Url) result[0];
+            Long totalClicks = (Long) result[1];
+            UrlDto urlDto = urlMapper.mapUrlEntityToUrlDto(url);
+            UrlAnalyticsDto analyticsDto = new UrlAnalyticsDto();
+            analyticsDto.setTotalClicks(totalClicks);
+            urlDto.setAnalytics(analyticsDto);
+            popularUrls.add(urlDto);
+        }
+
+        return popularUrls;
     }
 }

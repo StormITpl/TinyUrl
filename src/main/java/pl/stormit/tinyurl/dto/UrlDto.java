@@ -15,6 +15,8 @@ public class UrlDto {
 
     private String shortUrl;
 
+    private UrlAnalyticsDto analytics;
+
     public String getLongUrl() {
         return longUrl;
     }
