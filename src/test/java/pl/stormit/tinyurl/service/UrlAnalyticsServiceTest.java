@@ -1,18 +1,21 @@
 package pl.stormit.tinyurl.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
+import pl.stormit.tinyurl.domain.repository.UrlRepository;
 import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
 import pl.stormit.tinyurl.dto.UrlAnalyticsLocalizationDto;
 import pl.stormit.tinyurl.dto.UrlAnalyticsMapper;
+import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.exception.ApiException;
 
 import java.time.Instant;
@@ -24,9 +27,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
+@ActiveProfiles({"test"})
 @SpringBootTest
 @Transactional
 class UrlAnalyticsServiceTest {
@@ -47,11 +54,64 @@ class UrlAnalyticsServiceTest {
     @Autowired
     private IpLocalizationService ipLocalizationService;
 
+    @Autowired
+    private UrlAnalyticsRepository realUrlAnalyticsRepository;
+
     @MockBean
-    private UrlAnalyticsRepository urlAnalyticsRepository;
+    private UrlAnalyticsRepository mockUrlAnalyticsRepository;
+
+    @Autowired
+    private UrlRepository urlRepository;
 
     @MockBean
     private UrlAnalyticsMapper urlAnalyticsMapper;
+
+    @BeforeEach
+    void setUp() {
+        Url url1 = new Url();
+        url1.setLongUrl("https://google.com");
+        url1.setShortUrl("abc123");
+        urlRepository.save(url1);
+
+        Url url2 = new Url();
+        url2.setLongUrl("https://wp.pl");
+        url2.setShortUrl("def456");
+        urlRepository.save(url2);
+
+        Url url3 = new Url();
+        url3.setLongUrl("https://stormit.pl");
+        url3.setShortUrl("ghi789");
+        urlRepository.save(url3);
+
+        Url url4 = new Url();
+        url4.setLongUrl("https://yahoo.com");
+        url4.setShortUrl("klo159");
+        urlRepository.save(url4);
+
+        UrlAnalytics analytics1 = new UrlAnalytics();
+        analytics1.setUrl(url1);
+        analytics1.setTotalClicks(10L);
+        analytics1.setClickDate(Instant.now());
+        realUrlAnalyticsRepository.save(analytics1);
+
+        UrlAnalytics analytics2 = new UrlAnalytics();
+        analytics2.setUrl(url2);
+        analytics2.setTotalClicks(5L);
+        analytics2.setClickDate(Instant.now());
+        realUrlAnalyticsRepository.save(analytics2);
+
+        UrlAnalytics analytics3 = new UrlAnalytics();
+        analytics3.setUrl(url3);
+        analytics3.setTotalClicks(150L);
+        analytics3.setClickDate(Instant.now());
+        realUrlAnalyticsRepository.save(analytics3);
+
+        UrlAnalytics analytics4 = new UrlAnalytics();
+        analytics4.setUrl(url4);
+        analytics4.setTotalClicks(50L);
+        analytics4.setClickDate(Instant.now());
+        realUrlAnalyticsRepository.save(analytics4);
+    }
 
     @Test
     void shouldReturnAllAnalytics() {
@@ -59,7 +119,7 @@ class UrlAnalyticsServiceTest {
         List<UrlAnalytics> urlAnalyticsList = createListOfAnalytics();
 
         //when
-        when(urlAnalyticsRepository.findAll()).thenReturn(urlAnalyticsList);
+        when(mockUrlAnalyticsRepository.findAll()).thenReturn(urlAnalyticsList);
         List<UrlAnalytics> allAnalytics = urlAnalyticsService.getAllAnalytics();
 
         //then
@@ -71,7 +131,7 @@ class UrlAnalyticsServiceTest {
         //given
 
         //when
-        given(urlAnalyticsRepository.findAllByUrlId(Mockito.any())).willReturn(null);
+        given(mockUrlAnalyticsRepository.findAllByUrlId(any())).willReturn(null);
 
         //then
         assertThrows(ApiException.class, () -> urlAnalyticsService.getAnalyticsByUrlId(ID_1));
@@ -90,7 +150,7 @@ class UrlAnalyticsServiceTest {
                 (ID_4, AMOUNT_OF_CLICKS_4, "Poland", "PL", "Gdansk", Instant.now(), url);
         UrlAnalyticsDto urlAnalyticsDto = new UrlAnalyticsDto
                 (ID_4, AMOUNT_OF_CLICKS_4, "Poland", "PL", "Gdansk", Instant.now());
-        when(urlAnalyticsRepository.findAllByUrlId(URL_ID_1)).thenReturn(urlAnalyticsList);
+        when(mockUrlAnalyticsRepository.findAllByUrlId(URL_ID_1)).thenReturn(urlAnalyticsList);
         when(urlAnalyticsMapper.mapUrlAnalyticsEntityToUrlAnalyticsDto(urlAnalytics4)).thenReturn(urlAnalyticsDto);
         List<UrlAnalytics> newList = new ArrayList<>();
 
@@ -130,6 +190,29 @@ class UrlAnalyticsServiceTest {
         Assertions.assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> ipLocalizationService.getIpLocalization(ipAddress))
                 .withMessageContaining("Failed to get location");
+    }
+
+    @Test
+    void shouldReturnMostPopularUrlsWhenUrlsExist() {
+        // given
+
+        // when
+        List<UrlDto> result = urlAnalyticsService.findMostPopularUrls();
+
+        // then
+        assertNotNull(result);
+        assertEquals(3, result.size());
+    }
+
+    @Test
+    void shouldReturnEmptyListWhenUrlsDoesntExist() {
+        // given
+
+        // when
+        List<UrlDto> result = urlAnalyticsService.findMostPopularUrls();
+
+        // then
+        assertTrue(result.isEmpty());
     }
 
     private List<UrlAnalytics> createListOfAnalytics() {

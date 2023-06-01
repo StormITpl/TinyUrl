@@ -14,10 +14,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
+import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.exception.ResourceNotFoundException;
 import pl.stormit.tinyurl.service.UrlAnalyticsService;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +30,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -112,6 +115,37 @@ class UrlAnalyticsControllerTest {
         result.andExpect(status().isNotFound());
     }
 
+    @Test
+    void shouldReturnStatusOkWhenFindMostPopularUrlsCorrectly() throws Exception {
+        // given
+        List<UrlDto> popularUrls = createListOfPopularUrls();
+        when(urlAnalyticsService.findMostPopularUrls()).thenReturn(popularUrls);
+
+        // when
+        ResultActions result = mockMvc.perform(get("/api/v1/analytics/most-popular")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(popularUrls))));
+        // then
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(popularUrls.size()));;
+    }
+
+    @Test
+    void shouldReturnStatusNotFoundWhenMostPopularUrlsDoesNotExist() throws Exception {
+        // given
+        List<UrlAnalytics> urlAnalyticsList = createListOfAnalytics();
+        when(urlAnalyticsService.findMostPopularUrls()).thenThrow(ResourceNotFoundException.class);
+
+        // when
+        ResultActions result = mockMvc.perform(get("/api/v1/analytics/most-popular")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlAnalyticsList))));
+
+        // then
+        result.andExpect(status().isNotFound());
+    }
+
     private List<UrlAnalytics> createListOfAnalytics() {
         Url url = new Url("www.google.pl", "817a3ec2");
         UrlAnalytics urlAnalytics1 = new UrlAnalytics
@@ -122,5 +156,24 @@ class UrlAnalyticsControllerTest {
                 (ID_3, AMOUNT_OF_CLICKS_3, "Poland", "PL", "Cracow", Instant.now(), url);
 
         return List.of(urlAnalytics1, urlAnalytics2, urlAnalytics3);
+    }
+
+    private List<UrlDto> createListOfPopularUrls() {
+
+        List<UrlDto> popularUrls = new ArrayList<>();
+
+        UrlDto urlDto1 = new UrlDto("https://google.com", "abc123", null);
+        UrlDto urlDto2 = new UrlDto("https://wp.pl", "def456", null);
+        UrlDto urlDto3 = new UrlDto("https://stormit.pl", "ghi789", null);
+        UrlDto urlDto4 = new UrlDto("https://yahoo.com", "klo159", null);
+        UrlDto urlDto5 = new UrlDto("https://stooq.pl", "xyz547", null);
+
+        popularUrls.add(urlDto1);
+        popularUrls.add(urlDto2);
+        popularUrls.add(urlDto3);
+        popularUrls.add(urlDto4);
+        popularUrls.add(urlDto5);
+
+        return popularUrls;
     }
 }

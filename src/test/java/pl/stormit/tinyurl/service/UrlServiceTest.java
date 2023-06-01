@@ -109,13 +109,11 @@ class UrlServiceTest {
     void shouldReturnLongUrlWithProtocol() {
         //given
         Url url = new Url("https://www.cnn.com", "kbn132");
-
         MockHttpServletRequest servletRequest = new MockHttpServletRequest();
 
         //when
         when(urlRepository.findUrlByShortUrl(any())).thenReturn(Optional.of(url));
         String result = urlService.startsWithHttpOrHttpsProtocolLongUrl(url.getShortUrl(), servletRequest);
-
 
         //then
         String expected = "https://www.cnn.com";
