@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import pl.stormit.tinyurl.domain.model.MostPopularUrlResult;
 import pl.stormit.tinyurl.domain.model.Url;
 
 import java.util.List;
@@ -17,5 +18,5 @@ public interface UrlRepository extends JpaRepository<Url, UUID> {
     Optional<Url> findUrlByLongUrl (String longUrl);
 
     @Query("SELECT u, MAX(ua.totalClicks) FROM Url u JOIN u.urlAnalytics ua GROUP BY u.id, u.shortUrl, u.longUrl ORDER BY MAX(ua.totalClicks) DESC")
-    List<Object[]> findMostPopularUrls(Pageable pageable);
+    List<MostPopularUrlResult> findMostPopularUrls(Pageable pageable);
 }

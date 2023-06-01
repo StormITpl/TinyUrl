@@ -3,6 +3,7 @@ package pl.stormit.tinyurl.service;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import pl.stormit.tinyurl.domain.model.MostPopularUrlResult;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
@@ -84,12 +85,12 @@ public class UrlAnalyticsService {
 
     public List<UrlDto> findMostPopularUrls() {
         PageRequest pageRequest = PageRequest.of(0, 3);
-        List<Object[]> results = urlRepository.findMostPopularUrls(pageRequest);
+        List<MostPopularUrlResult> results = urlRepository.findMostPopularUrls(pageRequest);
 
         List<UrlDto> popularUrls = new ArrayList<>();
-        for (Object[] result : results) {
-            Url url = (Url) result[0];
-            Long totalClicks = (Long) result[1];
+        for (MostPopularUrlResult result : results) {
+            Url url = result.getUrl();
+            Long totalClicks = result.getTotalClicks();
             UrlDto urlDto = urlMapper.mapUrlEntityToUrlDto(url);
             UrlAnalyticsDto analyticsDto = new UrlAnalyticsDto();
             analyticsDto.setTotalClicks(totalClicks);
