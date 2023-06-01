@@ -1,10 +1,18 @@
 package pl.stormit.tinyurl.domain.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -12,6 +20,8 @@ import java.util.UUID;
 @Table(name = "url_expiry")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class UrlExpiry {
 
@@ -24,9 +34,8 @@ public class UrlExpiry {
 
     private Instant expirationDate;
 
-    @Column(nullable = false)
     private Boolean isPremium = false;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Url url;
 }

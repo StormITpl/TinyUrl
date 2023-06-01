@@ -27,12 +27,14 @@ public class UrlService {
     @Autowired
     private final UrlRepository urlRepository;
 
-    private final UrlAnalyticsService urlAnalyticsService;
+    private final UrlExpiryService urlExpiryService;
 
+    private final UrlAnalyticsService urlAnalyticsService;
+    
     private final UrlMapper urlMapper;
 
     public UrlDto generateShortUrl(UrlDto urlDto) {
-
+        longUrlExist(urlDto.getLongUrl());
         if (!urlDto.getLongUrl().isBlank()) {
 
             Url urlToSave = new Url();
@@ -40,14 +42,15 @@ public class UrlService {
             urlToSave.setCreationDate(LocalDate.now());
             urlToSave.setLongUrl(urlDto.getLongUrl());
             urlToSave.setShortUrl(encodedUrl);
-
-            return urlMapper.mapUrlEntityToUrlDto(urlRepository.save(urlToSave));
+            Url savedUrl = urlRepository.save(urlToSave);
+            urlExpiryService.createUrlExpiryDate(urlToSave);
+            return urlMapper.mapUrlEntityToUrlDto(savedUrl);
         }
         throw new ApiException("Change the request your longUrl is empty!");
     }
 
     public UrlDto createShortUrl(UrlDto urlDto) {
-
+        longUrlExist(urlDto.getLongUrl());
         Url urlToSave = new Url();
         urlToSave.setCreationDate(LocalDate.now());
         if (longUrlExist(urlDto.getLongUrl())) {
@@ -56,8 +59,9 @@ public class UrlService {
         if (shortUrlExist(isShortUrlCorrect(urlDto.getShortUrl()))) {
             urlToSave.setShortUrl(urlDto.getShortUrl());
         }
-
-        return urlMapper.mapUrlEntityToUrlDto(urlRepository.save(urlToSave));
+        Url savedUrl = urlRepository.save(urlToSave);
+        urlExpiryService.createUrlExpiryDate(urlToSave);
+        return urlMapper.mapUrlEntityToUrlDto(savedUrl);
     }
 
     private String encodeUrl(String longUrl) {
