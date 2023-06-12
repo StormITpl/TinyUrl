@@ -26,6 +26,7 @@ import java.util.UUID;
 public class UrlAnalyticsService {
 
     public static final long FIRST_CLICK_ON_SHORT_URL = 1L;
+    public static final PageRequest AMOUNT_OF_POPULAR_URLS = PageRequest.of(0, 3);
 
     private final UrlAnalyticsRepository urlAnalyticsRepository;
 
@@ -84,7 +85,7 @@ public class UrlAnalyticsService {
     }
 
     public List<UrlDto> findMostPopularUrls() {
-        PageRequest pageRequest = PageRequest.of(0, 3);
+        PageRequest pageRequest = AMOUNT_OF_POPULAR_URLS;
         List<MostPopularUrlResult> results = urlRepository.findMostPopularUrls(pageRequest);
 
         List<UrlDto> popularUrls = new ArrayList<>();

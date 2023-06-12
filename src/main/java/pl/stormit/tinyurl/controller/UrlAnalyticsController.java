@@ -37,7 +37,6 @@ public class UrlAnalyticsController {
 
     @GetMapping("/most-popular")
     public ResponseEntity<List<UrlDto>> getMostPopularUrls() {
-
         List<UrlDto> mostPopularUrlsList = urlAnalyticsService.findMostPopularUrls();
 
         HttpHeaders headers = new HttpHeaders();
