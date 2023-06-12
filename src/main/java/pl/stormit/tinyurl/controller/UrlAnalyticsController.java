@@ -1,6 +1,7 @@
 package pl.stormit.tinyurl.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
+import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.service.UrlAnalyticsService;
 
 import javax.validation.constraints.NotNull;
@@ -31,5 +33,15 @@ public class UrlAnalyticsController {
     public ResponseEntity<List<UrlAnalytics>> getAllAnalytics() {
         List<UrlAnalytics> urlAnalyticsDtoList = urlAnalyticsService.getAllAnalytics();
         return new ResponseEntity<>(urlAnalyticsDtoList, HttpStatus.OK);
+    }
+
+    @GetMapping("/most-popular")
+    public ResponseEntity<List<UrlDto>> getMostPopularUrls() {
+        List<UrlDto> mostPopularUrlsList = urlAnalyticsService.findMostPopularUrls();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("message", "The most popular URL's has been successfully found");
+
+        return new ResponseEntity<>(mostPopularUrlsList, headers, HttpStatus.OK);
     }
 }
