@@ -87,7 +87,7 @@ public class UrlService {
                 .orElseThrow(() -> {
                     throw new ApiException("The short url: " + shortUrl + ", does not exist.");
                 });
-        urlAnalyticsService.setAnalitycsData(urlByShortUrl, servletRequest);
+        urlAnalyticsService.setAnalyticsData(urlByShortUrl, servletRequest);
 
         if (urlByShortUrl.getLongUrl().contains("https://") ||
                 urlByShortUrl.getLongUrl().contains("http://")) {
