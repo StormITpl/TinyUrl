@@ -12,6 +12,7 @@ import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
 import pl.stormit.tinyurl.domain.repository.UrlRepository;
+import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
 import pl.stormit.tinyurl.dto.UrlAnalyticsLocalizationDto;
 import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.exception.ApiException;
@@ -101,10 +102,10 @@ class UrlAnalyticsServiceTest {
         // given
 
         // when
-        List<UrlAnalytics> allAnalytics = urlAnalyticsService.getAllAnalytics();
+        List<UrlAnalyticsDto> allAnalyticsDto = urlAnalyticsService.getAllAnalytics();
 
         // then
-        assertEquals(4, allAnalytics.size());
+        assertEquals(4, allAnalyticsDto.size());
     }
 
     @Test
@@ -129,7 +130,7 @@ class UrlAnalyticsServiceTest {
         servletRequest.setRemoteAddr("95.160.156.244");
 
         // when
-        urlAnalyticsService.setAnalitycsData(url, servletRequest);
+        urlAnalyticsService.setAnalyticsData(url, servletRequest);
         Long totalClicksOnUrl = urlAnalyticsRepository.findMaxClickOnShortUrlByUrlId(urlId);
 
         // then

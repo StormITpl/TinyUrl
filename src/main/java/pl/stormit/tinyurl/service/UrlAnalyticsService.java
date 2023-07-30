@@ -1,8 +1,9 @@
 package pl.stormit.tinyurl.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.stormit.tinyurl.domain.model.MostPopularUrlResult;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UrlAnalyticsService {
 
     public static final long FIRST_CLICK_ON_SHORT_URL = 1L;
@@ -38,35 +39,36 @@ public class UrlAnalyticsService {
 
     private IpLocalizationService ipLocalization;
 
-    public List<UrlAnalytics> getAnalyticsByUrlId(UUID urlId) {
+    @Transactional(readOnly = true)
+    public List<UrlAnalyticsDto> getAnalyticsByUrlId(UUID urlId) {
+
         if (!urlAnalyticsRepository.existsById(urlId)) {
-            throw new ApiException("Change the request your id does not exist!");
+            throw new ApiException("The url by id: " + urlId + ", does not exist!");
         }
         return urlAnalyticsRepository.findAllByUrlId(urlId);
     }
 
-    public List<UrlAnalytics> getAllAnalytics() {
-        return urlAnalyticsRepository.findAll();
+    @Transactional(readOnly = true)
+    public List<UrlAnalyticsDto> getAllAnalytics() {
+        return urlAnalyticsRepository.findAll().stream()
+                .map(urlAnalyticsMapper::mapUrlAnalyticsEntityToUrlAnalyticsDto)
+                .toList();
     }
 
-
-
-    public void setAnalitycsData(Url url, HttpServletRequest servletRequest) {
+    public void setAnalyticsData(Url url, HttpServletRequest servletRequest) {
 
         String addressIp = servletRequest.getRemoteAddr();
 
-        UrlAnalyticsLocalizationDto analyticsLocalizationDto = ipLocalization.getIpLocalization(addressIp);
-
+//        UrlAnalyticsLocalizationDto analyticsLocalizationDto = ipLocalization.getIpLocalization(addressIp);
 
         UUID urlId = url.getId();
         UrlAnalytics urlAnalytics = new UrlAnalytics();
         urlAnalytics.setClickDate(Instant.now());
         urlAnalytics.setTotalClicks(checkClicksAmountOnShortUrl(urlId));
-        urlAnalytics.setCountryLocalization(analyticsLocalizationDto.getCountryLocalization());
-        urlAnalytics.setIsoCode(analyticsLocalizationDto.getIsoCode());
-        urlAnalytics.setCityLocalization(analyticsLocalizationDto.getCityLocalization());
+//        urlAnalytics.setCountryLocalization(analyticsLocalizationDto.getCountryLocalization());
+//        urlAnalytics.setIsoCode(analyticsLocalizationDto.getIsoCode());
+//        urlAnalytics.setCityLocalization(analyticsLocalizationDto.getCityLocalization());
         urlAnalytics.setUrl(url);
-
 
         urlAnalyticsMapper.mapUrlAnalyticsEntityToUrlAnalyticsDto(urlAnalyticsRepository.save(urlAnalytics));
     }
