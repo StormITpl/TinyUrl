@@ -1,10 +1,9 @@
 package pl.stormit.tinyurl.service;
 
-
 import com.google.common.hash.Hashing;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.repository.UrlRepository;
 import pl.stormit.tinyurl.dto.UrlDto;
@@ -16,25 +15,23 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UrlService {
 
-    @Autowired
     private final UrlRepository urlRepository;
 
     private final UrlExpiryService urlExpiryService;
 
     private final UrlAnalyticsService urlAnalyticsService;
-    
+
     private final UrlMapper urlMapper;
 
+    @Transactional
     public UrlDto generateShortUrl(UrlDto urlDto) {
-        longUrlExist(urlDto.getLongUrl());
         if (!urlDto.getLongUrl().isBlank()) {
 
             Url urlToSave = new Url();
@@ -49,8 +46,8 @@ public class UrlService {
         throw new ApiException("Change the request your longUrl is empty!");
     }
 
+    @Transactional
     public UrlDto createShortUrl(UrlDto urlDto) {
-        longUrlExist(urlDto.getLongUrl());
         Url urlToSave = new Url();
         urlToSave.setCreationDate(LocalDate.now());
         if (longUrlExist(urlDto.getLongUrl())) {
@@ -64,6 +61,13 @@ public class UrlService {
         return urlMapper.mapUrlEntityToUrlDto(savedUrl);
     }
 
+    @Transactional(readOnly = true)
+    public List<UrlDto> getUrls() {
+        return urlRepository.findAll().stream()
+                .map(urlMapper::mapUrlEntityToUrlDto)
+                .toList();
+    }
+
     private String encodeUrl(String longUrl) {
         LocalDateTime time = LocalDateTime.now();
         String encodedUrl = "";
@@ -74,53 +78,29 @@ public class UrlService {
         return encodedUrl;
     }
 
-    public List<Url> getUrls() {
-        return urlRepository.findAll();
-    }
-
-    public Optional<Url> getByShortUrl(String shortUrl) throws ApiException {
-        return urlRepository.findUrlByShortUrl(shortUrl);
-    }
-
-    public String startsWithHttpOrHttpsProtocolLongUrl(String shortUrl, HttpServletRequest servletRequest) {
+    public String getLongUrlByShortUrl(String shortUrl, HttpServletRequest servletRequest) {
         Url urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl)
-                .orElseThrow(() -> {
-                    throw new ApiException("The short url: " + shortUrl + ", does not exist.");
-                });
+                .orElseThrow(() -> new ApiException("The short url: " + shortUrl + ", does not exist."));
+
         urlAnalyticsService.setAnalyticsData(urlByShortUrl, servletRequest);
 
-        if (urlByShortUrl.getLongUrl().contains("https://") ||
-                urlByShortUrl.getLongUrl().contains("http://")) {
+        if (urlByShortUrl.getLongUrl().startsWith("https://") || urlByShortUrl.getLongUrl().startsWith("http://")) {
             return urlByShortUrl.getLongUrl();
         } else {
             return "https://" + urlByShortUrl.getLongUrl();
         }
     }
 
-    public boolean shortUrlDoesNotExist(String shortUrl) {
-        Optional<Url> urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl);
-
-        if (urlByShortUrl.isPresent()) {
-            return true;
-        } else {
-            throw new ApiException("The short url: " + shortUrl + ", does not exist.");
-        }
-    }
-
     public boolean shortUrlExist(String shortUrl) {
-        Optional<Url> urlByShortUrl = urlRepository.findUrlByShortUrl(shortUrl);
-
-        if (urlByShortUrl.isPresent()) {
-            throw new ApiException("The short url: " + shortUrl + ", exist.");
+        if (urlRepository.findUrlByShortUrl(shortUrl).isPresent()) {
+            throw new ApiException("The short url: " + shortUrl + ", exists.");
         } else {
             return true;
         }
     }
 
     public boolean longUrlExist(String longUrl) {
-        Optional<Url> urlByLongUrl = urlRepository.findUrlByLongUrl(longUrl);
-
-        if (urlByLongUrl.isPresent()) {
+        if (urlRepository.findUrlByLongUrl(longUrl).isPresent()) {
             throw new ApiException("The long url: " + longUrl + ", exist.");
         } else {
             return true;

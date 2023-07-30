@@ -98,7 +98,7 @@ class UrlServiceTest {
 
         //when
         when(urlRepository.findUrlByShortUrl(any())).thenReturn(Optional.of(url));
-        String result = urlService.startsWithHttpOrHttpsProtocolLongUrl(url.getShortUrl(), servletRequest);
+        String result = urlService.getLongUrlByShortUrl(url.getShortUrl(), servletRequest);
 
         //then
         String expected = "https://www.cnn.com";
@@ -113,7 +113,7 @@ class UrlServiceTest {
 
         //when
         when(urlRepository.findUrlByShortUrl(any())).thenReturn(Optional.of(url));
-        String result = urlService.startsWithHttpOrHttpsProtocolLongUrl(url.getShortUrl(), servletRequest);
+        String result = urlService.getLongUrlByShortUrl(url.getShortUrl(), servletRequest);
 
         //then
         String expected = "https://www.cnn.com";
