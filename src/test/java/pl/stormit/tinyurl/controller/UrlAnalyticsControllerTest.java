@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.stormit.tinyurl.domain.model.Url;
-import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
 import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.exception.ResourceNotFoundException;
@@ -56,63 +55,63 @@ class UrlAnalyticsControllerTest {
 
     @Test
     void shouldReturnStatusOkWhenGetAllAnalyticsCorrectly() throws Exception {
-        //given
+        // given
         List<UrlAnalyticsDto> urlAnalyticsListDto = createListOfAnalyticsDto();
         given(urlAnalyticsService.getAllAnalytics()).willReturn(urlAnalyticsListDto);
 
-        //when
+        // when
         ResultActions result = mockMvc.perform(get("/api/v1/analytics")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlAnalyticsListDto))));
-        //then
+        // then
         result.andExpect(status().isOk());
         result.andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(3));
     }
 
     @Test
     void shouldResponseStatusOkAndReturnEmptyList() throws Exception {
-        //given
+        // given
 
-        //when
+        // when
         MockHttpServletResponse result = mockMvc.perform(get("/api/v1/analytics")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn()
                 .getResponse();
 
-        //then
+        // then
         assertThat(result.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(result.getContentAsString()).isEqualTo(Collections.emptyList().toString());
     }
 
     @Test
     void shouldReturnStatusOkWhenGetAnalyticsByUrlIdIsCorrectly() throws Exception {
-        //given
+        // given
         Url url = new Url("www.google.pl", "817a3ec2");
         List<UrlAnalyticsDto> urlAnalyticsListDto = createListOfAnalyticsDto();
         when(urlAnalyticsService.getAnalyticsByUrlId(url.getId())).thenReturn(urlAnalyticsListDto);
 
-        //when
+        // when
         ResultActions result = mockMvc.perform(get("/api/v1/analytics/{id}", url.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlAnalyticsListDto))));
 
-        //then
+        // then
         result.andExpect(status().isOk());
     }
 
     @Test
     void shouldReturnStatusNotFoundWhenUrlIdDoesNotExist() throws Exception {
-        //given
+        // given
         List<UrlAnalyticsDto> urlAnalyticsListDto = createListOfAnalyticsDto();
         when(urlAnalyticsService.getAnalyticsByUrlId(any())).thenThrow(ResourceNotFoundException.class);
 
-        //when
+        // when
         ResultActions result = mockMvc.perform(get("/api/v1/analytics/{id}", UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlAnalyticsListDto))));
 
-        //then
+        // then
         result.andExpect(status().isNotFound());
     }
 
@@ -129,7 +128,7 @@ class UrlAnalyticsControllerTest {
         // then
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(popularUrls.size()));;
+                .andExpect(jsonPath("$.length()").value(popularUrls.size()));
     }
 
     @Test
@@ -148,7 +147,6 @@ class UrlAnalyticsControllerTest {
     }
 
     private List<UrlAnalyticsDto> createListOfAnalyticsDto() {
-        Url url = new Url("www.google.pl", "817a3ec2");
         UrlAnalyticsDto urlAnalytics1 = new UrlAnalyticsDto
                 (ID_1, AMOUNT_OF_CLICKS_1, "Poland", "PL", "Warsaw", Instant.now());
         UrlAnalyticsDto urlAnalytics2 = new UrlAnalyticsDto

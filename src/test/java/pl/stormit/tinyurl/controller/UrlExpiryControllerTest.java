@@ -24,7 +24,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@Transactional
 @AutoConfigureMockMvc
 class UrlExpiryControllerTest {
 
@@ -35,18 +34,17 @@ class UrlExpiryControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-
     @Test
-    void getAllExpires() throws Exception {
-        //given
+    void shouldReturnAllExpires() throws Exception {
+        // given
         List<UrlExpiryDto> urlExpiryList = listOfUrlExpiry();
         given(urlExpiryService.getAllExpires()).willReturn(urlExpiryList);
 
-        //when
+        // when
         ResultActions result = mockMvc.perform(get("/api/v1/expires")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlExpiryList))));
-        //then
+        // then
         result.andExpect(status().isOk());
         result.andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(3));
     }
