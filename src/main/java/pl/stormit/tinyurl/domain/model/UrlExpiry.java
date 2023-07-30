@@ -1,10 +1,9 @@
 package pl.stormit.tinyurl.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,16 +17,15 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "url_expiry")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class UrlExpiry {
 
     @Id
     @GeneratedValue
-    private UUID id = UUID.randomUUID();
+    @Column(columnDefinition = "uuid")
+    private UUID id;
 
     @Column(nullable = false)
     private Instant creationDate = Instant.now();
@@ -36,6 +34,7 @@ public class UrlExpiry {
 
     private Boolean isPremium = false;
 
+    @JsonBackReference
     @OneToOne(cascade = CascadeType.ALL)
     private Url url;
 }

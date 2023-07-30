@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.stormit.tinyurl.domain.model.Url;
-import pl.stormit.tinyurl.domain.model.UrlAnalytics;
+import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
 import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.exception.ResourceNotFoundException;
 import pl.stormit.tinyurl.service.UrlAnalyticsService;
@@ -55,63 +55,63 @@ class UrlAnalyticsControllerTest {
 
     @Test
     void shouldReturnStatusOkWhenGetAllAnalyticsCorrectly() throws Exception {
-        //given
-        List<UrlAnalytics> urlAnalyticsList = createListOfAnalytics();
-        given(urlAnalyticsService.getAllAnalytics()).willReturn(urlAnalyticsList);
+        // given
+        List<UrlAnalyticsDto> urlAnalyticsListDto = createListOfAnalyticsDto();
+        given(urlAnalyticsService.getAllAnalytics()).willReturn(urlAnalyticsListDto);
 
-        //when
+        // when
         ResultActions result = mockMvc.perform(get("/api/v1/analytics")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlAnalyticsList))));
-        //then
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlAnalyticsListDto))));
+        // then
         result.andExpect(status().isOk());
         result.andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(3));
     }
 
     @Test
     void shouldResponseStatusOkAndReturnEmptyList() throws Exception {
-        //given
+        // given
 
-        //when
+        // when
         MockHttpServletResponse result = mockMvc.perform(get("/api/v1/analytics")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn()
                 .getResponse();
 
-        //then
+        // then
         assertThat(result.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(result.getContentAsString()).isEqualTo(Collections.emptyList().toString());
     }
 
     @Test
     void shouldReturnStatusOkWhenGetAnalyticsByUrlIdIsCorrectly() throws Exception {
-        //given
+        // given
         Url url = new Url("www.google.pl", "817a3ec2");
-        List<UrlAnalytics> urlAnalyticsList = createListOfAnalytics();
-        when(urlAnalyticsService.getAnalyticsByUrlId(url.getId())).thenReturn(urlAnalyticsList);
+        List<UrlAnalyticsDto> urlAnalyticsListDto = createListOfAnalyticsDto();
+        when(urlAnalyticsService.getAnalyticsByUrlId(url.getId())).thenReturn(urlAnalyticsListDto);
 
-        //when
+        // when
         ResultActions result = mockMvc.perform(get("/api/v1/analytics/{id}", url.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlAnalyticsList))));
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlAnalyticsListDto))));
 
-        //then
+        // then
         result.andExpect(status().isOk());
     }
 
     @Test
     void shouldReturnStatusNotFoundWhenUrlIdDoesNotExist() throws Exception {
-        //given
-        List<UrlAnalytics> urlAnalyticsList = createListOfAnalytics();
+        // given
+        List<UrlAnalyticsDto> urlAnalyticsListDto = createListOfAnalyticsDto();
         when(urlAnalyticsService.getAnalyticsByUrlId(any())).thenThrow(ResourceNotFoundException.class);
 
-        //when
+        // when
         ResultActions result = mockMvc.perform(get("/api/v1/analytics/{id}", UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlAnalyticsList))));
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlAnalyticsListDto))));
 
-        //then
+        // then
         result.andExpect(status().isNotFound());
     }
 
@@ -128,32 +128,31 @@ class UrlAnalyticsControllerTest {
         // then
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(popularUrls.size()));;
+                .andExpect(jsonPath("$.length()").value(popularUrls.size()));
     }
 
     @Test
     void shouldReturnStatusNotFoundWhenMostPopularUrlsDoesNotExist() throws Exception {
         // given
-        List<UrlAnalytics> urlAnalyticsList = createListOfAnalytics();
+        List<UrlAnalyticsDto> urlAnalyticsListDto = createListOfAnalyticsDto();
         when(urlAnalyticsService.findMostPopularUrls()).thenThrow(ResourceNotFoundException.class);
 
         // when
         ResultActions result = mockMvc.perform(get("/api/v1/analytics/most-popular")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlAnalyticsList))));
+                .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlAnalyticsListDto))));
 
         // then
         result.andExpect(status().isNotFound());
     }
 
-    private List<UrlAnalytics> createListOfAnalytics() {
-        Url url = new Url("www.google.pl", "817a3ec2");
-        UrlAnalytics urlAnalytics1 = new UrlAnalytics
-                (ID_1, AMOUNT_OF_CLICKS_1, "Poland", "PL", "Warsaw", Instant.now(), url);
-        UrlAnalytics urlAnalytics2 = new UrlAnalytics
-                (ID_2, AMOUNT_OF_CLICKS_2, "United States", "US", "Los Angeles", Instant.now(), url);
-        UrlAnalytics urlAnalytics3 = new UrlAnalytics
-                (ID_3, AMOUNT_OF_CLICKS_3, "Poland", "PL", "Cracow", Instant.now(), url);
+    private List<UrlAnalyticsDto> createListOfAnalyticsDto() {
+        UrlAnalyticsDto urlAnalytics1 = new UrlAnalyticsDto
+                (ID_1, AMOUNT_OF_CLICKS_1, "Poland", "PL", "Warsaw", Instant.now());
+        UrlAnalyticsDto urlAnalytics2 = new UrlAnalyticsDto
+                (ID_2, AMOUNT_OF_CLICKS_2, "United States", "US", "Los Angeles", Instant.now());
+        UrlAnalyticsDto urlAnalytics3 = new UrlAnalyticsDto
+                (ID_3, AMOUNT_OF_CLICKS_3, "Poland", "PL", "Cracow", Instant.now());
 
         return List.of(urlAnalytics1, urlAnalytics2, urlAnalytics3);
     }

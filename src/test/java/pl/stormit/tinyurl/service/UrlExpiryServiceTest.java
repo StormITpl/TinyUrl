@@ -1,6 +1,5 @@
 package pl.stormit.tinyurl.service;
 
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,68 +29,69 @@ class UrlExpiryServiceTest {
     @Autowired
     private UrlExpiryService urlExpiryService;
 
-
     @Test
     void createUrlExpiryDate() {
-        //given
+        // given
         Url url = new Url("www.facebook.pl", "def456");
         UrlExpiry urlExpiry = new UrlExpiry(UUID.randomUUID(), Instant.now(), Instant.now().plusSeconds(20), true, url);
 
-        //when
+        // when
         urlExpiryRepository.save(urlExpiry);
 
-        //then
+        // then
         assertNotNull(urlExpiryRepository.findById(urlExpiry.getId()));
 
     }
 
     @Test
     void shouldSetExpirationDateOnNullWhenIsPremium() {
-        //given
+        // given
         Url url1 = new Url("www.facebook.pl", "def456");
         UrlExpiry urlExpiry1 = new UrlExpiry(UUID.randomUUID(), Instant.now(), Instant.now().plusSeconds(20), true, url1);
 
-        //when
+        // when
         urlExpiryService.isAccountPremium(urlExpiry1);
 
-        //then
+        // then
         assertNull(urlExpiry1.getExpirationDate());
     }
 
     @Test
     void shouldSetExpirationDateWhenIsNotPremium() {
-        //give
+        // give
         Url url1 = new Url("www.facebook.pl", "def456");
         UrlExpiry urlExpiry1 = new UrlExpiry(UUID.randomUUID(), Instant.now(), Instant.now().plusSeconds(20), false, url1);
 
-        //when
+        // when
         urlExpiryService.isAccountPremium(urlExpiry1);
 
-        //then
+        // then
         assertNotNull(urlExpiry1.getExpirationDate());
     }
 
     @Test
     void shouldGetAllExpires() {
-        //given
+        // given
         List<UrlExpiry> urlUrlExpiry = listOfUrlExpiry();
         urlExpiryRepository.saveAll(urlUrlExpiry);
 
-        //when
+        // when
         when(urlExpiryRepository.findAll()).thenReturn(urlUrlExpiry);
 
-        //then
+        // then
         assertEquals(3, urlUrlExpiry.size());
     }
 
     @Test
     void shouldGetAllExpiredDateUrls() {
-        //given
+        // given
         List<UrlExpiry> urlUrlExpiry = listOfUrlExpiry();
         given(urlExpiryRepository.findAll()).willReturn(urlUrlExpiry);
-        //when
+
+        // when
         List<UrlExpiry> result = urlExpiryService.getAllExpiredUrls();
-        //then
+
+        // then
         assertEquals(1, result.size());
     }
 

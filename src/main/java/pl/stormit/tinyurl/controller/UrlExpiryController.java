@@ -1,6 +1,7 @@
 package pl.stormit.tinyurl.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,11 @@ public class UrlExpiryController {
 
     @GetMapping
     public ResponseEntity<List<UrlExpiryDto>> getAllExpires() {
+
         List<UrlExpiryDto> urlExpiryDtoList = urlExpiryService.getAllExpires();
-        return new ResponseEntity<>(urlExpiryDtoList, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("message", "The list of expires has been successfully found");
+
+        return new ResponseEntity<>(urlExpiryDtoList, headers, HttpStatus.OK);
     }
 }

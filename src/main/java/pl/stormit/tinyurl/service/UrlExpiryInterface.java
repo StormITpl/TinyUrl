@@ -7,5 +7,4 @@ public interface UrlExpiryInterface {
     boolean isAccountPremium(UrlExpiry urlExpiry);
 
     int TWO_WEEKS = 1209600;
-
 }

@@ -2,9 +2,8 @@ package pl.stormit.tinyurl.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,8 +19,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "url_analytics")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UrlAnalytics {

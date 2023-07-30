@@ -1,12 +1,11 @@
 package pl.stormit.tinyurl.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlExpiry;
 import pl.stormit.tinyurl.domain.repository.UrlExpiryRepository;
-import pl.stormit.tinyurl.domain.repository.UrlRepository;
 import pl.stormit.tinyurl.dto.UrlExpiryDto;
 import pl.stormit.tinyurl.dto.UrlExpiryMapper;
 
@@ -17,18 +16,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UrlExpiryService implements UrlExpiryInterface {
 
     private final UrlExpiryRepository urlExpiryRepository;
+
     private final UrlExpiryMapper urlExpiryMapper;
 
     public UrlExpiryDto createUrlExpiryDate(Url url) {
 
-            UrlExpiry urlExpiry = new UrlExpiry();
-            isAccountPremium(urlExpiry);
-            urlExpiry.setUrl(url);
-            return urlExpiryMapper.mapUrlExpiryEntityToUrlExpiryDto(urlExpiryRepository.save(urlExpiry));
+        UrlExpiry urlExpiry = new UrlExpiry();
+        isAccountPremium(urlExpiry);
+        urlExpiry.setUrl(url);
+        return urlExpiryMapper.mapUrlExpiryEntityToUrlExpiryDto(urlExpiryRepository.save(urlExpiry));
     }
 
     @Override
@@ -51,13 +51,13 @@ public class UrlExpiryService implements UrlExpiryInterface {
                 .toList();
     }
 
-    public List<UrlExpiry> getAllExpiredUrls(){
+    public List<UrlExpiry> getAllExpiredUrls() {
         Instant checkInstant = Instant.now();
         return urlExpiryRepository.findAll().stream()
                 .filter(urlExpiry -> Objects.nonNull(urlExpiry.getExpirationDate()) && urlExpiry.getExpirationDate().isBefore(checkInstant)).toList();
     }
 
-    public void printExpiredUrlsToDelete(List<UrlExpiry> expires){
+    public void printExpiredUrlsToDelete(List<UrlExpiry> expires) {
         Logger logger = Logger.getLogger(getClass().getName());
 
         logger.log(Level.INFO, "Start searching expired urls");
@@ -73,12 +73,7 @@ public class UrlExpiryService implements UrlExpiryInterface {
     @Scheduled(fixedDelay = 15000)
     public void deleteExpiredDateUrls() {
         List<UrlExpiry> expires = getAllExpiredUrls();
-
         printExpiredUrlsToDelete(expires);
-
         urlExpiryRepository.deleteAll(expires);
     }
-
 }
-
-
