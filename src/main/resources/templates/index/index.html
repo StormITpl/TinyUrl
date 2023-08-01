@@ -11,20 +11,16 @@
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <a href="/static" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
+                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                    <use xlink:href="#bootstrap"/>
+                </svg>
             </a>
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">About</a></li>
             </ul>
-
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-                <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
-            </form>
 
             <div class="text-end">
                 <button type="button" class="btn btn-outline-light me-2">Login</button>
@@ -33,23 +29,98 @@
         </div>
     </div>
 </header>
-<form th:object="${urlDto}" method="post" action="/api/v1/urlview">
-    <div class="containerURL">
-        <div class="whatCanIDoForYou">
-            <h1>What Can I short for you?</h1>
-        </div><br>
-        <div class="inputBox">
-            <input type="text" required="required" th:field="*{longUrl}">
-            <span>Enter long URL</span>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-6">
+
+            <form th:object="${urlDto}" method="post" action="/api/v1/urlview">
+                <div class="containerURL">
+                    <div class="GenerateShortUrl">
+                        <h1>Generate a short URL</h1>
+                    </div>
+                    <br>
+                    <div class="inputBox">
+                        <input type="text" required="required" th:field="*{longUrl}">
+                        <span>Enter long URL</span>
+                    </div>
+
+                    <div class="inputSubmit">
+                        <input type="submit" value="Generate">
+                    </div>
+                </div>
+            </form>
+
+            <div style="margin-top: 60px;"></div>
+
+            <form th:object="${urlDto}" method="post" action="/api/v1/urlview">
+                <div class="containerURL">
+                    <div class="GenerateYourOwnShortUrl">
+                        <h1>Generate your own short URL</h1>
+                    </div>
+                    <br>
+                    <div class="inputBox">
+                        <input type="text" required="required" th:field="*{longUrl}">
+                        <span>Enter long URL</span>
+                    </div>
+                    <div class="inputBox">
+                        <input>
+                        <span>Proposition your own short URL</span>
+                    </div>
+                    <div class="inputSubmit">
+                        <input type="submit" value="Generate">
+                    </div>
+                </div>
+            </form>
+
+<!--            <form id="createUrlForm" class="mt-5">-->
+<!--                <div class="form-group" col-12 col-lg-6>-->
+<!--                    <label for="customLongUrl">Enter the long URL:</label>-->
+<!--                    <input type="url" class="form-control neon-border" id="customLongUrl" name="customLongUrl"-->
+<!--                           required>-->
+<!--                </div>-->
+<!--                <div class="form-group" col-12 col-lg-6>-->
+<!--                    <label for="customShortUrl">Enter the custom short URL:</label>-->
+<!--                    <input type="text" class="form-control neon-border" id="customShortUrl" name="customShortUrl"-->
+<!--                           required>-->
+<!--                </div>-->
+<!--                <button type="submit" class="btn btn-success">Create Short URL</button>-->
+<!--            </form>-->
         </div>
-        <div class="inputBox">
-            <input>
-            <span>This is your short URL</span>
-        </div>
-        <div class="inputSubmit">
-            <input type="submit" value="Generate">
+
+        <div class="col-lg-6">
+            <div class="modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5" tabindex="-1"
+                 role="dialog" id="modalSheet">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content rounded-4 shadow">
+                        <div class="modal-header border-bottom-0">
+                            <div class="title-and-labels">
+                                <h1 class="modal-title fs-5">List of most popular URLs:</h1>
+                                <th:block th:each="urlDto, iterationStatus : ${mostPopularUrls}">
+                                    <label th:text="${iterationStatus.count + '. ' + mostPopularUrls.}"></label>
+                                </th:block>
+                            </div>
+                        </div>
+                        <!--                <div class="modal-body py-0">-->
+                        <!--                    <p>This is a modal sheet, a variation of the modal that docs itself to the bottom of the viewport like the newer share sheets in iOS.</p>-->
+                        <!--                </div>-->
+
+
+                    </div>
+                </div>
+                <div style="margin-top: 180px;"></div>
+
+                <form th:object="${urlDto}" method="get" action="/api/v1/urlview">
+                    <div class="containerURL">
+                        <div class="inputBox">
+                            <input>
+                            <span>This is your short URL</span>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</form>
+</div>
 </body>
 </html>

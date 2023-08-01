@@ -15,11 +15,34 @@ body{
     gap: 30px;
     background: #1d2b3a;
 }
-.whatCanIDoForYou
+.GenerateShortUrl
 {
     text-align: center;
     position: relative;
     color: #00dfc4;
+}
+.GenerateYourOwnShortUrl
+{
+    text-align: center;
+    position: relative;
+    color: #00dfc4;
+}
+.modal-header {
+    text-align: left;
+}
+
+.title-and-labels {
+    display: inline-block;
+}
+
+.title-and-labels h1 {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.title-and-labels label {
+    display: block;
+    margin-bottom: 5px;
 }
 .inputBox
 {
