@@ -10,23 +10,22 @@ import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.service.UrlAnalyticsService;
 import pl.stormit.tinyurl.service.UrlService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping(path = "api/v1/url-view")
+@RequestMapping(path = "api/v1/url-premium")
 @RequiredArgsConstructor
-public class UrlViewController {
+public class UrlPremiumViewController {
 
     private final UrlService urlService;
 
     private final UrlAnalyticsService urlAnalyticsService;
 
     @GetMapping
-    public String showForm(Model model) {
+    public String showPremiumForm(Model model) {
         UrlDto urlDto = new UrlDto();
-        model.addAttribute("urlDto", new UrlDto());
-        return "index/index";
+        model.addAttribute("urlDto", urlDto);
+        return "index/indexPremium";
     }
 
     @GetMapping("add")
@@ -45,7 +44,7 @@ public class UrlViewController {
         return "index/index";
     }
 
-    @GetMapping({"most-popular"})
+    @GetMapping("most-popular")
     public String getMostPopularUrls(Model model) {
         List<UrlDto> mostPopularUrls = urlAnalyticsService.findMostPopularUrls();
         model.addAttribute("mostPopularUrls", mostPopularUrls);
