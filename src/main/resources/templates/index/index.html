@@ -56,12 +56,22 @@
             <form th:object="${urlDto}" method="post" action="/api/v1/url-view">
                 <div class="containerURL">
                     <div class="inputBox">
-                        <span id="shortUrlLabel">This is your short URL: http://localhost:8989/api/v1/urls/[[${urlDto.shortUrl}]]</span>
-                        <input type="text" th:field="*{shortUrl}" readonly="readonly" id="shortUrlInput">
+                        <label id="shortUrlLabel">Your short URL is:</label>
+                        <input type="text" th:field="*{shortUrl}" id="shortUrlInputHidden">
+                        <script th:inline="javascript">
+                            var shortUrlValue = [[${urlDto.shortUrl}]];
+
+
+                            if (shortUrlValue === null || shortUrlValue.trim() === '') {
+                                shortUrlValue = '';
+                            } else {
+                                var fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
+                                document.getElementById('shortUrlInputHidden').value = fullUrl;
+                            }
+                        </script>
                     </div>
                 </div>
             </form>
-
         </div>
 
         <div class="col-lg-6">

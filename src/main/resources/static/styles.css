@@ -27,6 +27,12 @@ body{
     position: relative;
     color: #00dfc4;
 }
+.inputBox
+{
+    text-align: center;
+    position: relative;
+    color: #00dfc4;
+}
 .modal-header {
     text-align: left;
 }
