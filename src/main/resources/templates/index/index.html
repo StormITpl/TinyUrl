@@ -51,32 +51,17 @@
                 </div>
             </form>
 
-            <div style="margin-top: 120px;"></div>
+            <div style="margin-top: 80px;"></div>
 
-            <form th:object="${urlDto}" method="get" action="/api/v1/url-view">
+            <form th:object="${urlDto}" method="post" action="/api/v1/url-view">
                 <div class="containerURL">
                     <div class="inputBox">
-                        <input>
-                        <span>This is your short URL</span>
+                        <span id="shortUrlLabel">This is your short URL: http://localhost:8989/api/v1/urls/[[${urlDto.shortUrl}]]</span>
+                        <input type="text" th:field="*{shortUrl}" readonly="readonly" id="shortUrlInput">
                     </div>
-
                 </div>
             </form>
 
-
-            <!--            <form id="createUrlForm" class="mt-5">-->
-            <!--                <div class="form-group" col-12 col-lg-6>-->
-            <!--                    <label for="customLongUrl">Enter the long URL:</label>-->
-            <!--                    <input type="url" class="form-control neon-border" id="customLongUrl" name="customLongUrl"-->
-            <!--                           required>-->
-            <!--                </div>-->
-            <!--                <div class="form-group" col-12 col-lg-6>-->
-            <!--                    <label for="customShortUrl">Enter the custom short URL:</label>-->
-            <!--                    <input type="text" class="form-control neon-border" id="customShortUrl" name="customShortUrl"-->
-            <!--                           required>-->
-            <!--                </div>-->
-            <!--                <button type="submit" class="btn btn-success">Create Short URL</button>-->
-            <!--            </form>-->
         </div>
 
         <div class="col-lg-6">

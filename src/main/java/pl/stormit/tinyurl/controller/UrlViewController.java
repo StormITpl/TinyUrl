@@ -40,7 +40,8 @@ public class UrlViewController {
 
     @PostMapping
     public String createShortUrl(UrlDto urlDto){
-        urlService.generateShortUrl(urlDto);
+        UrlDto generatedUrlDto = urlService.generateShortUrl(urlDto);
+        urlDto.setShortUrl(generatedUrlDto.getShortUrl());
 
         return "index/index";
     }
