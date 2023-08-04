@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -66,6 +67,15 @@ public class UrlService {
         return urlRepository.findAll().stream()
                 .map(urlMapper::mapUrlEntityToUrlDto)
                 .toList();
+    }
+
+    @Transactional
+    public void deleteUrl(UUID urlId) {
+        if (urlRepository.existsById(urlId)) {
+            urlRepository.deleteById(urlId);
+        } else {
+            throw new ApiException("The url by id: " + urlId + ", does not exist.");
+        }
     }
 
     private String encodeUrl(String longUrl) {
