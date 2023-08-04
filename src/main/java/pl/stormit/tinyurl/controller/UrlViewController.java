@@ -10,9 +10,6 @@ import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.service.UrlAnalyticsService;
 import pl.stormit.tinyurl.service.UrlService;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Controller
 @RequestMapping(path = "api/v1/url-view")
 @RequiredArgsConstructor
@@ -40,7 +37,7 @@ public class UrlViewController {
     }
 
     @PostMapping
-    public String createShortUrl(UrlDto urlDto){
+    public String generateShortUrl(UrlDto urlDto){
         UrlDto generatedUrlDto = urlService.generateShortUrl(urlDto);
         urlDto.setShortUrl(generatedUrlDto.getShortUrl());
 

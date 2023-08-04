@@ -21,11 +21,6 @@
                 <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">About</a></li>
             </ul>
-
-            <div class="text-end">
-                <button type="button" class="btn btn-outline-light me-2">Login</button>
-                <button type="button" class="btn btn-warning">Sign-up</button>
-            </div>
         </div>
     </div>
 </header>
@@ -52,7 +47,7 @@
 
             <div style="margin-top: 60px;"></div>
 
-            <form th:object="${urlDto}" method="post" action="/api/v1/url-premium">
+            <form th:object="${urlDto}" method="post" action="/api/v1/url-premium/create">
                 <div class="containerURL">
                     <div class="GenerateYourOwnShortUrl">
                         <h1>Generate your own short URL</h1>
@@ -81,10 +76,27 @@
                         <div class="modal-header border-bottom-0">
                             <div class="title-and-labels">
                                 <h1 class="modal-title fs-5">List of your URLs:</h1>
-<!--                                <th:block th:each="urlDto, iterationStatus : ${mostPopularUrls}">-->
-<!--                                    <label th:text="${iterationStatus.count + '. ' + mostPopularUrls.get(0)}"></label>-->
-<!--                                </th:block>-->
                             </div>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>URL</th>
+                                    <th>Management</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="url : ${allUrls}">
+                                    <td th:text="${url.getLongUrl()}">0</td>
+                                    <td class="actions">
+                                        <form th:action="@{/api/v1/url-premium/delete/{id}(id=${url.id})}" method="post">
+                                            <button type="submit">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
 
                     </div>
