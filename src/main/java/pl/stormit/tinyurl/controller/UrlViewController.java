@@ -26,6 +26,7 @@ public class UrlViewController {
     public String showForm(Model model) {
         UrlDto urlDto = new UrlDto();
         model.addAttribute("urlDto", new UrlDto());
+        model.addAttribute("mostPopularUrls", urlAnalyticsService.findMostPopularUrls());
         return "index/index";
     }
 
@@ -42,14 +43,6 @@ public class UrlViewController {
     public String createShortUrl(UrlDto urlDto){
         UrlDto generatedUrlDto = urlService.generateShortUrl(urlDto);
         urlDto.setShortUrl(generatedUrlDto.getShortUrl());
-
-        return "index/index";
-    }
-
-    @GetMapping({"most-popular"})
-    public String getMostPopularUrls(Model model) {
-        List<UrlDto> mostPopularUrls = urlAnalyticsService.findMostPopularUrls();
-        model.addAttribute("mostPopularUrls", mostPopularUrls);
 
         return "index/index";
     }
