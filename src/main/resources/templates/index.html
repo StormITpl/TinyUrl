@@ -4,21 +4,112 @@
     <meta charset="UTF-8">
     <title>TinyURL</title>
     <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/bootstrap.min.css">
 </head>
 <body>
-    <div class="whatCanIDoForYou">
-        <h1>Is there something to short, Boss?</h1>
+<header class="p-3 bg-dark text-white fixed-top">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/static" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                    <use xlink:href="#bootstrap"/>
+                </svg>
+            </a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a th:href="@{/api/v1/url-view}" class="nav-link px-2 text-secondary">Home</a></li>
+                <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
+                <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+            </ul>
+
+            <div class="text-end">
+                <a th:href="@{/api/v1/url-premium}" class="btn btn-warning">Premium version</a>
+                <button type="button" class="btn btn-outline-light me-2">Login</button>
+                <button type="button" class="btn btn-warning">Sign-up</button>
+            </div>
+        </div>
     </div>
-    <div class="inputBox">
-        <input type="text" required="required">
-        <span>Enter long URL</span>
+</header>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-6">
+
+            <form th:object="${urlDto}" method="post" action="/api/v1/url-view">
+                <div class="containerURL">
+                    <div class="GenerateShortUrl">
+                        <h3>Generate a short URL</h3>
+                    </div>
+                    <br>
+                    <div class="inputBox">
+                        <input type="text" required="required" th:field="*{longUrl}">
+                        <span>Enter long URL</span>
+                    </div>
+
+                    <div class="inputSubmit">
+                        <input type="submit" value="Generate">
+                    </div>
+                </div>
+            </form>
+
+            <div style="margin-top: 80px;"></div>
+
+            <form th:object="${urlDto}" method="post" action="/api/v1/url-view">
+                <div class="containerURL">
+                    <div class="inputBox">
+                        <label id="shortUrlLabel">Your short URL is:</label>
+                        <input type="text" th:field="*{shortUrl}" id="shortUrlInputHidden">
+                        </script>
+                        <script th:inline="javascript">
+                            var shortUrlValue = [[${urlDto.shortUrl}]];
+
+                            if (shortUrlValue === null || shortUrlValue.trim() === '') {
+                                shortUrlValue = '';
+                            } else {
+                                var fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
+                                document.getElementById('shortUrlInputHidden').value = fullUrl;
+                            }
+                        </script>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5" tabindex="-1"
+                 role="dialog" id="modalSheet">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content rounded-4 shadow">
+                        <div class="modal-header border-bottom-0">
+                            <div class="title-and-labels">
+                                <h1 class="modal-title fs-5">List of most popular URLs:</h1>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Total Clicks</th>
+                                    <th>URL</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="urlDto : ${mostPopularUrls}">
+                                    <td th:text="${urlDto.analytics.totalClicks}">0</td>
+                                    <td>
+                                        <a th:href="@{'/api/v1/url-view/' + ${urlDto.analytics.id}}">
+                                            <span th:text="${urlDto.longUrl}">URL</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 180px;"></div>
+            </div>
+        </div>
     </div>
-    <div class="inputBox">
-        <input type="text" required="required">
-        <span>This is your short URL</span>
-    </div>
-    <div class="inputSubmit">
-    <input type="submit" value="Generate">
-    </div>
+</div>
 </body>
 </html>

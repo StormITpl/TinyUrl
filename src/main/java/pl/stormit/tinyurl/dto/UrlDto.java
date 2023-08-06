@@ -20,4 +20,6 @@ public class UrlDto {
     private String shortUrl;
 
     private UrlAnalyticsDto analytics;
+
+    private UrlExpiryDto expiry;
 }

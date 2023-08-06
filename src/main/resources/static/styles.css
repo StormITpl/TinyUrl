@@ -114,6 +114,18 @@ body{
     font-size: 1em;
 
 }
+.inputSubmitDelete input
+{
+    width: 70px;
+    padding: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: #1d2b3a;
+    border-radius: 10px;
+    outline: none;
+    color: #fff;
+    font-size: 1em;
+
+}
 .inputSubmit input:hover
 {
     width: 150px;

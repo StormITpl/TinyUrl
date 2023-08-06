@@ -31,7 +31,7 @@
             <form th:object="${urlDto}" method="post" action="/api/v1/url-premium">
                 <div class="containerURL">
                     <div class="GenerateShortUrl">
-                        <h1>Generate a short URL</h1>
+                        <h5>Generate a short URL</h5>
                     </div>
                     <br>
                     <div class="inputBox">
@@ -45,12 +45,12 @@
                 </div>
             </form>
 
-            <div style="margin-top: 60px;"></div>
+            <div style="margin-top: 30px;"></div>
 
             <form th:object="${urlDto}" method="post" action="/api/v1/url-premium/create">
                 <div class="containerURL">
                     <div class="GenerateYourOwnShortUrl">
-                        <h1>Generate your own short URL</h1>
+                        <h5>Generate your own short URL</h5>
                     </div>
                     <br>
                     <div class="inputBox">
@@ -63,6 +63,27 @@
                     </div>
                     <div class="inputSubmit">
                         <input type="submit" value="Generate">
+                    </div>
+                </div>
+            </form>
+            <div style="margin-top: 30px;"></div>
+
+            <form th:object="${urlDto}" method="post" action="/api/v1/url-premium">
+                <div class="containerURL">
+                    <div class="inputBox">
+                        <label id="shortUrlLabel">Your short URL is:</label>
+                        <input type="text" th:field="*{shortUrl}" id="shortUrlInputHidden">
+                        <script th:inline="javascript">
+                            var shortUrlValue = [[${urlDto.shortUrl}]];
+
+
+                            if (shortUrlValue === null || shortUrlValue.trim() === '') {
+                                shortUrlValue = '';
+                            } else {
+                                var fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
+                                document.getElementById('shortUrlInputHidden').value = fullUrl;
+                            }
+                        </script>
                     </div>
                 </div>
             </form>
@@ -83,45 +104,27 @@
                                 <thead>
                                 <tr>
                                     <th>URL</th>
+                                    <th>short url</th>
                                     <th>Management</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:each="url : ${allUrls}">
-                                    <td th:text="${url.getLongUrl()}">0</td>
+                                    <td th:text="${url.longUrl}"></td>
+                                    <td th:text="${url.shortUrl}"></td>
                                     <td class="actions">
                                         <form th:action="@{/api/v1/url-premium/delete/{id}(id=${url.id})}" method="post">
-                                            <button type="submit">Delete</button>
+                                            <div class="inputSubmitDelete">
+                                                <input type="submit" value="Delete">
+                                            </div>
                                         </form>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
                 </div>
-                <div style="margin-top: 180px;"></div>
-
-                <form th:object="${urlDto}" method="post" action="/api/v1/url-premium">
-                    <div class="containerURL">
-                        <div class="inputBox">
-                            <label id="shortUrlLabel">Your short URL is:</label>
-                            <input type="text" th:field="*{shortUrl}" id="shortUrlInputHidden">
-                            <script th:inline="javascript">
-                                var shortUrlValue = [[${urlDto.shortUrl}]];
-
-
-                                if (shortUrlValue === null || shortUrlValue.trim() === '') {
-                                    shortUrlValue = '';
-                                } else {
-                                    var fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
-                                    document.getElementById('shortUrlInputHidden').value = fullUrl;
-                                }
-                            </script>
-                        </div>
-                    </div>
-                </form>
             </div>
         </div>
     </div>

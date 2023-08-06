@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import pl.stormit.tinyurl.domain.model.UrlExpiry;
 import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.service.UrlAnalyticsService;
 import pl.stormit.tinyurl.service.UrlService;
@@ -20,14 +21,13 @@ public class UrlPremiumViewController {
 
     private final UrlService urlService;
 
-    private final UrlAnalyticsService urlAnalyticsService;
 
     @GetMapping
     public String showPremiumForm(Model model) {
         UrlDto urlDto = new UrlDto();
         model.addAttribute("urlDto", urlDto);
         model.addAttribute("allUrls", urlService.getUrls());
-        return "index/indexPremium";
+        return "indexPremium";
     }
 
     @GetMapping("add")
@@ -36,21 +36,21 @@ public class UrlPremiumViewController {
         model.addAttribute("urlDto", urlDto);
 
 
-        return "index/indexPremium";
+        return "indexPremium";
     }
 
     @PostMapping
     public String generateShortUrl(UrlDto urlDto){
         urlService.generateShortUrl(urlDto);
 
-        return "index/indexPremium";
+        return "indexPremium";
     }
 
     @PostMapping("create")
     public String createShortUrl(UrlDto urlDto){
         urlService.createShortUrl(urlDto);
 
-        return "index/indexPremium";
+        return "indexPremium";
     }
 
     @PostMapping("/delete/{id}")

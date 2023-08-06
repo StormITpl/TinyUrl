@@ -24,23 +24,24 @@ public class UrlViewController {
         UrlDto urlDto = new UrlDto();
         model.addAttribute("urlDto", new UrlDto());
         model.addAttribute("mostPopularUrls", urlAnalyticsService.findMostPopularUrls());
-        return "index/index";
+        return "index";
     }
 
     @GetMapping("add")
-    public String addView(Model model){
+    public String addView(Model model) {
         UrlDto urlDto = new UrlDto();
         model.addAttribute("urlDto", urlDto);
 
 
-        return "index/index";
+        return "index";
     }
 
     @PostMapping
-    public String generateShortUrl(UrlDto urlDto){
+    public String generateShortUrl(Model model, UrlDto urlDto) {
         UrlDto generatedUrlDto = urlService.generateShortUrl(urlDto);
         urlDto.setShortUrl(generatedUrlDto.getShortUrl());
+        model.addAttribute("mostPopularUrls", urlAnalyticsService.findMostPopularUrls());
 
-        return "index/index";
+        return "index";
     }
 }
