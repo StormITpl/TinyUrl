@@ -28,7 +28,7 @@
     <div class="row">
         <div class="col-lg-6">
 
-            <form th:object="${urlDto}" method="post" action="/api/v1/url-premium">
+            <form id="form1" th:object="${urlDto}" method="post" action="/api/v1/url-premium/generate">
                 <div class="containerURL">
                     <div class="GenerateShortUrl">
                         <h5>Generate a short URL</h5>
@@ -38,7 +38,6 @@
                         <input type="text" required="required" th:field="*{longUrl}">
                         <span>Enter long URL</span>
                     </div>
-
                     <div class="inputSubmit">
                         <input type="submit" value="Generate">
                     </div>
@@ -47,7 +46,7 @@
 
             <div style="margin-top: 30px;"></div>
 
-            <form th:object="${urlDto}" method="post" action="/api/v1/url-premium/create">
+            <form id="form2" th:object="${urlDto}" method="post" action="/api/v1/url-premium/create">
                 <div class="containerURL">
                     <div class="GenerateYourOwnShortUrl">
                         <h5>Generate your own short URL</h5>
@@ -58,7 +57,7 @@
                         <span>Enter long URL</span>
                     </div>
                     <div class="inputBox">
-                        <input>
+                        <input type="text" required="required" th:field="*{shortUrl}">
                         <span>Proposition your own short URL</span>
                     </div>
                     <div class="inputSubmit">
@@ -66,6 +65,7 @@
                     </div>
                 </div>
             </form>
+
             <div style="margin-top: 30px;"></div>
 
             <form th:object="${urlDto}" method="post" action="/api/v1/url-premium">
@@ -75,7 +75,6 @@
                         <input type="text" th:field="*{shortUrl}" id="shortUrlInputHidden">
                         <script th:inline="javascript">
                             var shortUrlValue = [[${urlDto.shortUrl}]];
-
 
                             if (shortUrlValue === null || shortUrlValue.trim() === '') {
                                 shortUrlValue = '';
