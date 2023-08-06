@@ -58,7 +58,8 @@
                     <div class="inputBox">
                         <label id="shortUrlLabel">Your short URL is:</label>
                         <input type="text" th:field="*{shortUrl}" id="shortUrlInputHidden">
-                        </script>
+                        <div style="margin-top: 5px;"></div>
+                        <button type="button" id="copyButton" class="btn btn-outline-light btn-sm me-2">copy</button>
                         <script th:inline="javascript">
                             var shortUrlValue = [[${urlDto.shortUrl}]];
 
@@ -68,6 +69,25 @@
                                 var fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
                                 document.getElementById('shortUrlInputHidden').value = fullUrl;
                             }
+                        </script>
+                        <script th:inline="javascript">
+                            var shortUrlValue = [[${urlDto.shortUrl}]];
+
+                            document.addEventListener('DOMContentLoaded', function() {
+                                var copyButton = document.getElementById('copyButton');
+                                var shortUrlInput = document.getElementById('shortUrlInputHidden');
+
+                                if (shortUrlValue.trim() !== '') {
+                                    var fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
+                                    shortUrlInput.value = fullUrl;
+                                }
+
+                                copyButton.addEventListener('click', function() {
+                                    shortUrlInput.select();
+                                    document.execCommand('copy');
+                                    alert('Short URL copied to clipboard!');
+                                });
+                            });
                         </script>
                     </div>
                 </div>
