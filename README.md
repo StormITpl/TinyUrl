@@ -31,7 +31,7 @@ The application is based on the REST architecture and the Minimum Viable Product
 - [Mockito](https://site.mockito.org/)
 
 ## Screenshots
-![Test redirect](./images/redirect.png)
+![Test redirect](./images/mainsite.png)
 
 ## Prerequisites
 The following tools are required to start the application:

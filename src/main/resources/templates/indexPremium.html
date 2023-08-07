@@ -21,12 +21,6 @@
                 <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">About</a></li>
             </ul>
-
-            <div class="text-end">
-                <a th:href="@{/api/v1/url-premium}" class="btn btn-warning">Premium version</a>
-                <button type="button" class="btn btn-outline-light me-2">Login</button>
-                <button type="button" class="btn btn-warning">Sign-up</button>
-            </div>
         </div>
     </div>
 </header>
@@ -34,26 +28,47 @@
     <div class="row">
         <div class="col-lg-6">
 
-            <form th:object="${urlDto}" method="post" action="/api/v1/url-view">
+            <form id="form1" th:object="${urlDto}" method="post" action="/api/v1/url-premium/generate">
                 <div class="containerURL">
                     <div class="GenerateShortUrl">
-                        <h3>Generate a short URL</h3>
+                        <h5>Generate a short URL</h5>
                     </div>
                     <br>
                     <div class="inputBox">
                         <input type="text" required="required" th:field="*{longUrl}">
                         <span>Enter long URL</span>
                     </div>
-
                     <div class="inputSubmit">
                         <input type="submit" value="Generate">
                     </div>
                 </div>
             </form>
 
-            <div style="margin-top: 80px;"></div>
+            <div style="margin-top: 30px;"></div>
 
-            <form th:object="${urlDto}" method="post" action="/api/v1/url-view">
+            <form id="form2" th:object="${urlDto}" method="post" action="/api/v1/url-premium/create">
+                <div class="containerURL">
+                    <div class="GenerateYourOwnShortUrl">
+                        <h5>Generate your own short URL</h5>
+                    </div>
+                    <br>
+                    <div class="inputBox">
+                        <input type="text" required="required" th:field="*{longUrl}">
+                        <span>Enter long URL</span>
+                    </div>
+                    <div class="inputBox">
+                        <input type="text" required="required" th:field="*{shortUrl}">
+                        <span>Proposition your own short URL</span>
+                    </div>
+                    <div class="inputSubmit">
+                        <input type="submit" value="Generate">
+                    </div>
+                </div>
+            </form>
+
+            <div style="margin-top: 30px;"></div>
+
+            <form th:object="${urlDto}" method="post" action="/api/v1/url-premium">
                 <div class="containerURL">
                     <div class="inputBox">
                         <label id="shortUrlLabel">Your short URL is:</label>
@@ -101,24 +116,28 @@
                     <div class="modal-content rounded-4 shadow">
                         <div class="modal-header border-bottom-0">
                             <div class="title-and-labels">
-                                <h1 class="modal-title fs-5">List of most popular URLs:</h1>
+                                <h1 class="modal-title fs-5">List of your URLs:</h1>
                             </div>
                         </div>
                         <div class="modal-body">
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th>Total Clicks</th>
                                     <th>URL</th>
+                                    <th>short url</th>
+                                    <th>Management</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="urlDto : ${mostPopularUrls}">
-                                    <td th:text="${urlDto.analytics.totalClicks}">0</td>
-                                    <td>
-                                        <a th:href="@{'/api/v1/url-view/' + ${urlDto.analytics.id}}">
-                                            <span th:text="${urlDto.longUrl}">URL</span>
-                                        </a>
+                                <tr th:each="url : ${allUrls}">
+                                    <td th:text="${url.longUrl}"></td>
+                                    <td th:text="${url.shortUrl}"></td>
+                                    <td class="actions">
+                                        <form th:action="@{/api/v1/url-premium/delete/{id}(id=${url.id})}" method="post">
+                                            <div class="inputSubmitDelete">
+                                                <input type="submit" value="Delete">
+                                            </div>
+                                        </form>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -126,7 +145,6 @@
                         </div>
                     </div>
                 </div>
-                <div style="margin-top: 180px;"></div>
             </div>
         </div>
     </div>

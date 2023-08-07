@@ -31,7 +31,7 @@ Aplikacja jest oparta na architekturze REST i modelu Minimum Viable Product (MVP
 - [Mockito](https://site.mockito.org/)
 
 ## Zrzuty ekranu
-![Test redirect](./images/redirect.png)
+![Test redirect](./images/mainsite.png)
 
 ## Wymagane aplikacje/narzędzia
 Do uruchomienia aplikacji wymagana jest instalacja następujących narzędzi:

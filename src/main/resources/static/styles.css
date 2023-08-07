@@ -15,11 +15,40 @@ body{
     gap: 30px;
     background: #1d2b3a;
 }
-.whatCanIDoForYou
+.GenerateShortUrl
 {
     text-align: center;
     position: relative;
     color: #00dfc4;
+}
+.GenerateYourOwnShortUrl
+{
+    text-align: center;
+    position: relative;
+    color: #00dfc4;
+}
+.inputBox
+{
+    text-align: center;
+    position: relative;
+    color: #00dfc4;
+}
+.modal-header {
+    text-align: left;
+}
+
+.title-and-labels {
+    display: inline-block;
+}
+
+.title-and-labels h1 {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.title-and-labels label {
+    display: block;
+    margin-bottom: 5px;
 }
 .inputBox
 {
@@ -77,6 +106,18 @@ body{
 {
     width: 150px;
     padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: #1d2b3a;
+    border-radius: 10px;
+    outline: none;
+    color: #fff;
+    font-size: 1em;
+
+}
+.inputSubmitDelete input
+{
+    width: 70px;
+    padding: 4px;
     border: 1px solid rgba(255, 255, 255, 0.25);
     background: #1d2b3a;
     border-radius: 10px;
