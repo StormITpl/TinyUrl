@@ -42,8 +42,8 @@ class UrlServiceTest {
     void shouldCreateShortUrlCorrectly() {
         // given
         Url url = new Url(ID_1, "https://www.google.com", "yr49u12", LocalDate.now(), null, null);
-        UrlDto createdUrlDto = new UrlDto("https://www.google.com", "yr49u12", null);
-        UrlDto urlDto = new UrlDto("https://www.google.com", "yr49u12", null);
+        UrlDto createdUrlDto = new UrlDto(null,"https://www.google.com", "yr49u12", null,null);
+        UrlDto urlDto = new UrlDto(null, "https://www.google.com", "yr49u12", null, null);
 
         // when
         when(urlRepository.save(any(Url.class))).thenReturn(url);
@@ -59,8 +59,8 @@ class UrlServiceTest {
     void shouldThrowAnExceptionWhenLongUrlIsEmpty() {
         // given
         Url url = new Url(ID_1, "", "", LocalDate.now(), null, null);
-        UrlDto createdUrlDto = new UrlDto("", "", null);
-        UrlDto urlDto = new UrlDto("", "", null);
+        UrlDto createdUrlDto = new UrlDto(null, "", "", null, null);
+        UrlDto urlDto = new UrlDto(null, "", "", null, null);
 
         // when
         when(urlRepository.save(any(Url.class))).thenReturn(url);
@@ -76,8 +76,8 @@ class UrlServiceTest {
     void shouldThrowAnExceptionWhenOnlyWhiteSpacesInLongUrl() {
         // given
         Url url = new Url(ID_1, "   ", "", LocalDate.now(), null, null);
-        UrlDto createdUrlDto = new UrlDto("    ", "", null);
-        UrlDto urlDto = new UrlDto("   ", "", null);
+        UrlDto createdUrlDto = new UrlDto(null, "    ", "", null, null);
+        UrlDto urlDto = new UrlDto(null, "   ", "", null, null);
 
         // when
         when(urlRepository.save(any(Url.class))).thenReturn(url);

@@ -161,11 +161,11 @@ class UrlAnalyticsControllerTest {
 
         List<UrlDto> popularUrls = new ArrayList<>();
 
-        UrlDto urlDto1 = new UrlDto("https://google.com", "abc123", null);
-        UrlDto urlDto2 = new UrlDto("https://wp.pl", "def456", null);
-        UrlDto urlDto3 = new UrlDto("https://stormit.pl", "ghi789", null);
-        UrlDto urlDto4 = new UrlDto("https://yahoo.com", "klo159", null);
-        UrlDto urlDto5 = new UrlDto("https://stooq.pl", "xyz547", null);
+        UrlDto urlDto1 = new UrlDto(null, "https://google.com", "abc123", null, null);
+        UrlDto urlDto2 = new UrlDto(null, "https://wp.pl", "def456", null, null);
+        UrlDto urlDto3 = new UrlDto(null, "https://stormit.pl", "ghi789", null, null);
+        UrlDto urlDto4 = new UrlDto(null, "https://yahoo.com", "klo159", null, null);
+        UrlDto urlDto5 = new UrlDto(null, "https://stooq.pl", "xyz547", null, null);
 
         popularUrls.add(urlDto1);
         popularUrls.add(urlDto2);

@@ -43,9 +43,9 @@ class UrlControllerTest {
     @Test
     void shouldReturnStatusCreatedWhenCreateShortUrlCorrectly() throws Exception {
         // given
-        urlDto = new UrlDto("https://www.google.pl/", "", null);
+        urlDto = new UrlDto(null, "https://www.google.pl/", "", null, null);
         when(urlService.generateShortUrl(urlDto))
-                .thenReturn(new UrlDto("https://www.google.pl/", "", null));
+                .thenReturn(new UrlDto(null, "https://www.google.pl/", "", null, null));
 
         // when
         ResultActions result = mockMvc.perform(post("/api/v1/urls")
@@ -59,9 +59,9 @@ class UrlControllerTest {
     @Test
     void shouldThrowAnExceptionWhenLongUrlIsNull() throws Exception {
         // given
-        urlDto = new UrlDto(null, "", null);
+        urlDto = new UrlDto(null, null, "", null, null);
         when(urlService.generateShortUrl(any()))
-                .thenReturn(new UrlDto(null, "", null));
+                .thenReturn(new UrlDto(null, null, "", null, null));
 
         // when
         ResultActions result = mockMvc.perform(post("/api/v1/urls")
@@ -75,9 +75,9 @@ class UrlControllerTest {
     @Test
     void shouldThrowAnExceptionWhenLongUrlIsEmpty() throws Exception {
         // given
-        urlDto = new UrlDto("", "", null);
+        urlDto = new UrlDto(null, "", "", null, null);
         when(urlService.generateShortUrl(any()))
-                .thenReturn(new UrlDto("", "", null));
+                .thenReturn(new UrlDto(null, "", "", null, null));
 
         // when
         ResultActions result = mockMvc.perform(post("/api/v1/urls")
@@ -91,9 +91,9 @@ class UrlControllerTest {
     @Test
     void shouldThrowAnExceptionWhenOnlyWhiteSpacesInLongUrl() throws Exception {
         // given
-        urlDto = new UrlDto("     ", "", null);
+        urlDto = new UrlDto(null, "     ", "", null, null);
         when(urlService.generateShortUrl(any()))
-                .thenReturn(new UrlDto("     ", "", null));
+                .thenReturn(new UrlDto(null, "     ", "", null, null));
 
         // when
         ResultActions result = mockMvc.perform(post("/api/v1/urls")
@@ -107,7 +107,7 @@ class UrlControllerTest {
     @Test
     void shouldRedirectToLongUrlWhenShortUrlIsCorrectly() throws Exception {
         // given
-        urlDto = new UrlDto("www.cnn.com", "kbr345", null);
+        urlDto = new UrlDto(null, "www.cnn.com", "kbr345", null, null);
         HttpServletRequest servletRequest = mock(HttpServletRequest.class);
         URI uri = new URI("www.cnn.com");
         when(urlService.getLongUrlByShortUrl(Mockito.eq("kbr345"), any(HttpServletRequest.class)))
