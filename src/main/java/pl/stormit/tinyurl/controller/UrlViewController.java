@@ -21,17 +21,16 @@ public class UrlViewController {
 
     @GetMapping
     public String showForm(Model model) {
-        UrlDto urlDto = new UrlDto();
+//        UrlDto urlDto = new UrlDto(); ???
         model.addAttribute("urlDto", new UrlDto());
         model.addAttribute("mostPopularUrls", urlAnalyticsService.findMostPopularUrls());
-        return "index";
+        return "index"; // można stałą dodać
     }
 
     @GetMapping("add")
     public String addView(Model model) {
         UrlDto urlDto = new UrlDto();
         model.addAttribute("urlDto", urlDto);
-
 
         return "index";
     }

@@ -43,7 +43,7 @@ public class Url {
     private LocalDate creationDate = LocalDate.now();
 
     @JsonManagedReference
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "url", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "url", fetch = FetchType.EAGER)// to nie zabije bazy przy większej ilości?
     private List<UrlAnalytics> urlAnalytics;
 
     @JsonIgnore

@@ -34,7 +34,6 @@ public class UrlService {
     @Transactional
     public UrlDto generateShortUrl(UrlDto urlDto) {
         if (!urlDto.getLongUrl().isBlank()) {
-
             Url urlToSave = new Url();
             String encodedUrl = encodeUrl(urlDto.getLongUrl());
             urlToSave.setCreationDate(LocalDate.now());
@@ -44,6 +43,7 @@ public class UrlService {
             urlExpiryService.createUrlExpiryDate(urlToSave);
             return urlMapper.mapUrlEntityToUrlDto(savedUrl);
         }
+
         throw new ApiException("Change the request your longUrl is empty!");
     }
 
@@ -102,6 +102,7 @@ public class UrlService {
     }
 
     public boolean shortUrlExist(String shortUrl) {
+        // nie podoba mi się, że metoda sypie wyjątkiem albo zwraca true; może warto chociaż nazwę zmienić?
         if (urlRepository.findUrlByShortUrl(shortUrl).isPresent()) {
             throw new ApiException("The short url: " + shortUrl + ", exists.");
         } else {
@@ -118,7 +119,6 @@ public class UrlService {
     }
 
     public String isShortUrlCorrect(String shortUrl) {
-
         String regex = "^\\w{4,8}$";
 
         Pattern p = Pattern.compile(regex);
@@ -126,6 +126,7 @@ public class UrlService {
         if (m.matches()) {
             return shortUrl;
         }
+        // String.format
         throw new ApiException("The short url: " + shortUrl + ", is incorrect.");
     }
 }

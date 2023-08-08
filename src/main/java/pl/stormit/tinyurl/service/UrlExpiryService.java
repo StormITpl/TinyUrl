@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 @RequiredArgsConstructor
 public class UrlExpiryService implements UrlExpiryInterface {
 
+    public static final int SOME_CONSTANT = 15000;
     private final UrlExpiryRepository urlExpiryRepository;
 
     private final UrlExpiryMapper urlExpiryMapper;
@@ -33,7 +34,7 @@ public class UrlExpiryService implements UrlExpiryInterface {
 
     @Override
     public boolean isAccountPremium(UrlExpiry urlExpiry) {
-
+// czytelniej będzie w odwrotnej kolejności
         if (!urlExpiry.getIsPremium()) {
             urlExpiry.setIsPremium(false);
             urlExpiry.setExpirationDate(Instant.now().plusSeconds(TWO_WEEKS));
@@ -45,6 +46,7 @@ public class UrlExpiryService implements UrlExpiryInterface {
         }
     }
 
+    // a co jak będzie duuuużo obiektów?
     public List<UrlExpiryDto> getAllExpires() {
         return urlExpiryRepository.findAll().stream()
                 .map(urlExpiryMapper::mapUrlExpiryEntityToUrlExpiryDto)
@@ -57,6 +59,7 @@ public class UrlExpiryService implements UrlExpiryInterface {
                 .filter(urlExpiry -> Objects.nonNull(urlExpiry.getExpirationDate()) && urlExpiry.getExpirationDate().isBefore(checkInstant)).toList();
     }
 
+    // logEx...
     public void printExpiredUrlsToDelete(List<UrlExpiry> expires) {
         Logger logger = Logger.getLogger(getClass().getName());
 
@@ -70,7 +73,7 @@ public class UrlExpiryService implements UrlExpiryInterface {
         }
     }
 
-    @Scheduled(fixedDelay = 15000)
+    @Scheduled(fixedDelay = SOME_CONSTANT)
     public void deleteExpiredDateUrls() {
         List<UrlExpiry> expires = getAllExpiredUrls();
         printExpiredUrlsToDelete(expires);

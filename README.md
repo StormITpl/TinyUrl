@@ -45,7 +45,7 @@ The following tools are required to start the application:
 
 To run this project, please clone this repository and create a local copy on your computer.
 
-After download project configurate your database and db server in few step:
+After download project, configure your database and db server in few steps:
 
 - Create database connection with Docker pasting in command line:
 
