@@ -51,10 +51,10 @@ public class UrlService {
     public UrlDto createShortUrl(UrlDto urlDto) {
         Url urlToSave = new Url();
         urlToSave.setCreationDate(LocalDate.now());
-        if (longUrlExist(urlDto.getLongUrl())) {
+        if (isLongUrlExists(urlDto.getLongUrl())) {
             urlToSave.setLongUrl(urlDto.getLongUrl());
         }
-        if (shortUrlExist(isShortUrlCorrect(urlDto.getShortUrl()))) {
+        if (isShortUrlExists(isShortUrlCorrect(urlDto.getShortUrl()))) {
             urlToSave.setShortUrl(urlDto.getShortUrl());
         }
         Url savedUrl = urlRepository.save(urlToSave);
@@ -101,24 +101,15 @@ public class UrlService {
         }
     }
 
-    public boolean shortUrlExist(String shortUrl) {
-        if (urlRepository.findUrlByShortUrl(shortUrl).isPresent()) {
-            throw new ApiException("The short url: " + shortUrl + ", exists.");
-        } else {
-            return true;
-        }
+    public boolean isShortUrlExists(String shortUrl) {
+        return urlRepository.findUrlByShortUrl(shortUrl).isPresent();
     }
 
-    public boolean longUrlExist(String longUrl) {
-        if (urlRepository.findUrlByLongUrl(longUrl).isPresent()) {
-            throw new ApiException("The long url: " + longUrl + ", exist.");
-        } else {
-            return true;
-        }
+    public boolean isLongUrlExists(String longUrl) {
+        return urlRepository.findUrlByLongUrl(longUrl).isPresent();
     }
 
     public String isShortUrlCorrect(String shortUrl) {
-
         String regex = "^\\w{4,8}$";
 
         Pattern p = Pattern.compile(regex);
@@ -126,6 +117,6 @@ public class UrlService {
         if (m.matches()) {
             return shortUrl;
         }
-        throw new ApiException("The short url: " + shortUrl + ", is incorrect.");
+        throw new ApiException(String.format("The short url: %s, is incorrect.", shortUrl));
     }
 }
