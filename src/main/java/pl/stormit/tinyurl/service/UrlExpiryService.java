@@ -38,19 +38,22 @@ public class UrlExpiryService implements UrlExpiryInterface {
     @Override
     public boolean isAccountPremium(UrlExpiry urlExpiry) {
 
-        if (!urlExpiry.getIsPremium()) {
-            urlExpiry.setIsPremium(false);
-            urlExpiry.setExpirationDate(Instant.now().plusSeconds(TWO_WEEKS));
-            return false;
-        } else {
+        if (urlExpiry.getIsPremium()) {
             urlExpiry.setIsPremium(true);
             urlExpiry.setExpirationDate(null);
             return true;
+        } else {
+            urlExpiry.setIsPremium(false);
+            urlExpiry.setExpirationDate(Instant.now().plusSeconds(TWO_WEEKS));
+            return false;
         }
     }
 
-    public List<UrlExpiryDto> getAllExpires() {
-        return urlExpiryRepository.findAll().stream()
+    public List<UrlExpiryDto> getAllExpires(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<UrlExpiry> urlExpiryPage = urlExpiryRepository.findAll(pageable);
+
+        return urlExpiryPage.stream()
                 .map(urlExpiryMapper::mapUrlExpiryEntityToUrlExpiryDto)
                 .toList();
     }
