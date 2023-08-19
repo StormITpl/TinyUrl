@@ -34,7 +34,6 @@ public class UrlService {
     @Transactional
     public UrlDto generateShortUrl(UrlDto urlDto) {
         if (!urlDto.getLongUrl().isBlank()) {
-
             Url urlToSave = new Url();
             String encodedUrl = encodeUrl(urlDto.getLongUrl());
             urlToSave.setCreationDate(LocalDate.now());
@@ -44,6 +43,7 @@ public class UrlService {
             urlExpiryService.createUrlExpiryDate(urlToSave);
             return urlMapper.mapUrlEntityToUrlDto(savedUrl);
         }
+
         throw new ApiException("Change the request your longUrl is empty!");
     }
 

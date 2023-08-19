@@ -23,6 +23,8 @@ import java.util.Objects;
 public class UrlExpiryService implements UrlExpiryInterface {
 
     public static final int DELAY_TIME = 15000;
+    private static final Logger logger = LoggerFactory.getLogger(UrlExpiryService.class);
+
     private final UrlExpiryRepository urlExpiryRepository;
 
     private final UrlExpiryMapper urlExpiryMapper;
@@ -65,7 +67,6 @@ public class UrlExpiryService implements UrlExpiryInterface {
     }
 
     public void printExpiredUrlsToDelete(List<UrlExpiry> expires) {
-        Logger logger = LoggerFactory.getLogger(getClass());
 
         logger.info("Start searching expired urls");
         if (!expires.isEmpty()) {
