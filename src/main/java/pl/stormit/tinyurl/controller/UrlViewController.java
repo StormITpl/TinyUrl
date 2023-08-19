@@ -11,7 +11,7 @@ import pl.stormit.tinyurl.service.UrlAnalyticsService;
 import pl.stormit.tinyurl.service.UrlService;
 
 @Controller
-@RequestMapping(path = "api/v1/url-view")
+@RequestMapping(path = "/")
 @RequiredArgsConstructor
 public class UrlViewController {
 

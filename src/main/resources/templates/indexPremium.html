@@ -17,9 +17,9 @@
             </a>
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a th:href="@{/api/v1/url-view}" class="nav-link px-2 text-secondary">Home</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+                <li><a th:href="@{/}" class="nav-link px-2 text-secondary">Home</a></li>
+<!--                <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>-->
+<!--                <li><a href="#" class="nav-link px-2 text-white">About</a></li>-->
             </ul>
         </div>
     </div>
@@ -28,7 +28,7 @@
     <div class="row">
         <div class="col-lg-6">
 
-            <form id="form1" th:object="${urlDto}" method="post" action="/api/v1/url-premium/generate">
+            <form id="form1" th:object="${urlDto}" method="post" action="/url-premium/generate">
                 <div class="containerURL">
                     <div class="GenerateShortUrl">
                         <h5>Generate a short URL</h5>
@@ -46,7 +46,7 @@
 
             <div style="margin-top: 30px;"></div>
 
-            <form id="form2" th:object="${urlDto}" method="post" action="/api/v1/url-premium/create">
+            <form id="form2" th:object="${urlDto}" method="post" action="/url-premium/create">
                 <div class="containerURL">
                     <div class="GenerateYourOwnShortUrl">
                         <h5>Generate your own short URL</h5>
@@ -68,7 +68,7 @@
 
             <div style="margin-top: 30px;"></div>
 
-            <form th:object="${urlDto}" method="post" action="/api/v1/url-premium">
+            <form th:object="${urlDto}" method="post" action="/url-premium">
                 <div class="containerURL">
                     <div class="inputBox">
                         <label id="shortUrlLabel">Your short URL is:</label>
@@ -133,7 +133,7 @@
                                     <td th:text="${url.longUrl}"></td>
                                     <td th:text="${url.shortUrl}"></td>
                                     <td class="actions">
-                                        <form th:action="@{/api/v1/url-premium/delete/{id}(id=${url.id})}" method="post">
+                                        <form th:action="@{/url-premium/delete/{id}(id=${url.id})}" method="post">
                                             <div class="inputSubmitDelete">
                                                 <input type="submit" value="Delete">
                                             </div>

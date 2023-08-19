@@ -102,11 +102,11 @@ public class UrlService {
     }
 
     public boolean isShortUrlExists(String shortUrl) {
-        return urlRepository.findUrlByShortUrl(shortUrl).isPresent();
+        return !urlRepository.findUrlByShortUrl(shortUrl).isPresent();
     }
 
     public boolean isLongUrlExists(String longUrl) {
-        return urlRepository.findUrlByLongUrl(longUrl).isPresent();
+        return !urlRepository.findUrlByLongUrl(longUrl).isPresent();
     }
 
     public String isShortUrlCorrect(String shortUrl) {

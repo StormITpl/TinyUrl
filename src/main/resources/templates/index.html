@@ -17,15 +17,15 @@
             </a>
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a th:href="@{/api/v1/url-view}" class="nav-link px-2 text-secondary">Home</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+                <li><a th:href="@{/}" class="nav-link px-2 text-secondary">Home</a></li>
+<!--                <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>-->
+<!--                <li><a href="#" class="nav-link px-2 text-white">About</a></li>-->
             </ul>
 
             <div class="text-end">
-                <a th:href="@{/api/v1/url-premium}" class="btn btn-warning">Premium version</a>
-                <button type="button" class="btn btn-outline-light me-2">Login</button>
-                <button type="button" class="btn btn-warning">Sign-up</button>
+                <a th:href="@{/url-premium}" class="btn btn-warning">Premium version</a>
+<!--                <button type="button" class="btn btn-outline-light me-2">Login</button>-->
+<!--                <button type="button" class="btn btn-warning">Sign-up</button>-->
             </div>
         </div>
     </div>
@@ -34,7 +34,7 @@
     <div class="row">
         <div class="col-lg-6">
 
-            <form th:object="${urlDto}" method="post" action="/api/v1/url-view">
+            <form th:object="${urlDto}" method="post" action="/">
                 <div class="containerURL">
                     <div class="GenerateShortUrl">
                         <h3>Generate a short URL</h3>
@@ -53,7 +53,7 @@
 
             <div style="margin-top: 80px;"></div>
 
-            <form th:object="${urlDto}" method="post" action="/api/v1/url-view">
+            <form th:object="${urlDto}" method="post" action="/">
                 <div class="containerURL">
                     <div class="inputBox">
                         <label id="shortUrlLabel">Your short URL is:</label>
@@ -116,7 +116,7 @@
                                 <tr th:each="urlDto : ${mostPopularUrls}">
                                     <td th:text="${urlDto.analytics.totalClicks}">0</td>
                                     <td>
-                                        <a th:href="@{'/api/v1/url-view/' + ${urlDto.analytics.id}}">
+                                        <a th:href="@{'/' + ${urlDto.analytics.id}}">
                                             <span th:text="${urlDto.longUrl}">URL</span>
                                         </a>
                                     </td>
