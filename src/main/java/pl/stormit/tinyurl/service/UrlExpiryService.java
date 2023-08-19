@@ -1,6 +1,8 @@
 package pl.stormit.tinyurl.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +17,6 @@ import pl.stormit.tinyurl.dto.UrlExpiryMapper;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
@@ -65,14 +65,13 @@ public class UrlExpiryService implements UrlExpiryInterface {
     }
 
     public void printExpiredUrlsToDelete(List<UrlExpiry> expires) {
-        Logger logger = Logger.getLogger(getClass().getName());
+        Logger logger = LoggerFactory.getLogger(getClass());
 
-        logger.log(Level.INFO, "Start searching expired urls");
-
-        if (expires.size() > 0) {
-            logger.log(Level.INFO, "Expiry Short Urls:");
+        logger.info("Start searching expired urls");
+        if (!expires.isEmpty()) {
+            logger.info("Expiry Short Urls:");
             for (UrlExpiry expire : expires) {
-                logger.log(Level.INFO, "ID: " + expire.getUrl().getId() + ", Long Url: " + expire.getUrl().getLongUrl() + ", Short Url: " + expire.getUrl().getShortUrl());
+                logger.info("ID: {}, Long Url: {}, Short Url: {}", expire.getUrl().getId(), expire.getUrl().getLongUrl(), expire.getUrl().getShortUrl());
             }
         }
     }
