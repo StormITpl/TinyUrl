@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 @RequiredArgsConstructor
 public class UrlExpiryService implements UrlExpiryInterface {
 
+    public static final int DELAY_TIME = 15000;
     private final UrlExpiryRepository urlExpiryRepository;
 
     private final UrlExpiryMapper urlExpiryMapper;
@@ -73,7 +74,7 @@ public class UrlExpiryService implements UrlExpiryInterface {
         }
     }
 
-    @Scheduled(fixedDelay = 15000)
+    @Scheduled(fixedDelay = DELAY_TIME)
     public void deleteExpiredDateUrls() {
         List<UrlExpiry> expires = getAllExpiredUrls();
         printExpiredUrlsToDelete(expires);

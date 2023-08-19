@@ -15,16 +15,16 @@ import pl.stormit.tinyurl.service.UrlService;
 @RequiredArgsConstructor
 public class UrlViewController {
 
+    public static final String INDEX = "index";
     private final UrlService urlService;
 
     private final UrlAnalyticsService urlAnalyticsService;
 
     @GetMapping
     public String showForm(Model model) {
-        UrlDto urlDto = new UrlDto();
         model.addAttribute("urlDto", new UrlDto());
         model.addAttribute("mostPopularUrls", urlAnalyticsService.findMostPopularUrls());
-        return "index";
+        return INDEX;
     }
 
     @GetMapping("add")
@@ -32,8 +32,7 @@ public class UrlViewController {
         UrlDto urlDto = new UrlDto();
         model.addAttribute("urlDto", urlDto);
 
-
-        return "index";
+        return INDEX;
     }
 
     @PostMapping
@@ -42,6 +41,6 @@ public class UrlViewController {
         urlDto.setShortUrl(generatedUrlDto.getShortUrl());
         model.addAttribute("mostPopularUrls", urlAnalyticsService.findMostPopularUrls());
 
-        return "index";
+        return INDEX;
     }
 }
