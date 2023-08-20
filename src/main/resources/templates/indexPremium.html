@@ -46,25 +46,31 @@
 
             <div style="margin-top: 30px;"></div>
 
-            <form id="form2" th:object="${urlDto}" method="post" action="/url-premium/create">
-                <div class="containerURL">
-                    <div class="GenerateYourOwnShortUrl">
-                        <h5>Generate your own short URL</h5>
+                <form id="form2" th:object="${urlDto}" method="post" action="/url-premium/create">
+                    <div class="containerURL">
+                        <div class="GenerateYourOwnShortUrl">
+                            <h5>Generate your own short URL</h5>
+                        </div>
+                        <br>
+                        <div class="inputBox">
+                            <input type="text" required="required" th:field="*{longUrl}">
+                            <span>Enter long URL</span>
+                        </div>
+                        <div class="inputBox">
+                            <input type="text" required="required" th:field="*{shortUrl}">
+                            <span>Proposition your own short URL</span>
+                        </div>
+                        <div th:if="${errorLongUrl}" class="error-message">
+                            <span th:text="${errorLongUrl}"></span>
+                        </div>
+                        <div th:if="${errorShortUrl}" class="error-message">
+                            <span th:text="${errorShortUrl}"></span>
+                        </div>
+                        <div class="inputSubmit">
+                            <input type="submit" value="Generate">
+                        </div>
                     </div>
-                    <br>
-                    <div class="inputBox">
-                        <input type="text" required="required" th:field="*{longUrl}">
-                        <span>Enter long URL</span>
-                    </div>
-                    <div class="inputBox">
-                        <input type="text" required="required" th:field="*{shortUrl}">
-                        <span>Proposition your own short URL</span>
-                    </div>
-                    <div class="inputSubmit">
-                        <input type="submit" value="Generate">
-                    </div>
-                </div>
-            </form>
+                </form>
 
             <div style="margin-top: 30px;"></div>
 

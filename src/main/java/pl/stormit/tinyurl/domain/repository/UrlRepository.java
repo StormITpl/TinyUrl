@@ -19,4 +19,8 @@ public interface UrlRepository extends JpaRepository<Url, UUID> {
 
     @Query("SELECT new pl.stormit.tinyurl.domain.model.MostPopularUrlResult(u, MAX(ua.totalClicks)) FROM Url u JOIN u.urlAnalytics ua GROUP BY u.id, u.shortUrl, u.longUrl ORDER BY MAX(ua.totalClicks) DESC")
     List<MostPopularUrlResult> findMostPopularUrls(Pageable pageable);
+
+    boolean existsByShortUrl(String shortUrl);
+
+    boolean existsByLongUrl(String longUrl);
 }
