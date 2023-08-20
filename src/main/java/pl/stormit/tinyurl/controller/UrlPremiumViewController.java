@@ -46,11 +46,13 @@ public class UrlPremiumViewController {
     public String createShortUrl(Model model, UrlDto urlDto) {
         if (!urlService.isLongUrlExists(urlDto.getLongUrl())) {
             model.addAttribute("errorLongUrl", "Long URL already exists.");
+            model.addAttribute("allUrls", urlService.getUrls());
             return INDEX_PREMIUM;
         }
 
         if (!urlService.isShortUrlExists(urlDto.getShortUrl())) {
             model.addAttribute("errorShortUrl", "Short URL already exists.");
+            model.addAttribute("allUrls", urlService.getUrls());
             return INDEX_PREMIUM;
         }
 

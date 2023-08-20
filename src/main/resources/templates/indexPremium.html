@@ -81,6 +81,7 @@
                         <input type="text" th:field="*{shortUrl}" id="shortUrlInputHidden">
                         <div style="margin-top: 5px;"></div>
                         <button type="button" id="copyButton" class="btn btn-outline-light btn-sm me-2">copy</button>
+                        <button type="button" id="clearButton" class="btn btn-outline-light btn-sm me-2">clear</button>
                         <script th:inline="javascript">
                             var shortUrlValue = [[${urlDto.shortUrl}]];
 
@@ -97,6 +98,27 @@
                             document.addEventListener('DOMContentLoaded', function() {
                                 var copyButton = document.getElementById('copyButton');
                                 var shortUrlInput = document.getElementById('shortUrlInputHidden');
+                                var clearButton = document.getElementById('clearButton');
+
+                                clearButton.addEventListener('click', function() {
+                                    var shortUrlInput = document.getElementById('shortUrlInputHidden');
+                                    var longUrlInput2 = document.getElementById('form1').querySelector('[name="longUrl"]');
+                                    var longUrlInput = document.getElementById('form2').querySelector('[name="longUrl"]');
+                                    var shortUrlInput2 = document.getElementById('form2').querySelector('[name="shortUrl"]');
+
+                                    if (shortUrlInput) {
+                                        shortUrlInput.value = '';
+                                    }
+                                    if (longUrlInput2) {
+                                        longUrlInput2.value = '';
+                                    }
+                                    if (longUrlInput) {
+                                        longUrlInput.value = '';
+                                    }
+                                    if (shortUrlInput2) {
+                                        shortUrlInput2.value = '';
+                                    }
+                                });
 
                                 if (shortUrlValue.trim() !== '') {
                                     var fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
