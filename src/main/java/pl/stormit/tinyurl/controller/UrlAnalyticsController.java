@@ -1,5 +1,6 @@
 package pl.stormit.tinyurl.controller;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,6 @@ import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
 import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.service.UrlAnalyticsService;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 

@@ -12,7 +12,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
 import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.exception.ResourceNotFoundException;
@@ -87,12 +86,11 @@ class UrlAnalyticsControllerTest {
     @Test
     void shouldReturnStatusOkWhenGetAnalyticsByUrlIdIsCorrectly() throws Exception {
         // given
-        Url url = new Url("www.google.pl", "817a3ec2");
         List<UrlAnalyticsDto> urlAnalyticsListDto = createListOfAnalyticsDto();
-        when(urlAnalyticsService.getAnalyticsByUrlId(url.getId())).thenReturn(urlAnalyticsListDto);
+        when(urlAnalyticsService.getAnalyticsByUrlId(any())).thenReturn(urlAnalyticsListDto);
 
         // when
-        ResultActions result = mockMvc.perform(get("/api/v1/analytics/{id}", url.getId())
+        ResultActions result = mockMvc.perform(get("/api/v1/analytics/" + ID_1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Objects.requireNonNull(objectMapper.writeValueAsString(urlAnalyticsListDto))));
 

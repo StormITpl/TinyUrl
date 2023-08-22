@@ -1,6 +1,7 @@
 package pl.stormit.tinyurl.service;
 
 import com.google.common.hash.Hashing;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +11,6 @@ import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.dto.UrlMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

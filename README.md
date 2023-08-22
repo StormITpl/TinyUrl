@@ -19,7 +19,7 @@ The application is based on the REST architecture and the Minimum Viable Product
 ## Technologies Used
 ### Development
 - [Java 18](https://openjdk.org/projects/jdk/18/)
-- [Spring Boot 2](https://spring.io/projects/spring-boot)
+- [Spring Boot 3](https://spring.io/projects/spring-boot)
 - [Spring Data](https://spring.io/projects/spring-data)
 - [PostgreSQL (docker)](https://www.postgresql.org/)
 - [Maven 3.x](https://maven.apache.org/)
