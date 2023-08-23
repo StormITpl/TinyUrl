@@ -88,7 +88,7 @@
                             if (shortUrlValue === null || shortUrlValue.trim() === '') {
                                 shortUrlValue = '';
                             } else {
-                                var fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
+                                const fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
                                 document.getElementById('shortUrlInputHidden').value = fullUrl;
                             }
                         </script>
@@ -96,15 +96,15 @@
                             var shortUrlValue = [[${urlDto.shortUrl}]];
 
                             document.addEventListener('DOMContentLoaded', function() {
-                                var copyButton = document.getElementById('copyButton');
-                                var shortUrlInput = document.getElementById('shortUrlInputHidden');
-                                var clearButton = document.getElementById('clearButton');
+                                const copyButton = document.getElementById('copyButton');
+                                const shortUrlInput = document.getElementById('shortUrlInputHidden');
+                                const clearButton = document.getElementById('clearButton');
 
                                 clearButton.addEventListener('click', function() {
-                                    var shortUrlInput = document.getElementById('shortUrlInputHidden');
-                                    var longUrlInput2 = document.getElementById('form1').querySelector('[name="longUrl"]');
-                                    var longUrlInput = document.getElementById('form2').querySelector('[name="longUrl"]');
-                                    var shortUrlInput2 = document.getElementById('form2').querySelector('[name="shortUrl"]');
+                                    const shortUrlInput = document.getElementById('shortUrlInputHidden');
+                                    const longUrlInput2 = document.getElementById('form1').querySelector('[name="longUrl"]');
+                                    const longUrlInput = document.getElementById('form2').querySelector('[name="longUrl"]');
+                                    const shortUrlInput2 = document.getElementById('form2').querySelector('[name="shortUrl"]');
 
                                     if (shortUrlInput) {
                                         shortUrlInput.value = '';
@@ -121,7 +121,7 @@
                                 });
 
                                 if (shortUrlValue.trim() !== '') {
-                                    var fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
+                                    const fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
                                     shortUrlInput.value = fullUrl;
                                 }
 
