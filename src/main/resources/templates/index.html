@@ -17,15 +17,15 @@
             </a>
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a th:href="@{/api/v1/url-view}" class="nav-link px-2 text-secondary">Home</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+                <li><a th:href="@{/}" class="nav-link px-2 text-secondary">Home</a></li>
+<!--                <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>-->
+<!--                <li><a href="#" class="nav-link px-2 text-white">About</a></li>-->
             </ul>
 
             <div class="text-end">
-                <a th:href="@{/api/v1/url-premium}" class="btn btn-warning">Premium version</a>
-                <button type="button" class="btn btn-outline-light me-2">Login</button>
-                <button type="button" class="btn btn-warning">Sign-up</button>
+                <a th:href="@{/url-premium}" class="btn btn-warning">Premium version</a>
+<!--                <button type="button" class="btn btn-outline-light me-2">Login</button>-->
+<!--                <button type="button" class="btn btn-warning">Sign-up</button>-->
             </div>
         </div>
     </div>
@@ -34,7 +34,7 @@
     <div class="row">
         <div class="col-lg-6">
 
-            <form th:object="${urlDto}" method="post" action="/api/v1/url-view">
+            <form id="form" th:object="${urlDto}" method="post" action="/">
                 <div class="containerURL">
                     <div class="GenerateShortUrl">
                         <h3>Generate a short URL</h3>
@@ -53,20 +53,21 @@
 
             <div style="margin-top: 80px;"></div>
 
-            <form th:object="${urlDto}" method="post" action="/api/v1/url-view">
+            <form id="form2" th:object="${urlDto}" method="post" action="/">
                 <div class="containerURL">
                     <div class="inputBox">
                         <label id="shortUrlLabel">Your short URL is:</label>
                         <input type="text" th:field="*{shortUrl}" id="shortUrlInputHidden">
                         <div style="margin-top: 5px;"></div>
                         <button type="button" id="copyButton" class="btn btn-outline-light btn-sm me-2">copy</button>
+                        <button type="button" id="clearButton" class="btn btn-outline-light btn-sm me-2">clear</button>
                         <script th:inline="javascript">
                             var shortUrlValue = [[${urlDto.shortUrl}]];
 
                             if (shortUrlValue === null || shortUrlValue.trim() === '') {
                                 shortUrlValue = '';
                             } else {
-                                var fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
+                                const fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
                                 document.getElementById('shortUrlInputHidden').value = fullUrl;
                             }
                         </script>
@@ -74,11 +75,28 @@
                             var shortUrlValue = [[${urlDto.shortUrl}]];
 
                             document.addEventListener('DOMContentLoaded', function() {
-                                var copyButton = document.getElementById('copyButton');
-                                var shortUrlInput = document.getElementById('shortUrlInputHidden');
+                                const copyButton = document.getElementById('copyButton');
+                                const shortUrlInput = document.getElementById('shortUrlInputHidden');
+                                const clearButton = document.getElementById('clearButton');
+
+                                clearButton.addEventListener('click', function() {
+                                    const shortUrlInput = document.getElementById('shortUrlInputHidden');
+                                    const longUrlInput = document.getElementById('form').querySelector('[name="longUrl"]');
+                                    const shortUrlInput2 = document.getElementById('form2').querySelector('[name="shortUrl"]');
+
+                                    if (shortUrlInput) {
+                                        shortUrlInput.value = '';
+                                    }
+                                    if (longUrlInput) {
+                                        longUrlInput.value = '';
+                                    }
+                                    if (shortUrlInput2) {
+                                        shortUrlInput2.value = '';
+                                    }
+                                });
 
                                 if (shortUrlValue.trim() !== '') {
-                                    var fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
+                                    const fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
                                     shortUrlInput.value = fullUrl;
                                 }
 
@@ -116,7 +134,7 @@
                                 <tr th:each="urlDto : ${mostPopularUrls}">
                                     <td th:text="${urlDto.analytics.totalClicks}">0</td>
                                     <td>
-                                        <a th:href="@{'/api/v1/url-view/' + ${urlDto.analytics.id}}">
+                                        <a th:href="@{'/' + ${urlDto.analytics.id}}">
                                             <span th:text="${urlDto.longUrl}">URL</span>
                                         </a>
                                     </td>

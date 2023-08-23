@@ -17,9 +17,9 @@
             </a>
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a th:href="@{/api/v1/url-view}" class="nav-link px-2 text-secondary">Home</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+                <li><a th:href="@{/}" class="nav-link px-2 text-secondary">Home</a></li>
+<!--                <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>-->
+<!--                <li><a href="#" class="nav-link px-2 text-white">About</a></li>-->
             </ul>
         </div>
     </div>
@@ -28,7 +28,7 @@
     <div class="row">
         <div class="col-lg-6">
 
-            <form id="form1" th:object="${urlDto}" method="post" action="/api/v1/url-premium/generate">
+            <form id="form1" th:object="${urlDto}" method="post" action="/url-premium/generate">
                 <div class="containerURL">
                     <div class="GenerateShortUrl">
                         <h5>Generate a short URL</h5>
@@ -46,42 +46,49 @@
 
             <div style="margin-top: 30px;"></div>
 
-            <form id="form2" th:object="${urlDto}" method="post" action="/api/v1/url-premium/create">
-                <div class="containerURL">
-                    <div class="GenerateYourOwnShortUrl">
-                        <h5>Generate your own short URL</h5>
+                <form id="form2" th:object="${urlDto}" method="post" action="/url-premium/create">
+                    <div class="containerURL">
+                        <div class="GenerateYourOwnShortUrl">
+                            <h5>Generate your own short URL</h5>
+                        </div>
+                        <br>
+                        <div class="inputBox">
+                            <input type="text" required="required" th:field="*{longUrl}">
+                            <span>Enter long URL</span>
+                        </div>
+                        <div class="inputBox">
+                            <input type="text" required="required" th:field="*{shortUrl}">
+                            <span>Proposition your own short URL</span>
+                        </div>
+                        <div th:if="${errorLongUrl}" class="error-message">
+                            <span th:text="${errorLongUrl}"></span>
+                        </div>
+                        <div th:if="${errorShortUrl}" class="error-message">
+                            <span th:text="${errorShortUrl}"></span>
+                        </div>
+                        <div class="inputSubmit">
+                            <input type="submit" value="Generate">
+                        </div>
                     </div>
-                    <br>
-                    <div class="inputBox">
-                        <input type="text" required="required" th:field="*{longUrl}">
-                        <span>Enter long URL</span>
-                    </div>
-                    <div class="inputBox">
-                        <input type="text" required="required" th:field="*{shortUrl}">
-                        <span>Proposition your own short URL</span>
-                    </div>
-                    <div class="inputSubmit">
-                        <input type="submit" value="Generate">
-                    </div>
-                </div>
-            </form>
+                </form>
 
             <div style="margin-top: 30px;"></div>
 
-            <form th:object="${urlDto}" method="post" action="/api/v1/url-premium">
+            <form th:object="${urlDto}" method="post" action="/url-premium">
                 <div class="containerURL">
                     <div class="inputBox">
                         <label id="shortUrlLabel">Your short URL is:</label>
                         <input type="text" th:field="*{shortUrl}" id="shortUrlInputHidden">
                         <div style="margin-top: 5px;"></div>
                         <button type="button" id="copyButton" class="btn btn-outline-light btn-sm me-2">copy</button>
+                        <button type="button" id="clearButton" class="btn btn-outline-light btn-sm me-2">clear</button>
                         <script th:inline="javascript">
                             var shortUrlValue = [[${urlDto.shortUrl}]];
 
                             if (shortUrlValue === null || shortUrlValue.trim() === '') {
                                 shortUrlValue = '';
                             } else {
-                                var fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
+                                const fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
                                 document.getElementById('shortUrlInputHidden').value = fullUrl;
                             }
                         </script>
@@ -89,11 +96,32 @@
                             var shortUrlValue = [[${urlDto.shortUrl}]];
 
                             document.addEventListener('DOMContentLoaded', function() {
-                                var copyButton = document.getElementById('copyButton');
-                                var shortUrlInput = document.getElementById('shortUrlInputHidden');
+                                const copyButton = document.getElementById('copyButton');
+                                const shortUrlInput = document.getElementById('shortUrlInputHidden');
+                                const clearButton = document.getElementById('clearButton');
+
+                                clearButton.addEventListener('click', function() {
+                                    const shortUrlInput = document.getElementById('shortUrlInputHidden');
+                                    const longUrlInput2 = document.getElementById('form1').querySelector('[name="longUrl"]');
+                                    const longUrlInput = document.getElementById('form2').querySelector('[name="longUrl"]');
+                                    const shortUrlInput2 = document.getElementById('form2').querySelector('[name="shortUrl"]');
+
+                                    if (shortUrlInput) {
+                                        shortUrlInput.value = '';
+                                    }
+                                    if (longUrlInput2) {
+                                        longUrlInput2.value = '';
+                                    }
+                                    if (longUrlInput) {
+                                        longUrlInput.value = '';
+                                    }
+                                    if (shortUrlInput2) {
+                                        shortUrlInput2.value = '';
+                                    }
+                                });
 
                                 if (shortUrlValue.trim() !== '') {
-                                    var fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
+                                    const fullUrl = 'http://localhost:8989/api/v1/urls/' + shortUrlValue;
                                     shortUrlInput.value = fullUrl;
                                 }
 
@@ -133,7 +161,7 @@
                                     <td th:text="${url.longUrl}"></td>
                                     <td th:text="${url.shortUrl}"></td>
                                     <td class="actions">
-                                        <form th:action="@{/api/v1/url-premium/delete/{id}(id=${url.id})}" method="post">
+                                        <form th:action="@{/url-premium/delete/{id}(id=${url.id})}" method="post">
                                             <div class="inputSubmitDelete">
                                                 <input type="submit" value="Delete">
                                             </div>
