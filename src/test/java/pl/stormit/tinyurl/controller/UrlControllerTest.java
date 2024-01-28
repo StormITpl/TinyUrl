@@ -1,6 +1,7 @@
 package pl.stormit.tinyurl.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.service.UrlService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.Objects;
 

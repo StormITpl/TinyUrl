@@ -19,7 +19,7 @@ The application is based on the REST architecture and the Minimum Viable Product
 ## Technologies Used
 ### Development
 - [Java 18](https://openjdk.org/projects/jdk/18/)
-- [Spring Boot 2](https://spring.io/projects/spring-boot)
+- [Spring Boot 3](https://spring.io/projects/spring-boot)
 - [Spring Data](https://spring.io/projects/spring-data)
 - [PostgreSQL (docker)](https://www.postgresql.org/)
 - [Maven 3.x](https://maven.apache.org/)
@@ -45,7 +45,7 @@ The following tools are required to start the application:
 
 To run this project, please clone this repository and create a local copy on your computer.
 
-After download project configurate your database and db server in few step:
+After download project configure your database and db server in few steps:
 
 - Create database connection with Docker pasting in command line:
 

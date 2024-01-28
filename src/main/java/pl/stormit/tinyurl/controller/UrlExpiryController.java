@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.stormit.tinyurl.dto.UrlExpiryDto;
 import pl.stormit.tinyurl.service.UrlExpiryService;
@@ -20,9 +21,11 @@ public class UrlExpiryController {
     private final UrlExpiryService urlExpiryService;
 
     @GetMapping
-    public ResponseEntity<List<UrlExpiryDto>> getAllExpires() {
+    public ResponseEntity<List<UrlExpiryDto>> getAllExpires(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
 
-        List<UrlExpiryDto> urlExpiryDtoList = urlExpiryService.getAllExpires();
+        List<UrlExpiryDto> urlExpiryDtoList = urlExpiryService.getAllExpires(page, pageSize);
         HttpHeaders headers = new HttpHeaders();
         headers.add("message", "The list of expires has been successfully found");
 

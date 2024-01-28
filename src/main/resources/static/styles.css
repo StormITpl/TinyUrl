@@ -27,6 +27,11 @@ body{
     position: relative;
     color: #00dfc4;
 }
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
 .inputBox
 {
     text-align: center;

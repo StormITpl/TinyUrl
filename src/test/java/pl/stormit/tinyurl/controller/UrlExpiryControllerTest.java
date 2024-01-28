@@ -38,7 +38,7 @@ class UrlExpiryControllerTest {
     void shouldReturnAllExpires() throws Exception {
         // given
         List<UrlExpiryDto> urlExpiryList = listOfUrlExpiry();
-        given(urlExpiryService.getAllExpires()).willReturn(urlExpiryList);
+        given(urlExpiryService.getAllExpires(0,20)).willReturn(urlExpiryList);
 
         // when
         ResultActions result = mockMvc.perform(get("/api/v1/expires")

@@ -1,6 +1,7 @@
 package pl.stormit.tinyurl.service;
 
 import com.google.common.hash.Hashing;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +11,6 @@ import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.dto.UrlMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,7 +34,6 @@ public class UrlService {
     @Transactional
     public UrlDto generateShortUrl(UrlDto urlDto) {
         if (!urlDto.getLongUrl().isBlank()) {
-
             Url urlToSave = new Url();
             String encodedUrl = encodeUrl(urlDto.getLongUrl());
             urlToSave.setCreationDate(LocalDate.now());
@@ -44,6 +43,7 @@ public class UrlService {
             urlExpiryService.createUrlExpiryDate(urlToSave);
             return urlMapper.mapUrlEntityToUrlDto(savedUrl);
         }
+
         throw new ApiException("Change the request your longUrl is empty!");
     }
 
@@ -51,10 +51,10 @@ public class UrlService {
     public UrlDto createShortUrl(UrlDto urlDto) {
         Url urlToSave = new Url();
         urlToSave.setCreationDate(LocalDate.now());
-        if (longUrlExist(urlDto.getLongUrl())) {
+        if (isLongUrlExists(urlDto.getLongUrl())) {
             urlToSave.setLongUrl(urlDto.getLongUrl());
         }
-        if (shortUrlExist(isShortUrlCorrect(urlDto.getShortUrl()))) {
+        if (isShortUrlExists(isShortUrlCorrect(urlDto.getShortUrl()))) {
             urlToSave.setShortUrl(urlDto.getShortUrl());
         }
         Url savedUrl = urlRepository.save(urlToSave);
@@ -101,24 +101,15 @@ public class UrlService {
         }
     }
 
-    public boolean shortUrlExist(String shortUrl) {
-        if (urlRepository.findUrlByShortUrl(shortUrl).isPresent()) {
-            throw new ApiException("The short url: " + shortUrl + ", exists.");
-        } else {
-            return true;
-        }
+    public boolean isShortUrlExists(String shortUrl) {
+        return !urlRepository.existsByShortUrl(shortUrl);
     }
 
-    public boolean longUrlExist(String longUrl) {
-        if (urlRepository.findUrlByLongUrl(longUrl).isPresent()) {
-            throw new ApiException("The long url: " + longUrl + ", exist.");
-        } else {
-            return true;
-        }
+    public boolean isLongUrlExists(String longUrl) {
+        return !urlRepository.existsByLongUrl(longUrl);
     }
 
     public String isShortUrlCorrect(String shortUrl) {
-
         String regex = "^\\w{4,8}$";
 
         Pattern p = Pattern.compile(regex);
@@ -126,6 +117,6 @@ public class UrlService {
         if (m.matches()) {
             return shortUrl;
         }
-        throw new ApiException("The short url: " + shortUrl + ", is incorrect.");
+        throw new ApiException(String.format("The short url: %s, is incorrect.", shortUrl));
     }
 }
