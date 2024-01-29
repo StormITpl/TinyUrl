@@ -11,10 +11,9 @@ import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
 import pl.stormit.tinyurl.domain.repository.UrlRepository;
 import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
-import pl.stormit.tinyurl.dto.UrlAnalyticsLocalizationDto;
-import pl.stormit.tinyurl.dto.UrlAnalyticsMapper;
+import pl.stormit.tinyurl.mappers.UrlAnalyticsMapper;
 import pl.stormit.tinyurl.dto.UrlDto;
-import pl.stormit.tinyurl.dto.UrlMapper;
+import pl.stormit.tinyurl.mappers.UrlMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
 import java.time.Instant;
