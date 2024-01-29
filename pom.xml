@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.0</version>
+        <version>3.1.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>pl.stormit</groupId>
@@ -14,10 +14,10 @@
     <name>TinyURL</name>
     <description>TinyURL</description>
     <properties>
-        <java.version>18</java.version>
-        <spring-boot-starter-validation.version>3.1.0</spring-boot-starter-validation.version>
+        <java.version>21</java.version>
+        <spring-boot-starter-validation.version>3.1.4</spring-boot-starter-validation.version>
         <guava.version>31.1-jre</guava.version>
-        <lombok.version>1.18.26</lombok.version>
+        <lombok.version>1.18.30</lombok.version>
         <liquibase.version>4.23.1</liquibase.version>
         <mapstruct.version>1.5.3.Final</mapstruct.version>
         <maxmind.version>4.0.1</maxmind.version>
@@ -134,13 +134,13 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>18</source>
-                    <target>18</target>
+                    <source>21</source>
+                    <target>21</target>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>1.18.26</version>
+                            <version>1.18.30</version>
                         </path>
                         <path>
                             <groupId>org.mapstruct</groupId>
