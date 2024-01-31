@@ -2,31 +2,42 @@ package pl.stormit.tinyurl.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.stormit.tinyurl.domain.model.MostPopularUrlResult;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
 import pl.stormit.tinyurl.domain.repository.UrlRepository;
 import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
 import pl.stormit.tinyurl.mappers.UrlAnalyticsMapper;
+import pl.stormit.tinyurl.dto.UrlAnalyticsLocalizationDto;
 import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.mappers.UrlMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
+
+
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UrlAnalyticsService {
 
     public static final long FIRST_CLICK_ON_SHORT_URL = 1L;
-    public static final PageRequest AMOUNT_OF_POPULAR_URLS = PageRequest.of(0, 3);
+
+    @Value("${tiny.amount-of-popular-urls.offset}")
+    private int popularUrlsStartIndex;
+
+    @Value("${tiny.amount-of-popular-urls.limit}")
+    private int popularUrlsPageSize;
+
+    private final PageRequest AMOUNT_OF_POPULAR_URLS = PageRequest.of(popularUrlsStartIndex, popularUrlsPageSize);
 
     private final UrlAnalyticsRepository urlAnalyticsRepository;
 
