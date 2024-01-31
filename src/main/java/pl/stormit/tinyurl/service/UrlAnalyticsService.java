@@ -47,7 +47,7 @@ public class UrlAnalyticsService {
 
     private final UrlMapper urlMapper;
 
-    private IpLocalizationService ipLocalization;
+    private final IpLocalizationService ipLocalization;
 
     @Transactional(readOnly = true)
     public List<UrlAnalyticsDto> getAnalyticsByUrlId(UUID urlId) {
