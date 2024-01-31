@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.stormit.tinyurl.config.UrlAnalyticsConfig;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
@@ -16,8 +17,6 @@ import pl.stormit.tinyurl.dto.UrlAnalyticsLocalizationDto;
 import pl.stormit.tinyurl.dto.UrlDto;
 import pl.stormit.tinyurl.mappers.UrlMapper;
 import pl.stormit.tinyurl.exception.ApiException;
-
-
 
 import java.time.Instant;
 import java.util.List;
@@ -31,13 +30,7 @@ public class UrlAnalyticsService {
 
     public static final long FIRST_CLICK_ON_SHORT_URL = 1L;
 
-    @Value("${tiny.amount-of-popular-urls.offset}")
-    private int popularUrlsStartIndex;
-
-    @Value("${tiny.amount-of-popular-urls.limit}")
-    private int popularUrlsPageSize;
-
-    private final PageRequest AMOUNT_OF_POPULAR_URLS = PageRequest.of(popularUrlsStartIndex, popularUrlsPageSize);
+    private final PageRequest amountOfPopularUrls;
 
     private final UrlAnalyticsRepository urlAnalyticsRepository;
 

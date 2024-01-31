@@ -18,4 +18,6 @@ server:
   port: 8080
 
 tiny:
-  amount-of-popular-urls: 0,3
+  amount-of-popular-urls:
+    offset: 0
+    limit: 3
