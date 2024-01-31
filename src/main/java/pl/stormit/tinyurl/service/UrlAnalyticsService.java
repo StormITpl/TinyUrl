@@ -77,16 +77,9 @@ public class UrlAnalyticsService {
     }
 
     private Long checkClicksAmountOnShortUrl(UUID urlId) {
-        long incMaxClickValue;
-        Long maxClickValue = urlAnalyticsRepository.findMaxClickOnShortUrlByUrlId(urlId);
-
-        if (maxClickValue == null) {
-            return FIRST_CLICK_ON_SHORT_URL;
-        } else {
-            incMaxClickValue = maxClickValue.longValue();
-            incMaxClickValue++;
-            return incMaxClickValue;
-        }
+        return Optional.ofNullable(urlAnalyticsRepository.findMaxClickOnShortUrlByUrlId(urlId))
+                .map(maxClickValue -> maxClickValue + 1)
+                .orElse(FIRST_CLICK_ON_SHORT_URL);
     }
 
     public List<UrlDto> findMostPopularUrls() {
