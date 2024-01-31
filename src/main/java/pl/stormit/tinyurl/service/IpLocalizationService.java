@@ -22,7 +22,7 @@ public class IpLocalizationService {
         String isoCode;
         String city;
         InetAddress ipAddress;
-        UrlAnalyticsLocalizationDto setLocalization = new UrlAnalyticsLocalizationDto();
+        UrlAnalyticsLocalizationDto localizationDto = new UrlAnalyticsLocalizationDto();
 
         try {
             ipAddress = InetAddress.getByName(addressIp);
@@ -35,9 +35,9 @@ public class IpLocalizationService {
             city = response.getCity().getName();
 
             if (country != null && isoCode != null && city != null) {
-                setLocalization.setCountryLocalization(country);
-                setLocalization.setIsoCode(isoCode);
-                setLocalization.setCityLocalization(city);
+                localizationDto.setCountryLocalization(country);
+                localizationDto.setIsoCode(isoCode);
+                localizationDto.setCityLocalization(city);
             } else {
                 throw new AddressNotFoundException("Failed to get location for IP address: " + addressIp);
             }
@@ -45,6 +45,6 @@ public class IpLocalizationService {
         } catch (IOException | GeoIp2Exception e) {
             throw new RuntimeException("Failed to get location for IP address: " + addressIp, e);
         }
-        return setLocalization;
+        return localizationDto;
     }
 }
