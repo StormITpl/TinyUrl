@@ -44,7 +44,7 @@ public class UrlAnalyticsService {
     public List<UrlAnalyticsDto> getAnalyticsByUrlId(UUID urlId) {
 
         if (!urlAnalyticsRepository.existsById(urlId)) {
-            throw new ApiException("The url by id: " + urlId + ", does not exist!");
+            throw new ApiException("The analytics by urlId: " + urlId + ", does not exist!");
         }
         return urlAnalyticsRepository.findAllByUrlId(urlId);
     }

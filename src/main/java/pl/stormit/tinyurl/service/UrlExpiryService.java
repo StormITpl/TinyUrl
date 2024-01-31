@@ -46,7 +46,7 @@ public class UrlExpiryService implements UrlExpiryInterface {
             return true;
         } else {
             urlExpiry.setIsPremium(false);
-            urlExpiry.setExpirationDate(Instant.now().plusSeconds(TWO_WEEKS));
+            urlExpiry.setExpirationDate(Instant.now().plusSeconds(TWO_WEEKS_IN_SECONDS));
             return false;
         }
     }
