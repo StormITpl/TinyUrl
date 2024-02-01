@@ -7,14 +7,17 @@ import com.maxmind.geoip2.model.CityResponse;
 import org.springframework.stereotype.Service;
 import pl.stormit.tinyurl.dto.UrlAnalyticsLocalizationDto;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 
 @Service
 public class IpLocalizationService {
 
-    public static final String LOCALIZATION_DB_GEO_LITE = "src/main/resources/localizationdb/GeoLite2-City.mmdb";
+    private final DatabaseReader database;
+
+    public IpLocalizationService() {
+        this.database = GeoLiteDatabaseLoader.getInstance().getDatabase();
+    }
 
     public UrlAnalyticsLocalizationDto getIpLocalization(String addressIp) {
 
@@ -24,11 +27,13 @@ public class IpLocalizationService {
         InetAddress ipAddress;
         UrlAnalyticsLocalizationDto localizationDto = new UrlAnalyticsLocalizationDto();
 
+        if (database == null) {
+            throw new IllegalStateException("GeoLite2 database not initialized");
+        }
+
         try {
             ipAddress = InetAddress.getByName(addressIp);
 
-            DatabaseReader database = new DatabaseReader.
-                    Builder(new File(LOCALIZATION_DB_GEO_LITE)).build();
             CityResponse response = database.city(ipAddress);
             country = response.getCountry().getName();
             isoCode = response.getCountry().getIsoCode();
