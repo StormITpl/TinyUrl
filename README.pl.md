@@ -18,7 +18,7 @@ Aplikacja jest oparta na architekturze REST i modelu Minimum Viable Product (MVP
 
 ## Zastosowane technologie
 ### Development
-- [Java 18](https://openjdk.org/projects/jdk/18/)
+- [Java 21](https://openjdk.org/projects/jdk/21/)
 - [Spring Boot 3](https://spring.io/projects/spring-boot)
 - [Spring Data](https://spring.io/projects/spring-data)
 - [PostgreSQL (docker)](https://www.postgresql.org/)
@@ -37,7 +37,7 @@ Aplikacja jest oparta na architekturze REST i modelu Minimum Viable Product (MVP
 Do uruchomienia aplikacji wymagana jest instalacja następujących narzędzi:
 
 - [IntelliJ IDEA](https://www.jetbrains.com/idea/),
-- [Java 18](https://openjdk.org/projects/jdk/18/)
+- [Java 21](https://openjdk.org/projects/jdk/21/)
 - [Maven 3.x](https://maven.apache.org/download.cgi),
 - [Docker](https://docs.docker.com/get-docker/)
 
@@ -45,34 +45,25 @@ Do uruchomienia aplikacji wymagana jest instalacja następujących narzędzi:
 
 W celu uruchomienia projektu, sklonuj to repozytorium i utwórz lokalną kopię na swoim komputerze.
 
-Po pobraniu projektu skonfiguruj swóją bazę daych i serwer db w kilku krokach:
+Po pobraniu projektu skonfiguruj swoją bazę danych i serwer db, wykonując poniższe kroki:
 
-- Utwórz połączenie z bazą danych za pomocą Docker wklejając w linii poleceń:
+- Utwórz połączenie do bazy danych PostgreSQL za pomocą Docker, wpisując w wierszu poleceń:
 
-docker run --name postgrestinyurl -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres
-
+    ```bash
+    docker run --name postgrestinyurl -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres
+    ```
+  
 - Połącz się z serwerem:
 
 Login: postgres
 
 Password: password
 
-- Utwórz bazę danych:
+- Uruchom migracje Liquibase, aby skonfigurować bazę danych:
 
-create database db_tinyurl;
-
-Utwórz tabelę:
-
-create table url(
-
-id serial PRIMARY KEY ,
-
-longURL VARCHAR(255) NOT NULL ,
-
-shortURL VARCHAR(16) NOT NULL ,
-
-creationDate DATE NOT NULL DEFAULT CURRENT_DATE
-);
+    ```bash
+    mvnw liquibase:create
+    ```
 
 ## Autorzy
 Społeczność StormIT:
