@@ -12,7 +12,7 @@ import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlExpiry;
 import pl.stormit.tinyurl.domain.repository.UrlExpiryRepository;
 import pl.stormit.tinyurl.dto.UrlExpiryDto;
-import pl.stormit.tinyurl.dto.UrlExpiryMapper;
+import pl.stormit.tinyurl.mappers.UrlExpiryMapper;
 
 import java.time.Instant;
 import java.util.List;
@@ -46,7 +46,7 @@ public class UrlExpiryService implements UrlExpiryInterface {
             return true;
         } else {
             urlExpiry.setIsPremium(false);
-            urlExpiry.setExpirationDate(Instant.now().plusSeconds(TWO_WEEKS));
+            urlExpiry.setExpirationDate(Instant.now().plusSeconds(TWO_WEEKS_IN_SECONDS));
             return false;
         }
     }

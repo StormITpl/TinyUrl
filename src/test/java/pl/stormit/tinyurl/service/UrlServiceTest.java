@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.repository.UrlRepository;
 import pl.stormit.tinyurl.dto.UrlDto;
-import pl.stormit.tinyurl.dto.UrlMapper;
+import pl.stormit.tinyurl.mappers.UrlMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
 import java.time.LocalDate;

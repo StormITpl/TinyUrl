@@ -18,7 +18,7 @@ The application is based on the REST architecture and the Minimum Viable Product
 
 ## Technologies Used
 ### Development
-- [Java 18](https://openjdk.org/projects/jdk/18/)
+- [Java 21](https://openjdk.org/projects/jdk/21/)
 - [Spring Boot 3](https://spring.io/projects/spring-boot)
 - [Spring Data](https://spring.io/projects/spring-data)
 - [PostgreSQL (docker)](https://www.postgresql.org/)
@@ -37,7 +37,7 @@ The application is based on the REST architecture and the Minimum Viable Product
 The following tools are required to start the application:
 
 - [IntelliJ IDEA](https://www.jetbrains.com/idea/),
-- [Java 18](https://openjdk.org/projects/jdk/18/)
+- [Java 21](https://openjdk.org/projects/jdk/21/)
 - [Maven 3.x](https://maven.apache.org/download.cgi),
 - [Docker](https://docs.docker.com/get-docker/)
 
@@ -45,11 +45,13 @@ The following tools are required to start the application:
 
 To run this project, please clone this repository and create a local copy on your computer.
 
-After download project configure your database and db server in few steps:
+After download the project, configure your database and db server by following these steps:
 
-- Create database connection with Docker pasting in command line:
+- Create a PostgreSQL database connection using Docker by running the following command in the command line:
 
-docker run --name postgrestinyurl -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres
+    ```bash
+    docker run --name postgrestinyurl -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres
+    ```
 
 - Connect with server:
 
@@ -57,22 +59,11 @@ Login: postgres
 
 Password: password
 
-- Create database in server:
+- Run Liquibase migrations to set up the database:
 
-create database db_tinyurl;
-
-Create table:
-
-create table url(
-
-id serial PRIMARY KEY ,
-
-longURL VARCHAR(255) NOT NULL ,
-
-shortURL VARCHAR(16) NOT NULL ,
-
-creationDate DATE NOT NULL DEFAULT CURRENT_DATE
-);
+    ```bash
+    mvnw liquibase:create
+    ```
 
 ## Authors
 Created by StormIT community: 

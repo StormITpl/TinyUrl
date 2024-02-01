@@ -5,29 +5,30 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.stormit.tinyurl.domain.model.MostPopularUrlResult;
 import pl.stormit.tinyurl.domain.model.Url;
 import pl.stormit.tinyurl.domain.model.UrlAnalytics;
 import pl.stormit.tinyurl.domain.repository.UrlAnalyticsRepository;
 import pl.stormit.tinyurl.domain.repository.UrlRepository;
 import pl.stormit.tinyurl.dto.UrlAnalyticsDto;
+import pl.stormit.tinyurl.mappers.UrlAnalyticsMapper;
 import pl.stormit.tinyurl.dto.UrlAnalyticsLocalizationDto;
-import pl.stormit.tinyurl.dto.UrlAnalyticsMapper;
 import pl.stormit.tinyurl.dto.UrlDto;
-import pl.stormit.tinyurl.dto.UrlMapper;
+import pl.stormit.tinyurl.mappers.UrlMapper;
 import pl.stormit.tinyurl.exception.ApiException;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UrlAnalyticsService {
 
     public static final long FIRST_CLICK_ON_SHORT_URL = 1L;
-    public static final PageRequest AMOUNT_OF_POPULAR_URLS = PageRequest.of(0, 3);
+
+    private final PageRequest amountOfPopularUrls;
 
     private final UrlAnalyticsRepository urlAnalyticsRepository;
 
@@ -37,13 +38,13 @@ public class UrlAnalyticsService {
 
     private final UrlMapper urlMapper;
 
-    private IpLocalizationService ipLocalization;
+    private final IpLocalizationService ipLocalization;
 
     @Transactional(readOnly = true)
     public List<UrlAnalyticsDto> getAnalyticsByUrlId(UUID urlId) {
 
         if (!urlAnalyticsRepository.existsById(urlId)) {
-            throw new ApiException("The url by id: " + urlId + ", does not exist!");
+            throw new ApiException("The analytics by urlId: " + urlId + ", does not exist!");
         }
         return urlAnalyticsRepository.findAllByUrlId(urlId);
     }
@@ -74,33 +75,23 @@ public class UrlAnalyticsService {
     }
 
     private Long checkClicksAmountOnShortUrl(UUID urlId) {
-        long incMaxClickValue;
-        Long maxClickValue = urlAnalyticsRepository.findMaxClickOnShortUrlByUrlId(urlId);
-
-        if (maxClickValue == null) {
-            return FIRST_CLICK_ON_SHORT_URL;
-        } else {
-            incMaxClickValue = maxClickValue.longValue();
-            incMaxClickValue++;
-            return incMaxClickValue;
-        }
+        return Optional.ofNullable(urlAnalyticsRepository.findMaxClickOnShortUrlByUrlId(urlId))
+                .map(maxClickValue -> maxClickValue + 1)
+                .orElse(FIRST_CLICK_ON_SHORT_URL);
     }
 
     public List<UrlDto> findMostPopularUrls() {
-        PageRequest pageRequest = AMOUNT_OF_POPULAR_URLS;
-        List<MostPopularUrlResult> results = urlRepository.findMostPopularUrls(pageRequest);
-
-        List<UrlDto> popularUrls = new ArrayList<>();
-        for (MostPopularUrlResult result : results) {
-            Url url = result.getUrl();
-            Long totalClicks = result.getTotalClicks();
-            UrlDto urlDto = urlMapper.mapUrlEntityToUrlDto(url);
-            UrlAnalyticsDto analyticsDto = new UrlAnalyticsDto();
-            analyticsDto.setTotalClicks(totalClicks);
-            urlDto.setAnalytics(analyticsDto);
-            popularUrls.add(urlDto);
-        }
-
-        return popularUrls;
+        return urlRepository.findMostPopularUrls(amountOfPopularUrls)
+                .stream()
+                .map(result -> {
+                    Url url = result.getUrl();
+                    Long totalClicks = result.getTotalClicks();
+                    UrlDto urlDto = urlMapper.mapUrlEntityToUrlDto(url);
+                    UrlAnalyticsDto analyticsDto = new UrlAnalyticsDto();
+                    analyticsDto.setTotalClicks(totalClicks);
+                    urlDto.setAnalytics(analyticsDto);
+                    return urlDto;
+                })
+                .collect(Collectors.toList());
     }
 }
